@@ -1,8 +1,10 @@
 import { css } from "@emotion/react";
-// import styled from "@emotion/styled";
+import styled from "@emotion/styled";
 
 const light = css`
   :root {
+    --main-max-width: 640px;
+    --header-height: 72px;
     --main-bg-color: #dff6ff;
     --main-border-color: rgba(41, 49, 65, 0.2);
     --side-bg-color: #293141;
@@ -18,9 +20,44 @@ const light = css`
     --search-bg-color: #d9d9d9;
     --search-ph-color: #a6a6a6;
     --white: #fff;
-    --black: #000;
+    --black: #181818;
     --button-bar-txt-color: #7e7e7e;
   }
 `;
 
-export { light };
+const BaseLayout = styled.div`
+  max-width: 640px;
+  margin: 0 auto;
+`;
+
+const HeaderLayout = styled.header`
+  width: 100%;
+  max-width: 640px;
+  height: 72px;
+  margin: 0 auto;
+  padding: 16px 36px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  z-index: 10;
+
+  .header-utils {
+    display: flex;
+    gap: 12px;
+    button {
+      width: 24px;
+      height: 24px;
+      &:first-of-type {
+        padding: 2px;
+      }
+    }
+  }
+`;
+
+const MainLayout = styled.main`
+  padding-top: 72px;
+`;
+
+export { light, BaseLayout, HeaderLayout, MainLayout };

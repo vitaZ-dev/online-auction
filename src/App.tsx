@@ -1,17 +1,25 @@
-import { useState } from "react";
+import { Outlet } from "react-router-dom";
+import { BaseLayout, HeaderLayout, MainLayout } from "./styles/AppStyle";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <>
-      <h1>Vite + React + yarn project setting</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-      </div>
-    </>
+    <BaseLayout>
+      <HeaderLayout>
+        <h1>logo</h1>
+        <div className="header-utils">
+          <button onClick={() => console.log("search")}>
+            <img src="/images/search.svg" alt="search" />
+          </button>
+          <button onClick={() => console.log("nav")}>
+            <img src="/images/nav.svg" alt="nav" />
+          </button>
+        </div>
+      </HeaderLayout>
+      <MainLayout>
+        <Outlet />
+      </MainLayout>
+      <footer>footer</footer>
+    </BaseLayout>
   );
 }
 

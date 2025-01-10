@@ -5,18 +5,19 @@ import { lazy, Suspense } from "react";
 import "./index.css";
 
 import App from "./App.tsx";
-import Container from "./pages/Container.tsx";
+// import Container from "./pages/Container.tsx";
 import Loading from "./components/Loading.tsx";
+import Home from "./pages/Home.tsx";
 const About = lazy(() => import("./pages/About"));
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Container />,
+    element: <App />,
     children: [
       {
         path: "",
-        element: <App />,
+        element: <Home />,
       },
       {
         path: "/about",
