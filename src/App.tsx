@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import {
   BaseLayout,
   FooterLayout,
@@ -19,7 +19,9 @@ function App() {
     <BaseLayout>
       <HeaderLayout>
         <h1>
-          <img src="/images/logo.svg" alt="logo" />
+          <NavLink to="/" onClick={toggleDrawer(false)}>
+            <img src="/images/logo.svg" alt="logo" />
+          </NavLink>
         </h1>
         <div className="header-utils">
           <button onClick={() => console.log("search")}>
@@ -40,16 +42,52 @@ function App() {
               },
             }}
           >
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum
-            provident ipsam consequatur eaque? Nobis, ducimus quas, rem non sunt
-            dolorum, ab facilis molestias at animi libero ratione eum! Possimus,
-            perspiciatis?
-            <br />
-            <hr />
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quidem
-            libero, quisquam incidunt quia voluptates aspernatur veritatis
-            numquam cum quaerat quo voluptatum doloremque quasi perspiciatis
-            aliquid veniam mollitia quos doloribus eos!
+            <ul>
+              <li>
+                <NavLink
+                  to="/auction"
+                  className={({ isActive }) =>
+                    isActive ? "text-lime-500" : "text-white"
+                  }
+                  onClick={toggleDrawer(false)}
+                >
+                  경매
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/sell"
+                  className={({ isActive }) =>
+                    isActive ? "text-lime-500" : "text-white"
+                  }
+                  onClick={toggleDrawer(false)}
+                >
+                  판매
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/mypage"
+                  className={({ isActive }) =>
+                    isActive ? "text-lime-500" : "text-white"
+                  }
+                  onClick={toggleDrawer(false)}
+                >
+                  mypage
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/about"
+                  className={({ isActive }) =>
+                    isActive ? "text-lime-500" : "text-white"
+                  }
+                  onClick={toggleDrawer(false)}
+                >
+                  about
+                </NavLink>
+              </li>
+            </ul>
           </Drawer>
         </div>
       </HeaderLayout>
