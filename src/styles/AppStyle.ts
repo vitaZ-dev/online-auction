@@ -35,7 +35,7 @@ const HeaderLayout = styled.header`
   max-width: 640px;
   height: 72px;
   margin: 0 auto;
-  padding: 16px 36px;
+  padding: 16px 32px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -58,6 +58,10 @@ const HeaderLayout = styled.header`
 
 const MainLayout = styled.main`
   padding-top: 72px;
+`;
+
+export const FooterLayout = styled.footer`
+  padding: 32px;
 `;
 
 export { light, BaseLayout, HeaderLayout, MainLayout };
