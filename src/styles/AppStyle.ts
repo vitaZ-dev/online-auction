@@ -43,7 +43,7 @@ const HeaderLayout = styled.header`
   top: 0;
   z-index: 10;
 
-  .header-utils {
+  .header_utils {
     display: flex;
     gap: 12px;
     button {
@@ -59,7 +59,8 @@ const HeaderLayout = styled.header`
 const MainLayout = styled.main`
   min-height: calc(100vh - 300px);
   height: 100%;
-  padding: 72px 32px 32px;
+  /* padding: 72px 32px 32px; */
+  padding-top: 72px;
 `;
 
 export const FooterLayout = styled.footer`

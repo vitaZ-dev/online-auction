@@ -23,7 +23,7 @@ function App() {
             <img src="/images/logo.svg" alt="logo" />
           </NavLink>
         </h1>
-        <div className="header-utils">
+        <div className="header_utils">
           <button onClick={() => console.log("search")}>
             <img src="/images/search.svg" alt="search" />
           </button>
