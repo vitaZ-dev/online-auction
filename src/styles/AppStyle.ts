@@ -26,13 +26,13 @@ const light = css`
 `;
 
 const BaseLayout = styled.div`
-  max-width: 640px;
+  max-width: var(--main-max-width);
   margin: 0 auto;
 `;
 
 const HeaderLayout = styled.header`
   width: 100%;
-  max-width: 640px;
+  max-width: var(--main-max-width);
   height: 72px;
   margin: 0 auto;
   padding: 16px 32px;
