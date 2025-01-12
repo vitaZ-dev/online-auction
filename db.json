@@ -7,7 +7,35 @@
     }
   ],
   "posts": [
-    { "id": 1, "title": "첫 번째 포스트" },
-    { "id": 2, "title": "두 번째 포스트" }
+    {
+      "id": 1,
+      "title": "첫 번째 포스트",
+      "category": "카테고리1",
+      "user_info": "userA",
+      "start_date": "2024-12-31",
+      "end_date": "2025-01-31",
+      "price": 9999,
+      "start_price": 10000,
+      "now_price": 0,
+      "status": true,
+      "src": "https://placehold.co/100x100",
+      "contents": "detail contents",
+      "bid": 0
+    },
+    {
+      "id": 2,
+      "title": "두 번째 포스트",
+      "category": "카테고리1",
+      "user_info": "userA",
+      "start_date": "2024-12-31",
+      "end_date": "2025-01-31",
+      "price": 9999,
+      "start_price": 10000,
+      "now_price": 12000,
+      "status": false,
+      "src": "https://placehold.co/100x100",
+      "contents": "detail contents",
+      "bid": 1
+    }
   ]
 }

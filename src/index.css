@@ -84,6 +84,15 @@ footer {
   display: flex;
   justify-content: space-between;
 }
+.justify-content-center {
+  justify-content: center;
+}
+.justify-content-between {
+  justify-content: between;
+}
+.align-items-center {
+  align-items: center;
+}
 .w-100 {
   width: 100%;
 }
