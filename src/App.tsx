@@ -91,6 +91,17 @@ function App() {
                     about
                   </NavLink>
                 </li>
+                <li>
+                  <NavLink
+                    to="/login"
+                    className={({ isActive }) =>
+                      isActive ? "text-lime-500" : "text-white"
+                    }
+                    onClick={toggleDrawer(false)}
+                  >
+                    login
+                  </NavLink>
+                </li>
               </ul>
             </Drawer>
           </div>
