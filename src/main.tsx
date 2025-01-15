@@ -1,6 +1,13 @@
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  LoaderFunction,
+  RouterProvider,
+  // useNavigate,
+} from "react-router-dom";
 import { lazy, Suspense } from "react";
+
+// import useAuthStore from "./stores/useAuthStore.ts";
 
 import "./index.css";
 
@@ -18,6 +25,21 @@ import Mypage from "./pages/mypage/Mypage.tsx";
 import Login from "./pages/login/Login.tsx";
 import Register from "./pages/login/Register.tsx";
 const About = lazy(() => import("./pages/About"));
+
+const requireAuth: LoaderFunction = () => {
+  // const auth = useAuthStore((state) => state.loginCheck);
+  // const auth = useAuthStore.getState().loginCheck;
+  const storage = localStorage.getItem("online_auction");
+  const auth = storage ? JSON.parse(storage)?.state?.loginCheck : null;
+
+  // const navigate = useNavigate();
+
+  if (!auth) {
+    // navigate("/login");
+    location.href = "/login";
+  }
+  return null;
+};
 
 const router = createBrowserRouter([
   {
@@ -77,6 +99,13 @@ const router = createBrowserRouter([
       {
         path: "/mypage",
         element: <Mypage />,
+        loader: requireAuth,
+        children: [
+          {
+            path: "",
+            element: <Mypage />,
+          },
+        ],
       },
       {
         path: "/about",
