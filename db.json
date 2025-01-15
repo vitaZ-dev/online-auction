@@ -1,14 +1,14 @@
 {
   "todos": [
     {
-      "id": 1,
+      "id": "1",
       "title": "json-server",
       "content": "json-server를 배워봅시다."
     }
   ],
   "user": [
     {
-      "id": 1000,
+      "id": "1000",
       "token": "pewdksmfwoeifdk123mweo2",
       "email": "jsonserver@a.com",
       "password": "1234",
@@ -16,17 +16,33 @@
       "role": "USER"
     },
     {
-      "id": 1001,
+      "id": "1001",
       "token": "qfjpodsjmdsfpoijk41254fk",
       "email": "aaa@a.com",
       "password": "1234",
       "nickname": "B",
       "role": "USER"
+    },
+    {
+      "id": "eaea",
+      "token": "pewdksmfwoeifdk123mweo2",
+      "email": "b@b.com",
+      "password": "1234",
+      "nickname": "B",
+      "role": "USER"
+    },
+    {
+      "id": "4757",
+      "token": "pewdksmfwoeifdk123mweo2",
+      "email": "c@c.com",
+      "password": "1234",
+      "nickname": "C",
+      "role": "USER"
     }
   ],
   "posts": [
     {
-      "id": 1,
+      "id": "1",
       "title": "첫 번째 포스트",
       "category": "카테고리1",
       "user_info": "userA",
@@ -41,7 +57,7 @@
       "bid": 0
     },
     {
-      "id": 2,
+      "id": "2",
       "title": "두 번째 포스트",
       "category": "카테고리1",
       "user_info": "userA",

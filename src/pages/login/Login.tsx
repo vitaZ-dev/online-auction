@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 // import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
+import { Link } from "react-router-dom";
 
 export default function Login() {
   const auth = useAuthStore();
@@ -69,6 +70,10 @@ export default function Login() {
         />
       </form>
       <button onClick={() => login()}>로그인</button>
+
+      <button style={{ border: "2px solid red" }}>
+        <Link to="register">회원가입</Link>
+      </button>
 
       <div>로그인 후 정보</div>
       <div>{auth.userInfo?.id}</div>
