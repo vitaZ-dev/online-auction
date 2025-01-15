@@ -19,6 +19,12 @@ function App() {
   };
   const { logout } = useAuthStore();
 
+  const handelLogout = () => {
+    logout();
+    alert("logout");
+    location.href = "/";
+  };
+
   return (
     <>
       <Global styles={light} />
@@ -105,7 +111,10 @@ function App() {
                   </NavLink>
                 </li>
                 <li>
-                  <button onClick={logout} style={{ border: "2px solid red" }}>
+                  <button
+                    onClick={handelLogout}
+                    style={{ border: "2px solid red" }}
+                  >
                     logout
                   </button>
                 </li>
