@@ -10,12 +10,14 @@ import {
 
 import Drawer from "@mui/material/Drawer";
 import { Global } from "@emotion/react";
+import useAuthStore from "./stores/useAuthStore";
 
 function App() {
   const [open, setOpen] = useState(false);
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
+  const { logout } = useAuthStore();
 
   return (
     <>
@@ -101,6 +103,11 @@ function App() {
                   >
                     login
                   </NavLink>
+                </li>
+                <li>
+                  <button onClick={logout} style={{ border: "2px solid red" }}>
+                    logout
+                  </button>
                 </li>
               </ul>
             </Drawer>
