@@ -38,6 +38,30 @@
       "password": "1234",
       "nickname": "C",
       "role": "USER"
+    },
+    {
+      "id": "b675",
+      "token": "pewdksmfwoeifdk123mweo2",
+      "email": "d@d.com",
+      "password": "1234",
+      "nickname": "D",
+      "role": "USER"
+    },
+    {
+      "id": "55dbee68-a467-44d2-94f5-577cc264e700",
+      "token": "pewdksmfwoeifdk123mweo2",
+      "email": "aaa@a.com",
+      "password": "1234",
+      "nickname": "C",
+      "role": "USER"
+    },
+    {
+      "id": "52a8361c-30a2-4c8e-9353-eb6f8c3a9ce2",
+      "token": "pewdksmfwoeifdk123mweo2",
+      "email": "zzz@z.com",
+      "password": "1234",
+      "nickname": "Z",
+      "role": "USER"
     }
   ],
   "posts": [

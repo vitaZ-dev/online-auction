@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import useAuthStore from "../../stores/useAuthStore";
 import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
   const auth = useAuthStore();
+  const navigate = useNavigate();
 
-  const [userInfo, setUserInfo] = useState([]);
+  const [userDB, setUserDB] = useState([]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [nickname, setNickname] = useState("");
@@ -14,10 +17,10 @@ export default function Register() {
     const getUserInfo = async () => {
       try {
         const { data } = await axios.get("http://localhost:4000/user");
-        setUserInfo(data);
+        setUserDB(data);
       } catch (err) {
         console.log(err);
-        setUserInfo([]);
+        setUserDB([]);
       }
     };
     getUserInfo();
@@ -33,15 +36,26 @@ export default function Register() {
       "role": "USER"
      */
 
+    if (userDB.find((user) => user.email === email)) {
+      alert("중복 이메일");
+      return false;
+    }
+    if (userDB.find((user) => user.nickname === nickname)) {
+      alert("중복 닉네임");
+      return false;
+    }
+
     try {
       axios.post("http://localhost:4000/user", {
-        token: "pewdksmfwoeifdk123mweo2",
+        id: uuidv4(),
+        token: Math.random().toString(36).substring(2, 11),
         email,
         password,
         nickname,
         role: "USER",
       });
       alert("ok");
+      navigate("/login");
     } catch (err) {
       console.log(err);
       alert("error 발생-등록 실패");
