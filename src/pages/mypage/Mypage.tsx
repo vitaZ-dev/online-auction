@@ -4,6 +4,7 @@ import useAuthStore from "../../stores/useAuthStore";
 import { MypageLayout } from "../../styles/MypageStyle";
 import defaultImg from "/images/profile_default.png";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function Mypage() {
   const [postDB, setPostDB] = useState([]);
@@ -53,6 +54,7 @@ export default function Mypage() {
             );
           })}
         </div>
+        <Link to="list">더 보기 〉</Link>
       </section>
     </MypageLayout>
   );
