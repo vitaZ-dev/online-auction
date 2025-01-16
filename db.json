@@ -8,59 +8,27 @@
   ],
   "user": [
     {
-      "id": "1000",
-      "token": "pewdksmfwoeifdk123mweo2",
-      "email": "jsonserver@a.com",
+      "id": "55dbee68-a467-44d2-94f5-577cc264e700",
+      "token": "fwoeifdk1",
+      "email": "a@a.com",
       "password": "1234",
       "nickname": "A",
       "role": "USER"
     },
     {
-      "id": "1001",
-      "token": "qfjpodsjmdsfpoijk41254fk",
-      "email": "aaa@a.com",
-      "password": "1234",
-      "nickname": "B",
-      "role": "USER"
-    },
-    {
-      "id": "eaea",
-      "token": "pewdksmfwoeifdk123mweo2",
-      "email": "b@b.com",
-      "password": "1234",
-      "nickname": "B",
-      "role": "USER"
-    },
-    {
-      "id": "4757",
-      "token": "pewdksmfwoeifdk123mweo2",
-      "email": "c@c.com",
-      "password": "1234",
-      "nickname": "C",
-      "role": "USER"
-    },
-    {
-      "id": "b675",
-      "token": "pewdksmfwoeifdk123mweo2",
-      "email": "d@d.com",
-      "password": "1234",
-      "nickname": "D",
-      "role": "USER"
-    },
-    {
-      "id": "55dbee68-a467-44d2-94f5-577cc264e700",
-      "token": "pewdksmfwoeifdk123mweo2",
-      "email": "aaa@a.com",
-      "password": "1234",
-      "nickname": "C",
-      "role": "USER"
-    },
-    {
       "id": "52a8361c-30a2-4c8e-9353-eb6f8c3a9ce2",
-      "token": "pewdksmfwoeifdk123mweo2",
-      "email": "zzz@z.com",
+      "token": "pewdksmfw",
+      "email": "z@z.com",
       "password": "1234",
       "nickname": "Z",
+      "role": "USER"
+    },
+    {
+      "id": "d5875043-9024-417f-b0b1-968ff5715dd4",
+      "token": "9ybq29sy1",
+      "email": "k@k.com",
+      "password": "1234",
+      "nickname": "K",
       "role": "USER"
     }
   ],

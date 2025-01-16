@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
 import { Link } from "react-router-dom";
 
@@ -11,7 +11,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -42,10 +42,10 @@ export default function Login() {
     if (user) {
       console.log("login ok");
       auth.login(user);
-
-      // navigate("/"); // 로그인 성공시 홈으로 이동합니다.
+      navigate("/");
     } else {
       console.log("login no");
+      alert("일치하는 회원 정보가 없습니다");
     }
   };
 
