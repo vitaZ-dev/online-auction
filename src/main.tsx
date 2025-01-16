@@ -89,6 +89,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/sell",
+        loader: requireAuth,
         children: [
           {
             path: "",

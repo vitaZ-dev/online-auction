@@ -64,6 +64,7 @@ input[type="number"] {
 input,
 textarea {
   font-family: "Pretendard", sans-serif;
+  resize: none;
 }
 
 /* temp */
