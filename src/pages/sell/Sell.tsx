@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
 import { setDate30Temp, setDateTemp } from "../../modules";
 
@@ -12,9 +12,23 @@ export default function Sell() {
 
   const { userInfo } = useAuthStore();
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const registerPost = () => {
+    if (!title) {
+      alert("제목목을 입력하세요!");
+      return false;
+    }
+    if (!category) {
+      alert("내용을 입력하세요!");
+      return false;
+    }
+    if (!contents) {
+      alert("카테고리를 선택하세요!");
+      return false;
+    }
+    const start_price = Math.abs(Number(price));
+
     const start_date = setDateTemp();
     const end_date = setDate30Temp(start_date);
 
@@ -26,7 +40,7 @@ export default function Sell() {
         start_date,
         end_date,
         price: 9999,
-        start_price: price,
+        start_price,
         now_price: 0,
         status: true,
         src: "https://placehold.co/100x100",
@@ -34,7 +48,7 @@ export default function Sell() {
         bid: 0,
       });
       alert("ok");
-      // navigate("/login");
+      navigate("/auction");
     } catch (err) {
       console.log(err);
       alert("error 발생-등록 실패");
@@ -52,7 +66,9 @@ export default function Sell() {
           id="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          maxLength={50}
         />
+        <span>{title.length}/50</span>
 
         <br />
         <br />
@@ -63,7 +79,9 @@ export default function Sell() {
           value={contents}
           onChange={(e) => setContents(e.target.value)}
           style={{ width: "100%", height: "100px" }}
+          maxLength={1000}
         ></textarea>
+        <span>{contents.length}/1000</span>
 
         <br />
         <br />
@@ -84,7 +102,8 @@ export default function Sell() {
           type="number"
           id="price"
           value={price}
-          onChange={(e) => setPrice(e.target.value)}
+          onChange={(e) => setPrice(Number(e.target.value))}
+          min={0}
         />
       </form>
       <br />
