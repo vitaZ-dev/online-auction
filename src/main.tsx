@@ -41,6 +41,14 @@ const requireAuth: LoaderFunction = () => {
   return null;
 };
 
+const loginNoAccess: LoaderFunction = () => {
+  const storage = localStorage.getItem("online_auction");
+  const auth = storage ? JSON.parse(storage)?.state?.loginCheck : null;
+
+  if (auth) location.href = "/";
+  return null;
+};
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -120,6 +128,7 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <App />,
+    loader: loginNoAccess,
     children: [
       {
         path: "",
