@@ -37,6 +37,7 @@ export default function Sell() {
         title,
         category,
         user_info: userInfo?.nickname || "USER",
+        user_id: userInfo?.uuid,
         start_date,
         end_date,
         price: 9999,
