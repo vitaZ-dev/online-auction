@@ -48,12 +48,14 @@ export default function Mypage() {
         <div className="sell_list">
           {userPost?.map((item) => {
             return (
-              <article key={item?.id}>
-                <img src={item?.src} alt="item_image" />
-                <div>{findCategory(item?.category_id)}</div>
-                <p>{item?.title}</p>
-                <p>{item?.contents}</p>
-              </article>
+              <Link to={`/auction/${item?.id}`} key={item?.id}>
+                <article>
+                  <img src={item?.src} alt="item_image" />
+                  <div>{findCategory(item?.category_id)}</div>
+                  <p>{item?.title}</p>
+                  <p>{item?.contents}</p>
+                </article>
+              </Link>
             );
           })}
         </div>

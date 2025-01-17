@@ -4,6 +4,7 @@ import useAuthStore from "../../stores/useAuthStore";
 import { MypageLayout } from "../../styles/MypageStyle";
 import axios from "axios";
 import { findCategory } from "../../modules/category";
+import { Link } from "react-router-dom";
 
 export default function MySellList() {
   const [userPost, setUserPost] = useState([]);
@@ -33,12 +34,14 @@ export default function MySellList() {
         <div className="sell_list">
           {userPost?.map((item) => {
             return (
-              <article key={item?.id}>
-                <img src={item?.src} alt="item_image" />
-                <div>{findCategory(item?.category_id)}</div>
-                <p className="title">{item?.title}</p>
-                <p className="contents">{item?.contents}</p>
-              </article>
+              <Link to={`/auction/${item?.id}`} key={item?.id}>
+                <article>
+                  <img src={item?.src} alt="item_image" />
+                  <div>{findCategory(item?.category_id)}</div>
+                  <p className="title">{item?.title}</p>
+                  <p className="contents">{item?.contents}</p>
+                </article>
+              </Link>
             );
           })}
         </div>
