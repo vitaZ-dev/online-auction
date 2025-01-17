@@ -13,7 +13,9 @@ export default function Mypage() {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const { data } = await axios.get("http://localhost:4000/posts");
+      const { data } = await axios.get(
+        "http://localhost:4000/posts?_sort=-created_at"
+      );
       setPostDB(data);
 
       const filterRes = data.reduce((acc: any[], item: any) => {

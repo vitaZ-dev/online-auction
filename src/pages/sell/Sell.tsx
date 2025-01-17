@@ -47,6 +47,7 @@ export default function Sell() {
         src: "https://placehold.co/100x100",
         contents,
         bid: 0,
+        created_at: new Date(),
       });
       alert("ok");
       navigate("/auction");

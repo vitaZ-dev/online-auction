@@ -10,7 +10,9 @@ export default function MySellList() {
 
   useEffect(() => {
     const getUserPostList = async () => {
-      const { data } = await axios.get("http://localhost:4000/posts");
+      const { data } = await axios.get(
+        "http://localhost:4000/posts?_sort=-created_at"
+      );
 
       const filterRes = data.filter((item) =>
         item?.user_id.includes(userInfo?.uuid)
