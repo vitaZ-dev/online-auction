@@ -45,21 +45,30 @@ export default function Mypage() {
       <br />
       <section>
         <h3>최근 판매 물품 목록</h3>
-        <div className="sell_list">
-          {userPost?.map((item) => {
-            return (
-              <Link to={`/auction/${item?.id}`} key={item?.id}>
-                <article>
-                  <img src={item?.src} alt="item_image" />
-                  <div>{findCategory(item?.category_id)}</div>
-                  <p>{item?.title}</p>
-                  <p>{item?.contents}</p>
-                </article>
-              </Link>
-            );
-          })}
-        </div>
-        <Link to="list">더 보기 〉</Link>
+        {userPost.length ? (
+          <>
+            <div className="sell_list">
+              {userPost?.map((item) => {
+                return (
+                  <Link to={`/auction/${item?.id}`} key={item?.id}>
+                    <article>
+                      <img src={item?.src} alt="item_image" />
+                      <div>{findCategory(item?.category_id)}</div>
+                      <p>{item?.title}</p>
+                      <p>{item?.contents}</p>
+                    </article>
+                  </Link>
+                );
+              })}
+            </div>
+            <Link to="list">더 보기 〉</Link>
+          </>
+        ) : (
+          <>
+            <div>판매한 물품이 없습니다</div>
+            <Link to="/sell">판매글 작성하러 가기 〉</Link>
+          </>
+        )}
       </section>
     </MypageLayout>
   );

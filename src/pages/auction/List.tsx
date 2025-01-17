@@ -19,21 +19,25 @@ export default function List() {
   return (
     <>
       <h1>List</h1>
-      <ItemListLayout>
-        {posts?.map((post) => {
-          return (
-            <Link to={`${post.id}`} key={post.id}>
-              <article>
-                <img src={post.src} alt="img" />
-                <h5>
-                  {post.title} / {post.id}
-                </h5>
-                <div>{post.contents}</div>
-              </article>
-            </Link>
-          );
-        })}
-      </ItemListLayout>
+      {posts.length ? (
+        <ItemListLayout>
+          {posts?.map((post) => {
+            return (
+              <Link to={`${post.id}`} key={post.id}>
+                <article>
+                  <img src={post.src} alt="img" />
+                  <h5>
+                    {post.title} / {post.id}
+                  </h5>
+                  <div>{post.contents}</div>
+                </article>
+              </Link>
+            );
+          })}
+        </ItemListLayout>
+      ) : (
+        <p>게시글이 없습니다</p>
+      )}
     </>
   );
 }

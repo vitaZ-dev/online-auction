@@ -31,20 +31,25 @@ export default function MySellList() {
 
       <br />
       <section>
-        <div className="sell_list">
-          {userPost?.map((item) => {
-            return (
-              <Link to={`/auction/${item?.id}`} key={item?.id}>
-                <article>
-                  <img src={item?.src} alt="item_image" />
-                  <div>{findCategory(item?.category_id)}</div>
-                  <p className="title">{item?.title}</p>
-                  <p className="contents">{item?.contents}</p>
-                </article>
-              </Link>
-            );
-          })}
-        </div>
+        {userPost.length ? (
+          <div className="sell_list">
+            {userPost?.map((item) => {
+              return (
+                <Link to={`/auction/${item?.id}`} key={item?.id}>
+                  <article>
+                    <img src={item?.src} alt="item_image" />
+                    <div>{findCategory(item?.category_id)}</div>
+                    <p className="title">{item?.title}</p>
+                    <p className="contents">{item?.contents}</p>
+                  </article>
+                </Link>
+              );
+            })}
+          </div>
+        ) : (
+          <p>내가 판매한 물품이 없습니다</p>
+        )}
+        <Link to="/mypage">마이페이지로 돌아가기</Link>
       </section>
     </MypageLayout>
   );
