@@ -5,6 +5,7 @@ import { MypageLayout } from "../../styles/MypageStyle";
 import defaultImg from "/images/profile_default.png";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { findCategory } from "../../modules/category";
 
 export default function Mypage() {
   const [postDB, setPostDB] = useState([]);
@@ -49,7 +50,7 @@ export default function Mypage() {
             return (
               <article key={item?.id}>
                 <img src={item?.src} alt="item_image" />
-                <div>{item?.category}</div>
+                <div>{findCategory(item?.category_id)}</div>
                 <p>{item?.title}</p>
                 <p>{item?.contents}</p>
               </article>

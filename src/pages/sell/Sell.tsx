@@ -3,10 +3,11 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
 import { setDate30Temp, setDateTemp } from "../../modules";
+import { CATEGORY } from "../../modules/category";
 
 export default function Sell() {
   const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState(-1);
   const [contents, setContents] = useState("");
   const [price, setPrice] = useState(0); //start_price
 
@@ -16,7 +17,7 @@ export default function Sell() {
 
   const registerPost = () => {
     if (!title) {
-      alert("제목목을 입력하세요!");
+      alert("제목을 입력하세요!");
       return false;
     }
     if (!category) {
@@ -35,7 +36,7 @@ export default function Sell() {
     try {
       axios.post("http://localhost:4000/posts", {
         title,
-        category,
+        category_id: category,
         user_info: userInfo?.nickname || "USER",
         user_id: userInfo?.uuid,
         start_date,
@@ -89,12 +90,21 @@ export default function Sell() {
         <br />
 
         <label htmlFor="category">카테고리</label>
-        <input
-          type="text"
+        <select
+          name="category"
           id="category"
+          onChange={(e) => setCategory(Number(e.target.value))}
           value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        />
+        >
+          <option value={-1} disabled>
+            카테고리
+          </option>
+          {CATEGORY.map((cate) => (
+            <option value={cate.category_id} key={cate.category_id}>
+              {cate.category_name}
+            </option>
+          ))}
+        </select>
 
         <br />
         <br />

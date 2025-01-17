@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import useAuthStore from "../../stores/useAuthStore";
 import { MypageLayout } from "../../styles/MypageStyle";
 import axios from "axios";
+import { findCategory } from "../../modules/category";
 
 export default function MySellList() {
   const [userPost, setUserPost] = useState([]);
@@ -34,7 +35,7 @@ export default function MySellList() {
             return (
               <article key={item?.id}>
                 <img src={item?.src} alt="item_image" />
-                <div>{item?.category}</div>
+                <div>{findCategory(item?.category_id)}</div>
                 <p className="title">{item?.title}</p>
                 <p className="contents">{item?.contents}</p>
               </article>

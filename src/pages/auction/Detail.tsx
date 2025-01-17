@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { ItemDetailLayout } from "../../styles/AuctionStyle";
+import { findCategory } from "../../modules/category";
 
 export default function Detail() {
   const [detail, setDetail] = useState([]);
@@ -29,7 +30,7 @@ export default function Detail() {
             </div>
             <h2>{item.user_info}</h2>
             <hr />
-            <p>{item.category}</p>
+            <p>{findCategory(item?.category_id)}</p>
             <h1>{item.title}</h1>
             <p>{item.start_date}</p>
             {/* <div className="item_info">
