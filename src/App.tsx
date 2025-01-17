@@ -17,7 +17,7 @@ function App() {
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
-  const { logout } = useAuthStore();
+  const { loginCheck, logout } = useAuthStore();
 
   const handelLogout = () => {
     logout();
@@ -99,25 +99,29 @@ function App() {
                     about
                   </NavLink>
                 </li>
-                <li>
-                  <NavLink
-                    to="/login"
-                    className={({ isActive }) =>
-                      isActive ? "text-lime-500" : "text-white"
-                    }
-                    onClick={toggleDrawer(false)}
-                  >
-                    login
-                  </NavLink>
-                </li>
-                <li>
-                  <button
-                    onClick={handelLogout}
-                    style={{ border: "2px solid red" }}
-                  >
-                    logout
-                  </button>
-                </li>
+                {loginCheck || (
+                  <li>
+                    <NavLink
+                      to="/login"
+                      className={({ isActive }) =>
+                        isActive ? "text-lime-500" : "text-white"
+                      }
+                      onClick={toggleDrawer(false)}
+                    >
+                      login
+                    </NavLink>
+                  </li>
+                )}
+                {loginCheck && (
+                  <li>
+                    <button
+                      onClick={handelLogout}
+                      style={{ border: "2px solid red" }}
+                    >
+                      logout
+                    </button>
+                  </li>
+                )}
               </ul>
             </Drawer>
           </div>
