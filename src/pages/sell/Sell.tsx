@@ -106,7 +106,7 @@ export default function Sell() {
         start_price,
         now_price: 0,
         status: true,
-        src: [imgSrc],
+        src: imgSrc,
         contents,
         bid: 0,
         created_at: new Date(),
