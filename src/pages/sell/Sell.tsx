@@ -17,16 +17,49 @@ export default function Sell() {
 
   const onChangeFile = (e: Event) => {
     const file = e.target?.files[0];
-    console.log("file", file);
+
     if (file) {
       const reader = new FileReader();
-      reader.onload = (e) => {
-        const str = e?.currentTarget?.result;
+      reader.onload = () => {
+        const img = document.createElement("img");
+        img.src = reader.result as string;
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          // canvas.width = document.getElementById("imgfile")
+          //   ?.offsetWidth as number;
+          // canvas.height = document.getElementById("imgfile")
+          //   ?.offsetHeight as number;
 
-        setImgSrc(str);
+          const ctx = canvas.getContext("2d");
+          const MAX_WIDTH = 256;
+          const MAX_HEIGHT = 256;
+          let width = img.width;
+          let height = img.height;
+
+          // 비율에 맞게 크기 조정
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          // Canvas 크기 설정
+          canvas.width = width;
+          canvas.height = height;
+
+          // 이미지 그리기
+          ctx?.drawImage(img, 0, 0, width, height);
+          const base64 = canvas.toDataURL("image/webp");
+          setImgSrc(base64);
+        };
       };
       reader.readAsDataURL(file);
-      // end
     }
   };
 
@@ -110,7 +143,7 @@ export default function Sell() {
           id="imgfile"
           onChange={(e) => onChangeFile(e)}
         />
-        <img src={imgSrc} width="100" height="100" />
+        <img src={imgSrc} alt="preview_file" />
 
         <br />
         <br />
