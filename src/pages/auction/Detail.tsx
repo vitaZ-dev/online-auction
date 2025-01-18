@@ -48,7 +48,7 @@ export default function Detail() {
         return (
           <section key={item.id}>
             <div className="item_img">
-              <img src={item.src[0]} alt="image" />
+              <img src={item.src} alt="image" />
             </div>
             <div className="user_info">
               <h2>{item.user_info}</h2>
