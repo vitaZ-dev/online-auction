@@ -3,10 +3,13 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { ItemDetailLayout } from "../../styles/AuctionStyle";
 import { findCategory } from "../../modules/category";
+import useAuthStore from "../../stores/useAuthStore";
 
 export default function Detail() {
   const [detail, setDetail] = useState([]);
+  const [userCheck, setUserCheck] = useState(false);
   const { pathname } = useLocation();
+  const { userInfo } = useAuthStore();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -14,9 +17,18 @@ export default function Detail() {
         `http://localhost:4000/posts?id=${pathname.split("/")[2]}`
       );
       setDetail(data);
+      setUserCheck(data[0].user_id === userInfo?.uuid);
     };
+
     fetchPosts();
   }, []);
+
+  const editPost = () => {
+    console.log("게시글 수정 - 페이지 이동");
+  };
+  const deletePost = () => {
+    console.log("게시글 삭제");
+  };
 
   return (
     <ItemDetailLayout>
@@ -27,7 +39,15 @@ export default function Detail() {
             <div className="item_img">
               <img src={item.src[0]} alt="image" />
             </div>
-            <h2>{item.user_info}</h2>
+            <div className="user_info">
+              <h2>{item.user_info}</h2>
+              {userCheck && (
+                <div className="user_utils">
+                  <button onClick={() => editPost()}>수정</button>
+                  <button onClick={() => deletePost()}>삭제</button>
+                </div>
+              )}
+            </div>
             <hr />
             <p>{findCategory(item?.category_id)}</p>
             <h1>{item.title}</h1>

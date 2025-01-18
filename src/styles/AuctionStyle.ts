@@ -11,6 +11,25 @@ export const ItemDetailLayout = styled.article`
     }
   }
 
+  .user_info {
+    height: 60px;
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .user_utils {
+      button {
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        margin: 0;
+        margin-left: 12px;
+        font-size: 12px;
+      }
+    }
+  }
+
   .item_info {
     display: flex;
     margin: 24px auto;

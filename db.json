@@ -33,6 +33,15 @@
       "password": "1234",
       "nickname": "K",
       "role": "USER"
+    },
+    {
+      "id": "183f",
+      "uuid": "8e9356b7-003c-40fc-85db-f8d67ff1cd9a",
+      "token": "2fq0cmwrn",
+      "email": "r@r.com",
+      "password": "1234",
+      "nickname": "R",
+      "role": "USER"
     }
   ],
   "posts": [
@@ -48,7 +57,9 @@
       "start_price": 10000,
       "now_price": 0,
       "status": true,
-      "src": "https://placehold.co/100x100",
+      "src": [
+        "https://placehold.co/100x100"
+      ],
       "contents": "detail contents",
       "bid": 0,
       "created_at": "2024-12-31T09:43:52.486Z"
@@ -65,7 +76,9 @@
       "start_price": 10000,
       "now_price": 12000,
       "status": false,
-      "src": "https://placehold.co/100x100",
+      "src": [
+        "https://placehold.co/100x100"
+      ],
       "contents": "detail contents",
       "bid": 1,
       "created_at": "2024-12-31:43:52.486Z"
@@ -82,7 +95,9 @@
       "start_price": "100",
       "now_price": 0,
       "status": true,
-      "src": "https://placehold.co/100x100",
+      "src": [
+        "https://placehold.co/100x100"
+      ],
       "contents": "유저 K 가 중고 제품 출시함",
       "bid": 0,
       "created_at": "2025-01-16T12:43:52.486Z"
@@ -98,7 +113,9 @@
       "start_price": 0,
       "now_price": 0,
       "status": true,
-      "src": "https://placehold.co/100x100",
+      "src": [
+        "https://placehold.co/100x100"
+      ],
       "contents": "user A 의 작성글",
       "bid": 0,
       "id": "4",
@@ -115,7 +132,9 @@
       "start_price": 0,
       "now_price": 0,
       "status": true,
-      "src": "https://placehold.co/100x100",
+      "src": [
+        "https://placehold.co/100x100"
+      ],
       "contents": "유저A2",
       "bid": 0,
       "id": "5",
@@ -132,7 +151,9 @@
       "start_price": 5000000,
       "now_price": 0,
       "status": true,
-      "src": "https://placehold.co/100x100",
+      "src": [
+        "https://placehold.co/100x100"
+      ],
       "contents": "김까치 팔아요 31살",
       "bid": 0,
       "id": "6",
@@ -150,7 +171,9 @@
       "start_price": 0,
       "now_price": 0,
       "status": true,
-      "src": "https://placehold.co/100x100",
+      "src": [
+        "https://placehold.co/100x100"
+      ],
       "contents": "지워질 내용이지",
       "bid": 0,
       "created_at": "2025-01-17T12:43:52.486Z"
@@ -167,7 +190,9 @@
       "start_price": 500,
       "now_price": 0,
       "status": true,
-      "src": "https://placehold.co/100x100",
+      "src": [
+        "https://placehold.co/100x100"
+      ],
       "contents": "식물 팔아요",
       "bid": 0,
       "created_at": "2025-01-17T13:26:28.585Z"
@@ -184,7 +209,9 @@
       "start_price": 200,
       "now_price": 0,
       "status": true,
-      "src": "https://placehold.co/100x100",
+      "src": [
+        "https://placehold.co/100x100"
+      ],
       "contents": "도서",
       "bid": 0,
       "created_at": "2025-01-17T13:37:04.177Z"

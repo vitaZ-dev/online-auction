@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-import useAuthStore from "../../stores/useAuthStore";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { useNavigate } from "react-router-dom";
 
 export default function Register() {
-  const auth = useAuthStore();
   const navigate = useNavigate();
 
   const [userDB, setUserDB] = useState([]);
@@ -27,15 +25,6 @@ export default function Register() {
   }, []);
 
   const register = () => {
-    console.log("info", email, password, nickname);
-    /**
-      "token": "pewdksmfwoeifdk123mweo2",
-      "email": "jsonserver@a.com",
-      "password": "1234",
-      "nickname": "A",
-      "role": "USER"
-     */
-
     if (userDB.find((user) => user.email === email)) {
       alert("중복 이메일");
       return false;
@@ -47,7 +36,7 @@ export default function Register() {
 
     try {
       axios.post("http://localhost:4000/user", {
-        id: uuidv4(),
+        uuid: uuidv4(),
         token: Math.random().toString(36).substring(2, 11),
         email,
         password,
