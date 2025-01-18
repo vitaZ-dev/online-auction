@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ItemDetailLayout } from "../../styles/AuctionStyle";
 import { findCategory } from "../../modules/category";
 import useAuthStore from "../../stores/useAuthStore";
@@ -10,6 +10,7 @@ export default function Detail() {
   const [userCheck, setUserCheck] = useState(false);
   const { pathname } = useLocation();
   const { userInfo } = useAuthStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -26,8 +27,18 @@ export default function Detail() {
   const editPost = () => {
     console.log("게시글 수정 - 페이지 이동");
   };
-  const deletePost = () => {
+  const deletePost = async () => {
     console.log("게시글 삭제");
+    try {
+      await axios.delete(
+        `http://localhost:4000/posts/${pathname.split("/")[2]}`
+      );
+      alert("게시글 삭제가 완료되었습니다!");
+      navigate("/auction");
+    } catch (error) {
+      console.log(error);
+      alert("게시글 삭제에 실패했습니다!");
+    }
   };
 
   return (
