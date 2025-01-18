@@ -10,11 +10,10 @@ export default function Detail() {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const response = await axios.get(
+      const { data } = await axios.get(
         `http://localhost:4000/posts?id=${pathname.split("/")[2]}`
       );
-      setDetail(response.data);
-      console.log(response.data[0]);
+      setDetail(data);
     };
     fetchPosts();
   }, []);
@@ -26,7 +25,7 @@ export default function Detail() {
         return (
           <section key={item.id}>
             <div className="item_img">
-              <img src={item.src} alt="image" />
+              <img src={item.src[0]} alt="image" />
             </div>
             <h2>{item.user_info}</h2>
             <hr />
@@ -52,11 +51,11 @@ export default function Detail() {
               <p>품목 세부 정보</p>
               {/* <p>카테고리/시작가격/시작날짜/종료날짜</p> */}
               <p>
-                카테고리 | 일반 <br />
-                시작가 | 0원 <br />
-                입찰인원 | ?? <br />
-                현재가 | ?? <br />
-                마감일 | 1/15(수) 14:00 KST 순차마감
+                카테고리 | {findCategory(item?.category_id)} <br />
+                시작가 | {item?.start_price}원 <br />
+                입찰인원 | {item?.bid} <br />
+                현재가 | {item?.now_price} <br />
+                마감일 | {item?.end_date} (1/15(수) 14:00 KST 순차마감)
               </p>
             </section>
             <button>입찰하기</button>

@@ -10,10 +10,25 @@ export default function Sell() {
   const [category, setCategory] = useState(-1);
   const [contents, setContents] = useState("");
   const [price, setPrice] = useState(0); //start_price
+  const [imgSrc, setImgSrc] = useState("");
 
   const { userInfo } = useAuthStore();
-
   const navigate = useNavigate();
+
+  const onChangeFile = (e: Event) => {
+    const file = e.target?.files[0];
+    console.log("file", file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const str = e?.currentTarget?.result;
+
+        setImgSrc(str);
+      };
+      reader.readAsDataURL(file);
+      // end
+    }
+  };
 
   const registerPost = () => {
     if (!title) {
@@ -45,7 +60,7 @@ export default function Sell() {
         start_price,
         now_price: 0,
         status: true,
-        src: "https://placehold.co/100x100",
+        src: [imgSrc],
         contents,
         bid: 0,
         created_at: new Date(),
@@ -85,6 +100,17 @@ export default function Sell() {
           maxLength={1000}
         ></textarea>
         <span>{contents.length}/1000</span>
+
+        <br />
+        <br />
+        <label htmlFor="imgfile">이미지</label>
+        <input
+          type="file"
+          accept="image/*"
+          id="imgfile"
+          onChange={(e) => onChangeFile(e)}
+        />
+        <img src={imgSrc} width="100" height="100" />
 
         <br />
         <br />

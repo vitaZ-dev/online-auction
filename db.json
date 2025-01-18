@@ -37,7 +37,7 @@
   ],
   "posts": [
     {
-      "id": 1,
+      "id": "1",
       "title": "첫 번째 포스트",
       "category_id": 1,
       "user_info": "noUser",
@@ -54,7 +54,7 @@
       "created_at": "2024-12-31T09:43:52.486Z"
     },
     {
-      "id": 2,
+      "id": "2",
       "title": "두 번째 포스트",
       "category_id": 1,
       "user_info": "noUser",
@@ -71,7 +71,7 @@
       "created_at": "2024-12-31:43:52.486Z"
     },
     {
-      "id": 3,
+      "id": "3",
       "title": "K",
       "category_id": 1,
       "user_info": "K",
@@ -101,7 +101,7 @@
       "src": "https://placehold.co/100x100",
       "contents": "user A 의 작성글",
       "bid": 0,
-      "id": 4,
+      "id": "4",
       "created_at": "2025-01-17T11:43:52.486Z"
     },
     {
@@ -118,7 +118,7 @@
       "src": "https://placehold.co/100x100",
       "contents": "유저A2",
       "bid": 0,
-      "id": 5,
+      "id": "5",
       "created_at": "2025-01-17T12:13:52.486Z"
     },
     {
@@ -188,6 +188,25 @@
       "contents": "도서",
       "bid": 0,
       "created_at": "2025-01-17T13:37:04.177Z"
+    },
+    {
+      "id": "da30",
+      "title": "이미지테스트",
+      "category_id": 19,
+      "user_info": "A",
+      "user_id": "55dbee68-a467-44d2-94f5-577cc264e700",
+      "start_date": "2025-01-18",
+      "end_date": "2025-02-17",
+      "price": 9999,
+      "start_price": 0,
+      "now_price": 0,
+      "status": true,
+      "src": [
+        "data:image/jpeg;base64,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"
+      ],
+      "contents": "이미지 올리기 테스트 중입니다",
+      "bid": 0,
+      "created_at": "2025-01-18T12:35:57.667Z"
     }
   ]
 }
