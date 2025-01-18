@@ -18,6 +18,15 @@ export default function Sell() {
   const onChangeFile = (e: Event) => {
     const file = e.target?.files[0];
 
+    if (
+      !["image/png", "image/jpg", "image/jpeg", "image/webp"].includes(
+        file.type
+      )
+    ) {
+      alert("이미지를 선택해주세요");
+      return false;
+    }
+
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
