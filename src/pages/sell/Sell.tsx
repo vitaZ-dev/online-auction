@@ -77,16 +77,20 @@ export default function Sell() {
       alert("제목을 입력하세요!");
       return false;
     }
-    if (!category) {
+    if (!contents) {
       alert("내용을 입력하세요!");
       return false;
     }
-    if (!contents) {
+    if (category === -1) {
       alert("카테고리를 선택하세요!");
       return false;
     }
-    const start_price = Math.abs(Number(price));
+    if (!imgSrc) {
+      alert("이미지를 선택하세요!");
+      return false;
+    }
 
+    const start_price = Math.abs(Number(price));
     const start_date = setDateTemp();
     const end_date = setDate30Temp(start_date);
 
