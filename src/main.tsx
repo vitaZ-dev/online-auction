@@ -5,7 +5,7 @@ import {
   RouterProvider,
   // useNavigate,
 } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
 
 // import useAuthStore from "./stores/useAuthStore.ts";
 
@@ -27,6 +27,7 @@ import MySellList from "./pages/mypage/MySellList.tsx";
 import Login from "./pages/login/Login.tsx";
 import Register from "./pages/login/Register.tsx";
 import About from "./pages/About.tsx";
+import NotFound from "./pages/NotFound.tsx";
 
 const requireAuth: LoaderFunction = () => {
   // const auth = useAuthStore((state) => state.loginCheck);
@@ -149,6 +150,10 @@ const router = createBrowserRouter([
         element: <Register />,
       },
     ],
+  },
+  {
+    path: "*", // 모든 경로에 대해 매칭
+    element: <NotFound />, // 404 페이지 컴포넌트
   },
 ]);
 
