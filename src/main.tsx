@@ -19,13 +19,14 @@ import List from "./pages/auction/List.tsx";
 import Detail from "./pages/auction/Detail.tsx";
 import Result from "./pages/auction/Result.tsx";
 import Sell from "./pages/sell/Sell.tsx";
+import Edit from "./pages/sell/Edit.tsx";
 import MyList from "./pages/sell/MyList.tsx";
 import Guide from "./pages/guide/Guide.tsx";
 import Mypage from "./pages/mypage/Mypage.tsx";
 import MySellList from "./pages/mypage/MySellList.tsx";
 import Login from "./pages/login/Login.tsx";
 import Register from "./pages/login/Register.tsx";
-const About = lazy(() => import("./pages/About"));
+import About from "./pages/About.tsx";
 
 const requireAuth: LoaderFunction = () => {
   // const auth = useAuthStore((state) => state.loginCheck);
@@ -95,6 +96,10 @@ const router = createBrowserRouter([
           {
             path: "",
             element: <Sell />,
+          },
+          {
+            path: ":id",
+            element: <Edit />,
           },
           {
             path: "mylist",
