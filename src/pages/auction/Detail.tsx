@@ -4,10 +4,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ItemDetailLayout } from "../../styles/AuctionStyle";
 import { findCategory } from "../../modules/category";
 import useAuthStore from "../../stores/useAuthStore";
+import FullSizeImage from "../../components/common/FullSizeImage";
 
 export default function Detail() {
   const [detail, setDetail] = useState([]);
   const [userCheck, setUserCheck] = useState(false);
+  const [show, setShow] = useState(false);
+
   const { pathname } = useLocation();
   const { userInfo } = useAuthStore();
   const navigate = useNavigate();
@@ -23,6 +26,8 @@ export default function Detail() {
 
     fetchPosts();
   }, []);
+
+  const openComponent = () => setShow(true);
 
   const editPost = () => {
     console.log("게시글 수정 - 페이지 이동");
@@ -47,9 +52,12 @@ export default function Detail() {
       {detail?.map((item) => {
         return (
           <section key={item.id}>
-            <div className="item_img">
-              <img src={item.src} alt="image" />
+            <div className="item_img" onClick={openComponent}>
+              <div className="img_wrap">
+                <img src={item.src} alt="image" />
+              </div>
             </div>
+            {show && <FullSizeImage src={item?.src} setShow={setShow} />}
             <div className="user_info">
               <h2>{item.user_info}</h2>
               {userCheck && (
