@@ -25,11 +25,17 @@ export default function List() {
             return (
               <Link to={`${post.id}`} key={post.id}>
                 <article>
-                  <img src={post.src} alt="img" />
-                  <h5>
-                    {post.title} / {post.id}
-                  </h5>
-                  <div>{post.contents}</div>
+                  <div className="post_img">
+                    <div className="img_wrap">
+                      <img src={post.src} alt="img" />
+                    </div>
+                  </div>
+                  <div className="post_info">
+                    <h5 className="ellipsis-1">
+                      {post.title} / {post.id}
+                    </h5>
+                    <p className="ellipsis-1">{post.contents}</p>
+                  </div>
                 </article>
               </Link>
             );
