@@ -8,16 +8,29 @@ import {
   MainLayout,
 } from "./styles/AppStyle";
 
-import Drawer from "@mui/material/Drawer";
+// import Drawer from "@mui/material/Drawer";
 import { Global } from "@emotion/react";
 import useAuthStore from "./stores/useAuthStore";
+import {
+  Box,
+  Collapse,
+  Divider,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  SwipeableDrawer,
+} from "@mui/material";
+import List from "@mui/material/List";
 
 function App() {
   const [open, setOpen] = useState(false);
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
-  const { loginCheck, logout } = useAuthStore();
+  const [toggleMenu, setToggleMenu] = useState(false);
+  const handleToggleMenu = () => setToggleMenu(!toggleMenu);
+
+  const { userInfo, loginCheck, logout } = useAuthStore();
 
   const handelLogout = () => {
     logout();
@@ -42,10 +55,11 @@ function App() {
             <button onClick={toggleDrawer(true)}>
               <img src="/images/nav.svg" alt="nav" />
             </button>
-            <Drawer
+            <SwipeableDrawer
               anchor="top"
               open={open}
               onClose={toggleDrawer(false)}
+              onOpen={toggleDrawer(true)}
               sx={{
                 "& .MuiDrawer-paper": {
                   maxWidth: "640px", // 원하는 최대 너비 설정
@@ -123,7 +137,43 @@ function App() {
                   </li>
                 )}
               </ul>
-            </Drawer>
+              <Box>
+                <Divider />
+                {loginCheck && <div>어서오세요, {userInfo?.nickname} 님!</div>}
+                <Divider />
+                {/* https://mui.com/material-ui/react-drawer/#toolpad-beta */}
+                <List component="nav">
+                  {["All mail", "Trash", "Spam"].map((text) => (
+                    <ListItem key={text} disablePadding>
+                      <ListItemButton
+                        component={NavLink}
+                        to="/auction"
+                        onClick={toggleDrawer(false)}
+                      >
+                        경매
+                      </ListItemButton>
+                    </ListItem>
+                  ))}
+                </List>
+                <Divider />
+
+                <List component="nav">
+                  <ListItem disablePadding>
+                    <ListItemButton onClick={handleToggleMenu}>
+                      <span>toggle</span>
+                      {/* {open ? <ExpandLess /> : <ExpandMore />} */}
+                    </ListItemButton>
+                  </ListItem>
+                </List>
+                <Collapse in={toggleMenu} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding>
+                    <ListItemButton sx={{ pl: 4 }}>
+                      <ListItemText primary="Starred" />
+                    </ListItemButton>
+                  </List>
+                </Collapse>
+              </Box>
+            </SwipeableDrawer>
           </div>
         </HeaderLayout>
         <MainLayout>
