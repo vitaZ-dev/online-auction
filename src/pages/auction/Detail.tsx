@@ -12,13 +12,14 @@ export default function Detail() {
   const [show, setShow] = useState(false);
 
   const { pathname } = useLocation();
+  const POST_ID = pathname.split("/")[2];
   const { userInfo } = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPosts = async () => {
       const { data } = await axios.get(
-        `http://localhost:4000/posts?id=${pathname.split("/")[2]}`
+        `http://localhost:4000/posts?id=${POST_ID}`
       );
       setDetail(data);
       setUserCheck(data[0].user_id === userInfo?.uuid);
@@ -29,15 +30,11 @@ export default function Detail() {
 
   const openComponent = () => setShow(true);
 
-  const editPost = () => {
-    console.log("게시글 수정 - 페이지 이동");
-  };
+  const editPost = () => navigate(`/sell/${POST_ID}`);
+
   const deletePost = async () => {
-    console.log("게시글 삭제");
     try {
-      await axios.delete(
-        `http://localhost:4000/posts/${pathname.split("/")[2]}`
-      );
+      await axios.delete(`http://localhost:4000/posts/${POST_ID}`);
       alert("게시글 삭제가 완료되었습니다!");
       navigate("/auction");
     } catch (error) {
