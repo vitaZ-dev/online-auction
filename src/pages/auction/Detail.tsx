@@ -10,6 +10,9 @@ export default function Detail() {
   const [detail, setDetail] = useState([]);
   const [userCheck, setUserCheck] = useState(false);
   const [show, setShow] = useState(false);
+  const [openBidding, setOpenBidding] = useState(false);
+  const [bidAmount, setBidAmount] = useState(0);
+  const [bidHistory, setBidHistory] = useState([]);
 
   const { pathname } = useLocation();
   const POST_ID = pathname.split("/")[2];
@@ -17,16 +20,24 @@ export default function Detail() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      const { data } = await axios.get(
-        `http://localhost:4000/posts?id=${POST_ID}`
-      );
-      setDetail(data);
-      setUserCheck(data[0].user_id === userInfo?.uuid);
-    };
-
     fetchPosts();
   }, []);
+
+  const fetchPosts = async () => {
+    const { data } = await axios.get(
+      `http://localhost:4000/posts?id=${POST_ID}`
+    );
+    setDetail(data);
+    setUserCheck(data[0].user_id === userInfo?.uuid);
+
+    setBidHistory(data[0]?.bid_history || []);
+    if (data[0]?.bid_history?.length) {
+      const maxAmount = data[0].bid_history.reduce((max, current) =>
+        current.amount > max.amount ? current : max
+      );
+      setBidAmount(maxAmount?.amount);
+    } else setBidAmount(data[0]?.start_price || 0);
+  };
 
   const openComponent = () => setShow(true);
 
@@ -40,6 +51,31 @@ export default function Detail() {
     } catch (error) {
       console.log(error);
       alert("게시글 삭제에 실패했습니다!");
+    }
+  };
+
+  const auctionBidding = async () => {
+    try {
+      // 현재가=현재 최대 입찰가보다 높은 값이 들어오면 수정/아니면 그대로
+      await axios.patch(`http://localhost:4000/posts/${POST_ID}`, {
+        now_price: bidAmount,
+        bid_count: bidHistory.length + 1,
+        bid_history: [
+          {
+            amount: bidAmount,
+            bidder: userInfo?.nickname || "USER",
+            time: new Date(),
+            uuid: userInfo?.uuid,
+          },
+          ...bidHistory,
+        ],
+      });
+      alert("입찰 완료!");
+      setOpenBidding(false);
+      await fetchPosts();
+    } catch (error) {
+      console.log(error);
+      alert("입찰에 실패했습니다!");
     }
   };
 
@@ -84,24 +120,52 @@ export default function Detail() {
             </div> */}
 
             <section>
-              <p>품목 세부 정보</p>
+              <h3>품목 세부 정보</h3>
               {/* <p>카테고리/시작가격/시작날짜/종료날짜</p> */}
               <p>
                 카테고리 | {findCategory(item?.category_id)} <br />
                 시작가 | {item?.start_price}원 <br />
-                입찰인원 | {item?.bid} <br />
-                현재가 | {item?.now_price} <br />
+                입찰횟수 | {item?.bid_count} <br />
+                현재최대가 | {item?.now_price} <br />
                 마감일 | {item?.end_date} (1/15(수) 14:00 KST 순차마감)
               </p>
             </section>
-            <button>입찰하기</button>
+            {userCheck || (
+              <>
+                <button onClick={() => setOpenBidding(!openBidding)}>
+                  {openBidding ? <>닫기</> : <>입찰하기</>}
+                </button>
+              </>
+            )}
+            {openBidding && (
+              <section>
+                가격을 입력해주세요! <br />* 한 번 입찰하면 취소할 수 없습니다!
+                <br />
+                <input
+                  type="number"
+                  min={item?.start_price}
+                  value={bidAmount}
+                  onChange={(e) => setBidAmount(Number(e.target.value))}
+                />
+                <button onClick={() => auctionBidding()}>입찰하기</button>
+              </section>
+            )}
             <section>
-              <p>상세내용</p>
+              <h4>상세내용</h4>
               <p>{item.contents}</p>
             </section>
             <section>
-              <p>입찰 내역</p>
-              <p>입찰자 닉네임/입찰일/입찰 가격</p>
+              <h3>입찰 내역</h3>
+              <p>입찰자 닉네임/입찰가격/입찰일</p>
+              {bidHistory.length ? (
+                bidHistory?.map((item, idx) => (
+                  <div key={idx}>
+                    {item?.bidder} / {item?.amount} / {item?.time}
+                  </div>
+                ))
+              ) : (
+                <div>입찰자가 없습니다</div>
+              )}
             </section>
           </section>
         );
