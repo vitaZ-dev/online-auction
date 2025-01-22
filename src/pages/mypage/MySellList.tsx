@@ -13,13 +13,9 @@ export default function MySellList() {
   useEffect(() => {
     const getUserPostList = async () => {
       const { data } = await axios.get(
-        "http://localhost:4000/posts?_sort=-created_at"
+        `http://localhost:4000/posts?user_id=${userInfo?.uuid}&_sort=-created_at`
       );
-
-      const filterRes = data.filter((item) =>
-        item?.user_id.includes(userInfo?.uuid)
-      );
-      setUserPost(filterRes);
+      setUserPost(data);
     };
 
     getUserPostList();

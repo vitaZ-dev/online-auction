@@ -62,7 +62,6 @@ export default function Detail() {
     }
 
     try {
-      // 현재가=현재 최대 입찰가보다 높은 값이 들어오면 수정/아니면 그대로
       await axios.patch(`http://localhost:4000/posts/${POST_ID}`, {
         now_price: bidAmount,
         bid_count: bidHistory.length + 1,

@@ -8,24 +8,20 @@ import { Link } from "react-router-dom";
 import { findCategory } from "../../modules/category";
 
 export default function Mypage() {
-  const [postDB, setPostDB] = useState([]);
   const [userPost, setUserPost] = useState([]);
   const { userInfo } = useAuthStore();
 
   useEffect(() => {
     const fetchPosts = async () => {
       const { data } = await axios.get(
-        "http://localhost:4000/posts?_sort=-created_at"
+        `http://localhost:4000/posts?user_id=${userInfo?.uuid}&_sort=-created_at`
       );
-      setPostDB(data);
 
-      const filterRes = data.reduce((acc: any[], item: any) => {
-        if (item?.user_id.includes(userInfo?.uuid) && acc.length < 6) {
-          acc.push(item); // 조건에 맞는 요소를 추가
-        }
-        return acc; // 누적된 결과 반환
+      const filterPost = data.reduce((acc: any[], item: any) => {
+        if (acc.length < 6) acc.push(item);
+        return acc;
       }, []);
-      setUserPost(filterRes);
+      setUserPost(filterPost);
     };
 
     fetchPosts();
