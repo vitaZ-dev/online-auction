@@ -37,6 +37,7 @@ export default function Detail() {
       );
       setBidAmount(maxAmount?.amount);
     } else setBidAmount(data[0]?.start_price || 0);
+    setBidAmount(data[0]?.now_price || data[0]?.start_price || 0);
   };
 
   const openComponent = () => setShow(true);
@@ -55,6 +56,11 @@ export default function Detail() {
   };
 
   const auctionBidding = async () => {
+    if (bidAmount < detail[0].now_price) {
+      alert("입찰가는 현대최대가 보다 높은 값만 입력할 수 있습니다!");
+      return false;
+    }
+
     try {
       // 현재가=현재 최대 입찰가보다 높은 값이 들어오면 수정/아니면 그대로
       await axios.patch(`http://localhost:4000/posts/${POST_ID}`, {
