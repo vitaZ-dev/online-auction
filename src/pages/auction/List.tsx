@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { ItemListLayout } from "../../styles/CommonStyle";
 import { Link } from "react-router-dom";
+import { Pagination, Stack } from "@mui/material";
 // import Pagination from "../../components/common/Pagination";
 
 export default function List() {
   const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
   const [posts, setPosts] = useState<Array<any>>([]);
-  const [showLoadBtn, setShowLoadBtn] = useState(true);
+  // const [showLoadBtn, setShowLoadBtn] = useState(true);
   // const [pagination, setPagination] = useState({});
 
   useEffect(() => {
@@ -18,8 +20,10 @@ export default function List() {
     const { data } = await axios.get(
       `http://localhost:4000/posts?_sort=-created_at&_page=${page}&_per_page=10`
     );
-    setPosts((prev: Array<any>) => [...prev, ...data.data]);
-    setShowLoadBtn(Boolean(data.next));
+    setPosts(data.data);
+    // setPosts((prev: Array<any>) => [...prev, ...data.data]);
+    setTotalPage(data.pages);
+    // setShowLoadBtn(Boolean(data.next));
 
     // setPagination({
     //   now_page: data.first,
@@ -31,9 +35,7 @@ export default function List() {
     // });
   };
 
-  const loadingNextPage = () => {
-    setPage(page + 1);
-  };
+  // const loadingNextPage = () => setPage(page + 1);
 
   return (
     <>
@@ -62,7 +64,24 @@ export default function List() {
             })}
           </ItemListLayout>
           {/* <Pagination pageInfo={pagination} /> */}
-          {showLoadBtn && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "12px",
+            }}
+          >
+            <Stack spacing={2}>
+              <Pagination
+                count={totalPage}
+                variant="outlined"
+                color="secondary"
+                onChange={(_, changePage) => setPage(changePage)}
+              />
+            </Stack>
+          </div>
+          {/* {showLoadBtn && (
             <button
               style={{
                 width: "100%",
@@ -74,7 +93,7 @@ export default function List() {
             >
               더보기
             </button>
-          )}
+          )} */}
         </>
       ) : (
         <p>게시글이 없습니다</p>
