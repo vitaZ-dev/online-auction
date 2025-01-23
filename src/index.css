@@ -55,6 +55,9 @@ button {
   background-color: transparent;
   cursor: pointer;
 }
+button:disabled {
+  cursor: default;
+}
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
