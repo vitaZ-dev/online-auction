@@ -1,10 +1,15 @@
 import styled from "@emotion/styled";
 
-export const ItemListLayout = styled.div`
+export const AuctionListLayout = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: ${({ grid }) => `repeat(${grid || 2}, 1fr)`};
   column-gap: 15px;
-  row-gap: 32px;
+  row-gap: ${({ grid }) => (grid === 2 ? "32px" : "20px")};
+  @media (max-width: 475px) {
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 15px;
+    row-gap: 32px;
+  }
 
   article {
     padding: 4px;
@@ -41,8 +46,17 @@ export const ItemListLayout = styled.div`
         border-radius: 10px;
       }
     }
+
     .post_info {
       width: 100%;
+      .category_badge {
+        display: inline-block;
+        padding: 4px 8px;
+        margin-bottom: 4px;
+        border-radius: 12px;
+        background-color: lightblue;
+        font-size: 12px;
+      }
       h5 {
         margin-bottom: 8px;
       }

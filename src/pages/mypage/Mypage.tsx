@@ -6,6 +6,8 @@ import defaultImg from "/images/profile_default.png";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { findCategory } from "../../modules/category";
+import ListItem from "../../components/ListItem";
+import { AuctionListLayout } from "../../styles/CommonStyle";
 
 export default function Mypage() {
   const [userPost, setUserPost] = useState([]);
@@ -43,20 +45,20 @@ export default function Mypage() {
         <h3>최근 판매 물품 목록</h3>
         {userPost.length ? (
           <>
-            <div className="sell_list">
-              {userPost?.map((item) => {
+            <AuctionListLayout grid={3}>
+              {userPost?.map((post) => {
                 return (
-                  <Link to={`/auction/${item?.id}`} key={item?.id}>
-                    <article>
-                      <img src={item?.src} alt="item_image" />
-                      <div>{findCategory(item?.category_id)}</div>
-                      <p>{item?.title}</p>
-                      <p>{item?.contents}</p>
-                    </article>
+                  <Link to={`/auction/${post?.id}`} key={post?.id}>
+                    <ListItem
+                      src={post?.src}
+                      category={findCategory(post?.category_id)}
+                      title={post?.title}
+                      contents={post?.contents}
+                    />
                   </Link>
                 );
               })}
-            </div>
+            </AuctionListLayout>
             <Link to="list">더 보기 〉</Link>
           </>
         ) : (

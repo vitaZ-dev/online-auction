@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { ItemListLayout } from "../../styles/CommonStyle";
+import { AuctionListLayout } from "../../styles/CommonStyle";
 import { Link } from "react-router-dom";
 import { Pagination, Stack } from "@mui/material";
+import { findCategory } from "../../modules/category";
+import ListItem from "../../components/ListItem";
 // import Pagination from "../../components/common/Pagination";
 
 export default function List() {
@@ -42,27 +44,20 @@ export default function List() {
       <h1>List</h1>
       {posts.length ? (
         <>
-          <ItemListLayout>
+          <AuctionListLayout>
             {posts?.map((post) => {
               return (
                 <Link to={`${post.id}`} key={post.id}>
-                  <article>
-                    <div className="post_img">
-                      <div className="img_wrap">
-                        <img src={post.src} alt="img" />
-                      </div>
-                    </div>
-                    <div className="post_info">
-                      <h5 className="ellipsis-1">
-                        {post.title} / {post.id}
-                      </h5>
-                      <p className="ellipsis-1">{post.contents}</p>
-                    </div>
-                  </article>
+                  <ListItem
+                    src={post.src}
+                    category={findCategory(post?.category_id)}
+                    title={post.title}
+                    contents={post.contents}
+                  />
                 </Link>
               );
             })}
-          </ItemListLayout>
+          </AuctionListLayout>
           {/* <Pagination pageInfo={pagination} /> */}
           <div
             style={{

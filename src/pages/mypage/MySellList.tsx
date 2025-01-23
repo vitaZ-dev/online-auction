@@ -5,6 +5,8 @@ import { MypageLayout } from "../../styles/MypageStyle";
 import axios from "axios";
 import { findCategory } from "../../modules/category";
 import { Link } from "react-router-dom";
+import ListItem from "../../components/ListItem";
+import { AuctionListLayout } from "../../styles/CommonStyle";
 
 export default function MySellList() {
   const [userPost, setUserPost] = useState([]);
@@ -28,20 +30,26 @@ export default function MySellList() {
       <br />
       <section>
         {userPost.length ? (
-          <div className="sell_list">
-            {userPost?.map((item) => {
+          <AuctionListLayout grid={4}>
+            {userPost?.map((post) => {
               return (
-                <Link to={`/auction/${item?.id}`} key={item?.id}>
-                  <article>
-                    <img src={item?.src} alt="item_image" />
-                    <div>{findCategory(item?.category_id)}</div>
-                    <p className="title">{item?.title}</p>
-                    <p className="contents">{item?.contents}</p>
-                  </article>
+                <Link to={`/auction/${post?.id}`} key={post?.id}>
+                  <ListItem
+                    src={post?.src}
+                    category={findCategory(post?.category_id)}
+                    title={post?.title}
+                    contents={post?.contents}
+                  />
+                  {/* <article>
+                    <img src={post?.src} alt="item_image" />
+                    <div>{findCategory(post?.category_id)}</div>
+                    <p className="title">{post?.title}</p>
+                    <p className="contents">{post?.contents}</p>
+                  </article> */}
                 </Link>
               );
             })}
-          </div>
+          </AuctionListLayout>
         ) : (
           <p>내가 판매한 물품이 없습니다</p>
         )}
