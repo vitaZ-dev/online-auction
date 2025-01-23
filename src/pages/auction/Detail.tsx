@@ -31,12 +31,12 @@ export default function Detail() {
     setUserCheck(data[0].user_id === userInfo?.uuid);
 
     setBidHistory(data[0]?.bid_history || []);
-    if (data[0]?.bid_history?.length) {
-      const maxAmount = data[0].bid_history.reduce((max, current) =>
-        current.amount > max.amount ? current : max
-      );
-      setBidAmount(maxAmount?.amount);
-    } else setBidAmount(data[0]?.start_price || 0);
+    // if (data[0]?.bid_history?.length) {
+    //   const maxAmount = data[0].bid_history.reduce((max, current) =>
+    //     current.amount > max.amount ? current : max
+    //   );
+    //   setBidAmount(maxAmount?.amount);
+    // } else setBidAmount(data[0]?.start_price || 0);
     setBidAmount(data[0]?.now_price || data[0]?.start_price || 0);
   };
 
@@ -132,7 +132,7 @@ export default function Detail() {
                 시작가 | {item?.start_price}원 <br />
                 입찰횟수 | {item?.bid_count} <br />
                 현재최대가 | {item?.now_price} <br />
-                마감일 | {item?.end_date} (1/15(수) 14:00 KST 순차마감)
+                마감일 | {item?.end_date}
               </p>
             </section>
             {userCheck || (
