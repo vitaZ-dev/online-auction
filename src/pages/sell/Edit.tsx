@@ -15,13 +15,14 @@ export default function Edit() {
   const [imgSrc, setImgSrc] = useState("");
 
   const { pathname } = useLocation();
+  const POST_ID = pathname.split("/")[2];
   const { userInfo } = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPosts = async () => {
       const { data } = await axios.get(
-        `http://localhost:4000/posts?id=${pathname.split("/")[2]}`
+        `http://localhost:4000/posts?id=${POST_ID}`
       );
       setPageCheck(Boolean(data.length));
       setUserCheck(data[0]?.user_id === userInfo?.uuid);
@@ -98,16 +99,13 @@ export default function Edit() {
     const start_price = Math.abs(Number(price));
 
     try {
-      await axios.patch(
-        `http://localhost:4000/posts/${pathname.split("/")[2]}`,
-        {
-          title,
-          category_id: category,
-          contents,
-          start_price,
-          src: imgSrc,
-        }
-      );
+      await axios.patch(`http://localhost:4000/posts/${POST_ID}`, {
+        title,
+        category_id: category,
+        contents,
+        start_price,
+        src: imgSrc,
+      });
       alert("게시글이 수정되었습니다!");
       navigate("/auction");
     } catch (error) {

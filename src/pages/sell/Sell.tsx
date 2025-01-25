@@ -108,6 +108,7 @@ export default function Sell() {
         status: true,
         src: imgSrc,
         contents,
+        cnt: 0,
         bid: 0,
         created_at: new Date(),
       });

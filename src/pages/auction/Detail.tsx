@@ -5,6 +5,7 @@ import { ItemDetailLayout } from "../../styles/AuctionStyle";
 import { findCategory } from "../../modules/category";
 import useAuthStore from "../../stores/useAuthStore";
 import FullSizeImage from "../../components/common/FullSizeImage";
+import { useCookies } from "react-cookie";
 
 export default function Detail() {
   const [detail, setDetail] = useState([]);
@@ -17,17 +18,41 @@ export default function Detail() {
   const { pathname } = useLocation();
   const POST_ID = pathname.split("/")[2];
   const { userInfo } = useAuthStore();
+  const [cookies, setCookie] = useCookies();
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchPosts();
+    fetchPosts().then((post) => {
+      // 게시글 중복 카운트 방지용 쿠키
+      const cookieName = `view_${!userInfo?.loginCheck ? userInfo?.id : "non"}`;
+      const cookieContents = [
+        ...new Set([...(cookies[cookieName] || []), POST_ID]),
+      ];
+      const expires = new Date();
+      expires.setHours(0, 0, 0, 0);
+      expires.setDate(expires.getDate() + 1);
+      setCookie(cookieName, cookieContents, {
+        path: "/",
+        expires,
+      });
+
+      if (!cookies[cookieName]?.includes(POST_ID)) {
+        // 카운트하는 함수 생성 - 나 자신의 조회는 카운트X
+        if (post.user_id !== userInfo?.uuid) {
+          updatePostCnt(post.cnt);
+          post.cnt += 1;
+        }
+      }
+
+      setDetail([post]);
+    });
   }, []);
 
   const fetchPosts = async () => {
     const { data } = await axios.get(
       `http://localhost:4000/posts?id=${POST_ID}`
     );
-    setDetail(data);
+    // setDetail(data);
     setUserCheck(data[0].user_id === userInfo?.uuid);
 
     setBidHistory(data[0]?.bid_history || []);
@@ -38,6 +63,19 @@ export default function Detail() {
     //   setBidAmount(maxAmount?.amount);
     // } else setBidAmount(data[0]?.start_price || 0);
     setBidAmount(data[0]?.now_price || data[0]?.start_price || 0);
+
+    return data[0];
+  };
+
+  const updatePostCnt = async (cnt: number) => {
+    try {
+      await axios.patch(`http://localhost:4000/posts/${POST_ID}`, {
+        cnt: cnt + 1,
+      });
+    } catch (error) {
+      console.log(error);
+      console.log("조회수 갱신에 실패했습니다");
+    }
   };
 
   const openComponent = () => setShow(true);
@@ -109,6 +147,7 @@ export default function Detail() {
             <p>{findCategory(item?.category_id)}</p>
             <h1>{item.title}</h1>
             <p>{item.start_date}</p>
+            <p>조회수 | {item?.cnt}</p>
             {/* <div className="item_info">
               <div>
                 <p>현재 입찰가</p>
