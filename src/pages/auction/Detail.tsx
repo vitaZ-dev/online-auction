@@ -9,6 +9,8 @@ import { useCookies } from "react-cookie";
 import { setDateTemp } from "../../modules";
 
 export default function Detail() {
+  const [loading, setLoading] = useState(false);
+
   const [detail, setDetail] = useState([]);
   const [userCheck, setUserCheck] = useState(false);
   const [show, setShow] = useState(false);
@@ -25,6 +27,7 @@ export default function Detail() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    setLoading(true);
     fetchPosts().then((post) => {
       // 게시글 중복 카운트 방지용 쿠키
       const cookieName = `view_${!userInfo?.isLogin ? userInfo?.id : "non"}`;
@@ -52,6 +55,7 @@ export default function Detail() {
       setFavoriteCheck(
         post.favorite_list.some((item) => item.uuid === userInfo.uuid)
       );
+      setLoading(false);
     });
   }, []);
 
@@ -91,8 +95,10 @@ export default function Detail() {
 
   const deletePost = async () => {
     try {
+      setLoading(true);
       await axios.delete(`http://localhost:4000/posts/${POST_ID}`);
       alert("게시글 삭제가 완료되었습니다!");
+      setLoading(false);
       navigate("/auction");
     } catch (error) {
       console.log(error);
@@ -117,6 +123,7 @@ export default function Detail() {
     }
 
     try {
+      setLoading(true);
       await axios.patch(`http://localhost:4000/posts/${POST_ID}`, {
         favorite: cnt,
         favorite_check: !favoriteCheck,
@@ -125,6 +132,7 @@ export default function Detail() {
       alert("성공");
       setFavoriteCnt(cnt);
       setFavoriteCheck(!favoriteCheck);
+      setLoading(false);
     } catch (error) {
       console.log(error);
       console.log("실패했습니다");
@@ -138,6 +146,7 @@ export default function Detail() {
     }
 
     try {
+      setLoading(true);
       await axios.patch(`http://localhost:4000/posts/${POST_ID}`, {
         now_price: bidAmount,
         bid_count: bidHistory.length + 1,
@@ -154,6 +163,7 @@ export default function Detail() {
       alert("입찰 완료!");
       setOpenBidding(false);
       await fetchPosts();
+      setLoading(falsey);
     } catch (error) {
       console.log(error);
       alert("입찰에 실패했습니다!");
@@ -177,11 +187,16 @@ export default function Detail() {
               {userCheck ? (
                 <div className="user_utils">
                   <button onClick={() => editPost()}>수정</button>
-                  <button onClick={() => deletePost()}>삭제</button>
+                  <button onClick={() => deletePost()} disabled={loading}>
+                    삭제
+                  </button>
                 </div>
               ) : (
                 <div className="user_utils">
-                  <button onClick={() => updateFavorite(item.favorite_list)}>
+                  <button
+                    onClick={() => updateFavorite(item.favorite_list)}
+                    disabled={loading}
+                  >
                     {favoriteCheck ? "★" : "☆"}
                   </button>
                 </div>
@@ -236,7 +251,9 @@ export default function Detail() {
                   value={bidAmount}
                   onChange={(e) => setBidAmount(Number(e.target.value))}
                 />
-                <button onClick={() => auctionBidding()}>입찰하기</button>
+                <button onClick={() => auctionBidding()} disabled={loading}>
+                  입찰하기
+                </button>
               </section>
             )}
             <section>
