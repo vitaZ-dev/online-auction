@@ -49,7 +49,7 @@ function App() {
     setToggleMenu3(!toggleMenu3);
   };
 
-  const { userInfo, loginCheck, logout } = useAuthStore();
+  const { userInfo, isLogin, logout } = useAuthStore();
 
   const handelLogout = () => {
     logout();
@@ -90,7 +90,7 @@ function App() {
               <Box>
                 <Divider />
                 <div>
-                  {loginCheck && (
+                  {isLogin && (
                     <div style={{ padding: "12px" }}>
                       어서오세요, {userInfo?.nickname} 님!
                     </div>
@@ -190,7 +190,7 @@ function App() {
                 </List>
                 <Divider />
                 <div style={{ padding: "12px" }}>
-                  {loginCheck ? (
+                  {isLogin ? (
                     <div
                       style={{
                         marginBottom: "6px",
@@ -214,7 +214,7 @@ function App() {
                   ) : (
                     <></>
                   )}
-                  {loginCheck || (
+                  {isLogin || (
                     <div>
                       <NavLink
                         to="/login"
@@ -227,7 +227,7 @@ function App() {
                       </NavLink>
                     </div>
                   )}
-                  {loginCheck && (
+                  {isLogin && (
                     <div>
                       <button
                         onClick={handelLogout}

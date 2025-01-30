@@ -30,10 +30,10 @@ import About from "./pages/About.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const requireAuth: LoaderFunction = () => {
-  // const auth = useAuthStore((state) => state.loginCheck);
-  // const auth = useAuthStore.getState().loginCheck;
+  // const auth = useAuthStore((state) => state.isLogin);
+  // const auth = useAuthStore.getState().isLogin;
   const storage = localStorage.getItem("online_auction");
-  const auth = storage ? JSON.parse(storage)?.state?.loginCheck : null;
+  const auth = storage ? JSON.parse(storage)?.state?.isLogin : null;
 
   // const navigate = useNavigate();
 
@@ -46,7 +46,7 @@ const requireAuth: LoaderFunction = () => {
 
 const loginNoAccess: LoaderFunction = () => {
   const storage = localStorage.getItem("online_auction");
-  const auth = storage ? JSON.parse(storage)?.state?.loginCheck : null;
+  const auth = storage ? JSON.parse(storage)?.state?.isLogin : null;
 
   if (auth) location.href = "/";
   return null;

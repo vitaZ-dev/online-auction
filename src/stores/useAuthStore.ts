@@ -6,7 +6,7 @@ type ObjectType = {
 };
 
 type AuthStoreType = {
-  loginCheck: boolean;
+  isLogin: boolean;
   userInfo: ObjectType | null;
   token: string | null;
 
@@ -18,15 +18,24 @@ type AuthStoreType = {
 const useAuthStore = create(
   persist<AuthStoreType>(
     (set, get) => ({
-      loginCheck: false,
+      isLogin: false,
       userInfo: null,
       token: null,
 
-      login: (userInfo) => set({ loginCheck: true, userInfo }),
-      logout: () => set({ loginCheck: false, userInfo: null }),
+      login: (userInfo) => set({ isLogin: true, userInfo }),
+      logout: () => set({ isLogin: false, userInfo: null }),
       // 유저 정보 업데이트
       updateUserInfo: (newUserInfo) => set({ userInfo: newUserInfo }),
-      checkSignIn: () => get().loginCheck,
+      checkSignIn: () => get().isLogin,
+      // checkLogin: () => {
+      //   const accessToken = getCookie("accessToken");
+      //   const refreshToken = getCookie("refreshToken");
+      //   if (accessToken && refreshToken) {
+      //     set({ isLogin: true });
+      //   } else {
+      //     set({ user: null, isLogin: false });
+      //   }
+      // },
     }),
     {
       name: "online_auction", // name of the item in the storage (must be unique)

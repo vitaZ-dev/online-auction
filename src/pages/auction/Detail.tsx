@@ -24,7 +24,7 @@ export default function Detail() {
   useEffect(() => {
     fetchPosts().then((post) => {
       // 게시글 중복 카운트 방지용 쿠키
-      const cookieName = `view_${!userInfo?.loginCheck ? userInfo?.id : "non"}`;
+      const cookieName = `view_${!userInfo?.isLogin ? userInfo?.id : "non"}`;
       const cookieContents = [
         ...new Set([...(cookies[cookieName] || []), POST_ID]),
       ];
