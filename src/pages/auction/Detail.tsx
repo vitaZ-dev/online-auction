@@ -6,11 +6,14 @@ import { findCategory } from "../../modules/category";
 import useAuthStore from "../../stores/useAuthStore";
 import FullSizeImage from "../../components/common/FullSizeImage";
 import { useCookies } from "react-cookie";
+import { setDateTemp } from "../../modules";
 
 export default function Detail() {
   const [detail, setDetail] = useState([]);
   const [userCheck, setUserCheck] = useState(false);
   const [show, setShow] = useState(false);
+  const [favoriteCnt, setFavoriteCnt] = useState(0);
+  const [favoriteCheck, setFavoriteCheck] = useState(false);
   const [openBidding, setOpenBidding] = useState(false);
   const [bidAmount, setBidAmount] = useState(0);
   const [bidHistory, setBidHistory] = useState([]);
@@ -45,6 +48,10 @@ export default function Detail() {
       }
 
       setDetail([post]);
+      setFavoriteCnt(post.favorite_list.length);
+      setFavoriteCheck(
+        post.favorite_list.some((item) => item.uuid === userInfo.uuid)
+      );
     });
   }, []);
 
@@ -93,8 +100,39 @@ export default function Detail() {
     }
   };
 
+  const updateFavorite = async (list: any) => {
+    const cnt = favoriteCheck ? favoriteCnt - 1 : favoriteCnt + 1;
+    let favorite_list;
+    if (favoriteCheck) {
+      favorite_list = list.filter((item) => item.uuid !== userInfo.uuid);
+    } else {
+      favorite_list = [
+        ...list,
+        {
+          id: userInfo.id,
+          uuid: userInfo.uuid,
+          name: userInfo.nickname,
+        },
+      ];
+    }
+
+    try {
+      await axios.patch(`http://localhost:4000/posts/${POST_ID}`, {
+        favorite: cnt,
+        favorite_check: !favoriteCheck,
+        favorite_list,
+      });
+      alert("성공");
+      setFavoriteCnt(cnt);
+      setFavoriteCheck(!favoriteCheck);
+    } catch (error) {
+      console.log(error);
+      console.log("실패했습니다");
+    }
+  };
+
   const auctionBidding = async () => {
-    if (bidAmount < detail[0].now_price) {
+    if (bidAmount <= detail[0].now_price) {
       alert("입찰가는 현대최대가 보다 높은 값만 입력할 수 있습니다!");
       return false;
     }
@@ -107,7 +145,7 @@ export default function Detail() {
           {
             amount: bidAmount,
             bidder: userInfo?.nickname || "USER",
-            time: new Date(),
+            time: setDateTemp(),
             uuid: userInfo?.uuid,
           },
           ...bidHistory,
@@ -136,10 +174,16 @@ export default function Detail() {
             {show && <FullSizeImage src={item?.src} setShow={setShow} />}
             <div className="user_info">
               <h2>{item.user_info}</h2>
-              {userCheck && (
+              {userCheck ? (
                 <div className="user_utils">
                   <button onClick={() => editPost()}>수정</button>
                   <button onClick={() => deletePost()}>삭제</button>
+                </div>
+              ) : (
+                <div className="user_utils">
+                  <button onClick={() => updateFavorite(item.favorite_list)}>
+                    {favoriteCheck ? "★" : "☆"}
+                  </button>
                 </div>
               )}
             </div>
@@ -148,6 +192,7 @@ export default function Detail() {
             <h1>{item.title}</h1>
             <p>{item.start_date}</p>
             <p>조회수 | {item?.cnt}</p>
+            <p>관심 | {favoriteCnt}</p>
             {/* <div className="item_info">
               <div>
                 <p>현재 입찰가</p>

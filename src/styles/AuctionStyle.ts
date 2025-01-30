@@ -33,6 +33,9 @@ export const ItemDetailLayout = styled.article`
 
     .user_utils {
       button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         width: 36px;
         height: 36px;
         padding: 0;
