@@ -8,6 +8,7 @@ import { findCategory } from "../modules/category";
 
 export default function Home() {
   const [recent, setRecent] = useState([]);
+  const [favorite, setFavorite] = useState([]);
 
   useEffect(() => {
     getRecentList();
@@ -17,7 +18,12 @@ export default function Home() {
     const { data } = await axios.get(
       `http://localhost:4000/posts?_sort=-created_at&_page=1&_per_page=4`
     );
+    const favorite = await axios.get(
+      `http://localhost:4000/posts?_sort=-favorite&favorite_gte=1&_page=1&_per_page=4`
+    );
+
     setRecent(data.data);
+    setFavorite(favorite.data.data);
   };
 
   return (
@@ -48,13 +54,28 @@ export default function Home() {
           </AuctionListLayout>
         </div>
       </section>
-      <section className="popular_list">
-        <h3 className="title">인기 랭킹</h3>
-        <div className="h200"></div>
-      </section>
       <section className="ranking_list">
         <h3 className="title">즐겨찾기 랭킹</h3>
-        <div className="h200"></div>
+        <div>
+          {favorite.length ? (
+            <AuctionListLayout grid={4}>
+              {favorite?.map((r) => {
+                return (
+                  <Link to={`/auction/${r?.id}`} key={r?.id}>
+                    <ListItem
+                      src={r?.src}
+                      category={findCategory(r?.category_id)}
+                      title={r?.title}
+                      contents={r?.contents}
+                    />
+                  </Link>
+                );
+              })}
+            </AuctionListLayout>
+          ) : (
+            <div>no data</div>
+          )}
+        </div>
       </section>
       <section className="auction_guide">
         <h3 className="title">online-auction 가이드</h3>
