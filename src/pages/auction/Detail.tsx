@@ -22,7 +22,7 @@ export default function Detail() {
 
   const { pathname } = useLocation();
   const POST_ID = pathname.split("/")[2];
-  const { userInfo } = useAuthStore();
+  const { isLogin, userInfo } = useAuthStore();
   const [cookies, setCookie] = useCookies();
   const navigate = useNavigate();
 
@@ -30,7 +30,7 @@ export default function Detail() {
     setLoading(true);
     fetchPosts().then((post) => {
       // 게시글 중복 카운트 방지용 쿠키
-      const cookieName = `view_${!userInfo?.isLogin ? userInfo?.id : "non"}`;
+      const cookieName = `view_${isLogin ? userInfo?.id : "non"}`;
       const cookieContents = [
         ...new Set([...(cookies[cookieName] || []), POST_ID]),
       ];
@@ -117,7 +117,6 @@ export default function Detail() {
         {
           id: userInfo.id,
           uuid: userInfo.uuid,
-          name: userInfo.nickname,
         },
       ];
     }
@@ -193,12 +192,14 @@ export default function Detail() {
                 </div>
               ) : (
                 <div className="user_utils">
-                  <button
-                    onClick={() => updateFavorite(item.favorite_list)}
-                    disabled={loading}
-                  >
-                    {favoriteCheck ? "★" : "☆"}
-                  </button>
+                  {isLogin && (
+                    <button
+                      onClick={() => updateFavorite(item.favorite_list)}
+                      disabled={loading}
+                    >
+                      {favoriteCheck ? "★" : "☆"}
+                    </button>
+                  )}
                 </div>
               )}
             </div>
