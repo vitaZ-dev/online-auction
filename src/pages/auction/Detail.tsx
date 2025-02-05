@@ -34,12 +34,13 @@ export default function Detail() {
       const cookieContents = [
         ...new Set([...(cookies[cookieName] || []), POST_ID]),
       ];
-      const expires = new Date();
-      expires.setHours(0, 0, 0, 0);
-      expires.setDate(expires.getDate() + 1);
+      // 쿠키 만기
+      // const expires = new Date();
+      // expires.setHours(0, 0, 0, 0);
+      // expires.setDate(expires.getDate() + 1);
       setCookie(cookieName, cookieContents, {
         path: "/",
-        expires,
+        // expires,
       });
 
       if (!cookies[cookieName]?.includes(POST_ID)) {

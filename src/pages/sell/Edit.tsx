@@ -107,7 +107,7 @@ export default function Edit() {
         src: imgSrc,
       });
       alert("게시글이 수정되었습니다!");
-      navigate("/auction");
+      navigate(`/auction/${POST_ID}`);
     } catch (error) {
       console.log(error);
       alert("게시글 수정에 실패했습니다!");
