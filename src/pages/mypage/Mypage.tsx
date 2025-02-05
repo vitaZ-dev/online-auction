@@ -6,7 +6,7 @@ import defaultImg from "/images/profile_default.png";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { findCategory } from "../../modules/category";
-import ListItem from "../../components/ListItem";
+import ListPerItem from "../../components/ListPerItem";
 import { AuctionListLayout } from "../../styles/CommonStyle";
 
 export default function Mypage() {
@@ -49,7 +49,7 @@ export default function Mypage() {
               {userPost?.map((post) => {
                 return (
                   <Link to={`/auction/${post?.id}`} key={post?.id}>
-                    <ListItem
+                    <ListPerItem
                       src={post?.src}
                       category={findCategory(post?.category_id)}
                       title={post?.title}

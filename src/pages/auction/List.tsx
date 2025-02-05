@@ -4,7 +4,7 @@ import { AuctionListLayout } from "../../styles/CommonStyle";
 import { Link, useSearchParams } from "react-router-dom";
 import { Pagination, Stack } from "@mui/material";
 import { CATEGORY, findCategory } from "../../modules/category";
-import ListItem from "../../components/ListItem";
+import ListPerItem from "../../components/ListPerItem";
 // import Pagination from "../../components/common/Pagination";
 
 export default function List() {
@@ -104,7 +104,7 @@ export default function List() {
             {posts?.map((post) => {
               return (
                 <Link to={`${post.id}`} key={post.id}>
-                  <ListItem
+                  <ListPerItem
                     src={post.src}
                     category={findCategory(post?.category_id)}
                     title={post.title}

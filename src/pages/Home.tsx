@@ -3,7 +3,7 @@ import { HomeLayout, SwiperLayout } from "../styles/HomeStyle";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { AuctionListLayout } from "../styles/CommonStyle";
-import ListItem from "../components/ListItem";
+import ListPerItem from "../components/ListPerItem";
 import { CATEGORY, findCategory } from "../modules/category";
 
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -70,7 +70,7 @@ export default function Home() {
             {recent?.map((r) => {
               return (
                 <Link to={`/auction/${r?.id}`} key={r?.id}>
-                  <ListItem
+                  <ListPerItem
                     src={r?.src}
                     category={findCategory(r?.category_id)}
                     title={r?.title}
@@ -90,7 +90,7 @@ export default function Home() {
               {favorite?.map((r) => {
                 return (
                   <Link to={`/auction/${r?.id}`} key={r?.id}>
-                    <ListItem
+                    <ListPerItem
                       src={r?.src}
                       category={findCategory(r?.category_id)}
                       title={r?.title}

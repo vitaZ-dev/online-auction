@@ -1,4 +1,4 @@
-export default function ListItem({
+export default function ListPerItem({
   src,
   category,
   title,

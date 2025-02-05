@@ -5,7 +5,7 @@ import { MypageLayout } from "../../styles/MypageStyle";
 import axios from "axios";
 import { findCategory } from "../../modules/category";
 import { Link } from "react-router-dom";
-import ListItem from "../../components/ListItem";
+import ListPerItem from "../../components/ListPerItem";
 import { AuctionListLayout } from "../../styles/CommonStyle";
 
 export default function MySellList() {
@@ -34,7 +34,7 @@ export default function MySellList() {
             {userPost?.map((post) => {
               return (
                 <Link to={`/auction/${post?.id}`} key={post?.id}>
-                  <ListItem
+                  <ListPerItem
                     src={post?.src}
                     category={findCategory(post?.category_id)}
                     title={post?.title}
