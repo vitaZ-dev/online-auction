@@ -20,8 +20,8 @@ export default function List() {
   const [filterCheck, setFilterCheck] = useState<boolean>(false);
   const [filterCategory, setFilterCategory] = useState<number>(0);
   const [filterSort, setFilterSort] = useState<"" | "1" | "2">("");
-  // const [filterStartPrice, setFilterStartPrice] = useState(0);
-  // const [filterEndPrice, setFilterEndPrice] = useState(0);
+  const [filterStartPrice, setFilterStartPrice] = useState(0);
+  const [filterEndPrice, setFilterEndPrice] = useState(0);
 
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
@@ -162,6 +162,20 @@ export default function List() {
               <label htmlFor="favorite">인기순</label>
             </div>
             <div>price</div>
+            <input
+              type="number"
+              id="start_price"
+              value={filterStartPrice}
+              onChange={(e) => setFilterStartPrice(+e.target.value)}
+              min={0}
+            />
+            <input
+              type="number"
+              id="end_price"
+              value={filterEndPrice}
+              onChange={(e) => setFilterEndPrice(+e.target.value)}
+              min={0}
+            />
             <br />
             <button onClick={filterSearchPosts}>검색</button>
             <button onClick={clearAllFilter}>전체해제</button>
