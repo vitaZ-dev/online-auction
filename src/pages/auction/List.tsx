@@ -7,11 +7,20 @@ import { CATEGORY, findCategory } from "../../modules/category";
 import ListPerItem from "../../components/ListPerItem";
 // import Pagination from "../../components/common/Pagination";
 
+type searchQueryType = {
+  only_open?: boolean;
+  category_id?: string;
+  sort_by?: "" | "1" | "2";
+  price?: number;
+};
+
 export default function List() {
+  const [filterIsOpen, setFilterIsOpen] = useState<boolean>(false);
   const [filterCheck, setFilterCheck] = useState<boolean>(false);
-  const [filterCategory, setFilterCategory] = useState<number>(-1);
-  const [filterSort, setFilterSort] = useState<"recent" | "favorite">("recent");
-  // const [filterPrice, setFilterPrice] = useState(0);
+  const [filterCategory, setFilterCategory] = useState<number>(0);
+  const [filterSort, setFilterSort] = useState<"" | "1" | "2">("");
+  // const [filterStartPrice, setFilterStartPrice] = useState(0);
+  // const [filterEndPrice, setFilterEndPrice] = useState(0);
 
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
@@ -19,11 +28,28 @@ export default function List() {
   // const [showLoadBtn, setShowLoadBtn] = useState(true);
   // const [pagination, setPagination] = useState({});
 
+  const [query, setQuery] = useSearchParams();
+
+  useEffect(() => {
+    if (query.get("category_id")) {
+      setFilterCategory(Number(query.get("category_id")));
+    }
+    if (query.get("sort_by")) {
+      const sortId =
+        query.get("sort_by") === "recent"
+          ? "1"
+          : query.get("sort_by") === "favorite"
+          ? "2"
+          : "";
+      setFilterSort(sortId);
+    }
+  }, []);
+
   useEffect(() => {
     fetchPosts(page);
   }, [page]);
 
-  const fetchPosts = async (page: number) => {
+  const fetchPosts = async (page: number, query: searchQueryType = {}) => {
     const { data } = await axios.get(
       `http://localhost:4000/posts?_sort=-created_at&_page=${page}&_per_page=10`
     );
@@ -44,6 +70,24 @@ export default function List() {
 
   // const loadingNextPage = () => setPage(page + 1);
 
+  const filterSearchPosts = async () => {
+    if (filterCategory) query.set("category_id", filterCategory.toString());
+    if (filterSort) {
+      const sortText =
+        filterSort === "1" ? "recent" : filterSort === "2" ? "favorite" : "";
+      query.set("sort_by", sortText);
+    }
+    setQuery(query);
+  };
+
+  const clearAllFilter = async () => {
+    setFilterIsOpen(false);
+    setFilterCategory(0);
+    setFilterSort("");
+    setQuery({});
+    // await fetchPosts(1);
+  };
+
   return (
     <>
       <h1>List</h1>
@@ -53,6 +97,14 @@ export default function List() {
         {filterCheck && (
           <div>
             <p>(filter area)</p>
+            <div>only_open</div>
+            <input
+              type="checkbox"
+              id="able"
+              checked={filterIsOpen}
+              onChange={(e) => setFilterIsOpen(e.target.checked)}
+            />
+            <label htmlFor="able">거래 가능만 보기</label>
             <div>category_id</div>
             <AuctionListLayout grid={3}>
               {CATEGORY.map((item) => (
@@ -75,26 +127,27 @@ export default function List() {
             <div>
               <input
                 type="radio"
-                id="recent"
                 name="sort_filter"
-                value="recent"
+                id="recent"
+                value="1"
                 onChange={(e) => setFilterSort(e.target.value)}
-                checked={filterSort === "recent"}
+                checked={filterSort === "1"}
               />
               <label htmlFor="recent">최신순</label>
               <input
                 type="radio"
-                id="favorite"
                 name="sort_filter"
-                value="favorite"
+                id="favorite"
+                value="2"
                 onChange={(e) => setFilterSort(e.target.value)}
-                checked={filterSort === "favorite"}
+                checked={filterSort === "2"}
               />
               <label htmlFor="favorite">인기순</label>
             </div>
             <div>price</div>
             <br />
-            <button>검색</button>
+            <button onClick={filterSearchPosts}>검색</button>
+            <button onClick={clearAllFilter}>전체해제</button>
           </div>
         )}
       </div>
