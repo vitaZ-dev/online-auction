@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { AuctionListLayout } from "../../styles/CommonStyle";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Pagination, Stack } from "@mui/material";
-import { findCategory } from "../../modules/category";
+import { CATEGORY, findCategory } from "../../modules/category";
 import ListItem from "../../components/ListItem";
 // import Pagination from "../../components/common/Pagination";
 
 export default function List() {
+  const [filterCheck, setFilterCheck] = useState<boolean>(false);
+  const [filterCategory, setFilterCategory] = useState<number>(-1);
+  const [filterSort, setFilterSort] = useState<"recent" | "favorite">("recent");
+  // const [filterPrice, setFilterPrice] = useState(0);
+
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [posts, setPosts] = useState<Array<any>>([]);
@@ -42,6 +47,57 @@ export default function List() {
   return (
     <>
       <h1>List</h1>
+      <div>
+        <p>카테고리 별 검색</p>
+        <button onClick={() => setFilterCheck(!filterCheck)}>필터</button>
+        {filterCheck && (
+          <div>
+            <p>(filter area)</p>
+            <div>category_id</div>
+            <AuctionListLayout grid={3}>
+              {CATEGORY.map((item) => (
+                <div key={item.category_id}>
+                  <input
+                    type="radio"
+                    name="category_filter"
+                    id={String(item.category_id)}
+                    value={item.category_id}
+                    onChange={(e) => setFilterCategory(+e.target.value)}
+                    checked={filterCategory === item.category_id}
+                  />
+                  <label htmlFor={String(item.category_id)}>
+                    {item.category_name}
+                  </label>
+                </div>
+              ))}
+            </AuctionListLayout>
+            <div>sort_by</div>
+            <div>
+              <input
+                type="radio"
+                id="recent"
+                name="sort_filter"
+                value="recent"
+                onChange={(e) => setFilterSort(e.target.value)}
+                checked={filterSort === "recent"}
+              />
+              <label htmlFor="recent">최신순</label>
+              <input
+                type="radio"
+                id="favorite"
+                name="sort_filter"
+                value="favorite"
+                onChange={(e) => setFilterSort(e.target.value)}
+                checked={filterSort === "favorite"}
+              />
+              <label htmlFor="favorite">인기순</label>
+            </div>
+            <div>price</div>
+            <br />
+            <button>검색</button>
+          </div>
+        )}
+      </div>
       {posts.length ? (
         <>
           <AuctionListLayout>
