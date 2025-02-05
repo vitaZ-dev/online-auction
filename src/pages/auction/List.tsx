@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { AuctionListLayout } from "../../styles/CommonStyle";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { Pagination, Stack } from "@mui/material";
 import { CATEGORY, findCategory } from "../../modules/category";
 import ListPerItem from "../../components/ListPerItem";
@@ -10,8 +10,9 @@ import ListPerItem from "../../components/ListPerItem";
 type searchQueryType = {
   only_open?: boolean;
   category_id?: string;
-  sort_by?: "" | "1" | "2";
-  price?: number;
+  sort_by?: "recent" | "favorite";
+  start_price_gte?: number;
+  start_price_lte?: number;
 };
 
 export default function List() {
@@ -29,6 +30,7 @@ export default function List() {
   // const [pagination, setPagination] = useState({});
 
   const [query, setQuery] = useSearchParams();
+  const { search } = useLocation();
 
   useEffect(() => {
     if (query.get("category_id")) {
@@ -46,13 +48,28 @@ export default function List() {
   }, []);
 
   useEffect(() => {
-    fetchPosts(page);
-  }, [page]);
+    const query: { [key: string]: string } = {};
+    search
+      .slice(1)
+      .split("&")
+      .forEach((item) => (query[item.split("=")[0]] = item.split("=")[1]));
+
+    fetchPosts(page, query);
+  }, [page, search]);
 
   const fetchPosts = async (page: number, query: searchQueryType = {}) => {
-    const { data } = await axios.get(
-      `http://localhost:4000/posts?_sort=-created_at&_page=${page}&_per_page=10`
-    );
+    let url = `http://localhost:4000/posts?&_page=${page}&_per_page=10`;
+    query?.sort_by && query.sort_by === "favorite"
+      ? (url += "&_sort=-favorite,-created_at")
+      : (url += "&_sort=-created_at");
+
+    if (Object.keys(query).length !== 0) {
+      Object.keys(query).forEach((key) => {
+        if (key !== "sort_by") url += `&${key}=${query[key]}`;
+      });
+    }
+
+    const { data } = await axios.get(url);
     setPosts(data.data);
     // setPosts((prev: Array<any>) => [...prev, ...data.data]);
     setTotalPage(data.pages);

@@ -36,7 +36,6 @@ export default function Home() {
       <section className="category_list">
         <h3 className="title">인기 카테고리</h3>
         <div className="h200">
-          <Link to="/auction">더 보기</Link>
           <Swiper
             // modules={[Navigation]}
             // navigation={true}
@@ -65,6 +64,7 @@ export default function Home() {
       </section>
       <section className="recent_list">
         <h3 className="title">최근 올라온 물품</h3>
+        <Link to="/auction">더 보기</Link>
         <div>
           <AuctionListLayout grid={4}>
             {recent?.map((r) => {
@@ -84,6 +84,7 @@ export default function Home() {
       </section>
       <section className="ranking_list">
         <h3 className="title">즐겨찾기 랭킹</h3>
+        <Link to="/auction?sort_by=favorite">더 보기</Link>
         <div>
           {favorite.length ? (
             <AuctionListLayout grid={4}>
