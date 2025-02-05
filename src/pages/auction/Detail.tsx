@@ -1,12 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ItemDetailLayout } from "../../styles/AuctionStyle";
 import { findCategory } from "../../modules/category";
 import useAuthStore from "../../stores/useAuthStore";
 import FullSizeImage from "../../components/common/FullSizeImage";
 import { useCookies } from "react-cookie";
 import { setDateTemp } from "../../modules";
+import ListPerItem from "../../components/ListPerItem";
+import { AuctionListLayout } from "../../styles/CommonStyle";
 
 export default function Detail() {
   const [loading, setLoading] = useState(false);
@@ -20,6 +22,8 @@ export default function Detail() {
   const [bidAmount, setBidAmount] = useState(0);
   const [bidHistory, setBidHistory] = useState([]);
 
+  const [sellList, setSellList] = useState([]);
+
   const { pathname } = useLocation();
   const POST_ID = pathname.split("/")[2];
   const { isLogin, userInfo } = useAuthStore();
@@ -28,37 +32,42 @@ export default function Detail() {
 
   useEffect(() => {
     setLoading(true);
-    fetchPosts().then((post) => {
-      // 게시글 중복 카운트 방지용 쿠키
-      const cookieName = `view_${isLogin ? userInfo?.id : "non"}`;
-      const cookieContents = [
-        ...new Set([...(cookies[cookieName] || []), POST_ID]),
-      ];
-      // 쿠키 만기
-      // const expires = new Date();
-      // expires.setHours(0, 0, 0, 0);
-      // expires.setDate(expires.getDate() + 1);
-      setCookie(cookieName, cookieContents, {
-        path: "/",
-        // expires,
-      });
+    fetchPosts()
+      .then((post) => {
+        // 게시글 중복 카운트 방지용 쿠키
+        const cookieName = `view_${isLogin ? userInfo?.id : "non"}`;
+        const cookieContents = [
+          ...new Set([...(cookies[cookieName] || []), POST_ID]),
+        ];
+        // 쿠키 만기
+        // const expires = new Date();
+        // expires.setHours(0, 0, 0, 0);
+        // expires.setDate(expires.getDate() + 1);
+        setCookie(cookieName, cookieContents, {
+          path: "/",
+          // expires,
+        });
 
-      if (!cookies[cookieName]?.includes(POST_ID)) {
-        // 카운트하는 함수 생성 - 나 자신의 조회는 카운트X
-        if (post.user_id !== userInfo?.uuid) {
-          updatePostCnt(post.cnt);
-          post.cnt += 1;
+        if (!cookies[cookieName]?.includes(POST_ID)) {
+          // 카운트하는 함수 생성 - 나 자신의 조회는 카운트X
+          if (post.user_id !== userInfo?.uuid) {
+            updatePostCnt(post.cnt);
+            post.cnt += 1;
+          }
         }
-      }
 
-      setDetail([post]);
-      setFavoriteCnt(post.favorite_list.length);
-      setFavoriteCheck(
-        post.favorite_list.some((item) => item.uuid === userInfo.uuid)
-      );
-      setLoading(false);
-    });
-  }, []);
+        setDetail([post]);
+        setFavoriteCnt(post.favorite_list.length);
+        setFavoriteCheck(
+          post.favorite_list.some((item) => item.uuid === userInfo.uuid)
+        );
+        return post.user_id;
+      })
+      .then((id) => {
+        getSellList(id);
+        setLoading(false);
+      });
+  }, [pathname]);
 
   const fetchPosts = async () => {
     const { data } = await axios.get(
@@ -78,7 +87,6 @@ export default function Detail() {
 
     return data[0];
   };
-
   const updatePostCnt = async (cnt: number) => {
     try {
       await axios.patch(`http://localhost:4000/posts/${POST_ID}`, {
@@ -88,6 +96,14 @@ export default function Detail() {
       console.log(error);
       console.log("조회수 갱신에 실패했습니다");
     }
+  };
+
+  const getSellList = async (id: string) => {
+    const { data } = await axios.get(
+      `http://localhost:4000/posts?user_id=${id}&_limit=4`
+    );
+
+    setSellList(data.filter((item) => item.id !== POST_ID));
   };
 
   const openComponent = () => setShow(true);
@@ -279,7 +295,22 @@ export default function Detail() {
         );
       })}
       {/* 다른내용 */}
-      <section></section>
+      <section>
+        <h2>판매자의 다른 판매 물품</h2>
+        <AuctionListLayout grid={4}>
+          {sellList?.map((item) => (
+            <Link to={`/auction/${item.id}`} key={`item_${item.id}`}>
+              <ListPerItem
+                key={`item_${item.id}`}
+                src={item.src}
+                category={findCategory(item?.category_id)}
+                title={item.title}
+                contents={item.contents}
+              />
+            </Link>
+          ))}
+        </AuctionListLayout>
+      </section>
     </ItemDetailLayout>
   );
 }
