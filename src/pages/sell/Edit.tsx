@@ -11,8 +11,9 @@ export default function Edit() {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState(-1);
   const [contents, setContents] = useState("");
-  const [price, setPrice] = useState(0); //start_price
   const [imgSrc, setImgSrc] = useState("");
+  const [price, setPrice] = useState(0); //start_price
+  const [priceNoEdit, setPriceNoEdit] = useState(false);
 
   const { pathname } = useLocation();
   const POST_ID = pathname.split("/")[2];
@@ -26,13 +27,13 @@ export default function Edit() {
       );
       setPageCheck(Boolean(data.length));
       setUserCheck(data[0]?.user_id === userInfo?.uuid);
-      console.log(data);
       // 내용세팅
       setTitle(data[0]?.title);
       setContents(data[0]?.contents);
       setImgSrc(data[0]?.src);
       setCategory(data[0]?.category_id ?? -1);
       setPrice(data[0]?.start_price);
+      setPriceNoEdit(Boolean(data[0]?.bid_count));
     };
 
     fetchPosts();
@@ -183,9 +184,13 @@ export default function Edit() {
                 type="number"
                 id="price"
                 value={price}
-                onChange={(e) => setPrice(Number(e.target.value))}
+                onChange={(e) =>
+                  priceNoEdit || setPrice(Number(e.target.value))
+                }
                 min={0}
+                disabled={priceNoEdit}
               />
+              {priceNoEdit && <span>*입찰 내역이 있으면 가격 수정 불가</span>}
             </form>
             <br />
             <button
