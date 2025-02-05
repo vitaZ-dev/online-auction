@@ -1,10 +1,14 @@
 import { Link } from "react-router-dom";
-import { HomeLayout } from "../styles/HomeStyle";
+import { HomeLayout, SwiperLayout } from "../styles/HomeStyle";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { AuctionListLayout } from "../styles/CommonStyle";
 import ListItem from "../components/ListItem";
-import { findCategory } from "../modules/category";
+import { CATEGORY, findCategory } from "../modules/category";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+// import { Navigation } from "swiper/modules";
+import "swiper/swiper-bundle.css";
 
 export default function Home() {
   const [recent, setRecent] = useState([]);
@@ -33,6 +37,30 @@ export default function Home() {
         <h3 className="title">인기 카테고리</h3>
         <div className="h200">
           <Link to="/auction">더 보기</Link>
+          <Swiper
+            // modules={[Navigation]}
+            // navigation={true}
+            spaceBetween={16}
+            slidesPerView={4}
+          >
+            {CATEGORY.map((item) => {
+              return (
+                <SwiperSlide key={`cate_${item.category_id}`}>
+                  <Link
+                    to={`/auction?category_id=${item.category_id}`}
+                    key={`cate_${item.category_id}`}
+                  >
+                    <SwiperLayout>
+                      <div className="category_img">
+                        <div className="img_wrap">f</div>
+                      </div>
+                      <div className="category_title">{item.category_name}</div>
+                    </SwiperLayout>
+                  </Link>
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
         </div>
       </section>
       <section className="recent_list">

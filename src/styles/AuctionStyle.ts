@@ -32,6 +32,7 @@ export const ItemDetailLayout = styled.article`
     align-items: center;
 
     .user_utils {
+      display: flex;
       button {
         display: flex;
         justify-content: center;
