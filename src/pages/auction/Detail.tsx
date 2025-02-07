@@ -100,7 +100,7 @@ export default function Detail() {
 
   const getSellList = async (id: string) => {
     const { data } = await axios.get(
-      `http://localhost:4000/posts?user_id=${id}&_limit=4`
+      `http://localhost:4000/posts?id_ne=${POST_ID}&user_id=${id}&_limit=4&_sort=-created_at`
     );
 
     setSellList(data.filter((item) => item.id !== POST_ID));
@@ -297,6 +297,20 @@ export default function Detail() {
       {/* 다른내용 */}
       <section>
         <h2>판매자의 다른 판매 물품</h2>
+        <p>
+          <span
+            onClick={() =>
+              navigate(`/mypage/list`, {
+                state: {
+                  uuid: sellList[0]?.user_id,
+                  nickname: sellList[0]?.user_info,
+                },
+              })
+            }
+          >
+            더 보기 ▷
+          </span>
+        </p>
         <AuctionListLayout grid={4}>
           {sellList?.map((item) => (
             <Link to={`/auction/${item.id}`} key={`item_${item.id}`}>

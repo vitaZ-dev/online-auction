@@ -4,18 +4,21 @@ import useAuthStore from "../../stores/useAuthStore";
 import { MypageLayout } from "../../styles/MypageStyle";
 import axios from "axios";
 import { findCategory } from "../../modules/category";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import ListPerItem from "../../components/ListPerItem";
 import { AuctionListLayout } from "../../styles/CommonStyle";
 
 export default function MySellList() {
   const [userPost, setUserPost] = useState([]);
   const { userInfo } = useAuthStore();
+  const { state } = useLocation();
 
   useEffect(() => {
     const getUserPostList = async () => {
       const { data } = await axios.get(
-        `http://localhost:4000/posts?user_id=${userInfo?.uuid}&_sort=-created_at`
+        `http://localhost:4000/posts?user_id=${
+          state?.uuid ?? userInfo?.uuid
+        }&_sort=-created_at`
       );
       setUserPost(data);
     };
@@ -25,7 +28,7 @@ export default function MySellList() {
 
   return (
     <MypageLayout>
-      <h1>내가 판매한 물품 목록</h1>
+      <h1>{state?.nickname ?? userInfo.nickname} 님이 판매한 물품 목록</h1>
 
       <br />
       <section>
