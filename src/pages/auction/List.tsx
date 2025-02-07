@@ -192,7 +192,7 @@ export default function List() {
                     src={post.src}
                     category={findCategory(post?.category_id)}
                     title={post.title}
-                    contents={post.contents}
+                    startPrice={post.start_price}
                   />
                 </Link>
               );

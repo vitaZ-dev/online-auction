@@ -326,7 +326,7 @@ export default function Detail() {
                 src={item.src}
                 category={findCategory(item?.category_id)}
                 title={item.title}
-                contents={item.contents}
+                startPrice={item.start_price}
               />
             </Link>
           ))}

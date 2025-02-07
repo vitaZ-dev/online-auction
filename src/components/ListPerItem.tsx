@@ -2,12 +2,12 @@ export default function ListPerItem({
   src,
   category,
   title,
-  contents,
+  startPrice,
 }: {
   src: string;
   category: string;
   title: string;
-  contents: string;
+  startPrice: string;
 }) {
   // jsx
   return (
@@ -20,7 +20,7 @@ export default function ListPerItem({
       <div className="post_info">
         <div className="category_badge">{category}</div>
         <h5 className="ellipsis-1">{title}</h5>
-        <p className="ellipsis-1">{contents}</p>
+        <p className="ellipsis-1">{startPrice}원 ~</p>
       </div>
     </article>
   );

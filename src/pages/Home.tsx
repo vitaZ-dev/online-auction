@@ -74,7 +74,7 @@ export default function Home() {
                     src={r?.src}
                     category={findCategory(r?.category_id)}
                     title={r?.title}
-                    contents={r?.contents}
+                    startPrice={r?.start_price}
                   />
                 </Link>
               );
@@ -95,7 +95,7 @@ export default function Home() {
                       src={r?.src}
                       category={findCategory(r?.category_id)}
                       title={r?.title}
-                      contents={r?.contents}
+                      startPrice={r?.start_price}
                     />
                   </Link>
                 );
