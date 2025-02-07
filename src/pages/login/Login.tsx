@@ -44,6 +44,7 @@ export default function Login() {
       console.log("login ok");
       const { favorite, ...info } = user;
       auth.login(info);
+      auth.updateUserFavorite(favorite);
       navigate("/");
     } else {
       console.log("login no");
