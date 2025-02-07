@@ -26,7 +26,7 @@ export default function Detail() {
 
   const { pathname } = useLocation();
   const POST_ID = pathname.split("/")[2];
-  const { isLogin, userInfo } = useAuthStore();
+  const { isLogin, userInfo, favorite, updateUserFavorite } = useAuthStore();
   const [cookies, setCookie] = useCookies();
   const navigate = useNavigate();
 
@@ -146,22 +146,26 @@ export default function Detail() {
     setLoading(true);
     try {
       if (!favoriteCheck) {
+        const favoriteList = [
+          {
+            id: item.id,
+            category_id: item.category_id,
+            src: item.src,
+            start_price: item.start_price,
+            title: item.title,
+          },
+          ...favorite,
+        ];
         await axios.patch(`http://localhost:4000/user/${userInfo.id}`, {
-          favorite: [
-            {
-              id: item.id,
-              category_id: item.category_id,
-              src: item.src,
-              start_price: item.start_price,
-              title: item.title,
-            },
-            ...userInfo?.favorite,
-          ],
+          favorite,
         });
+        updateUserFavorite(favoriteList);
       } else {
+        const favoriteList = favorite.filter((item) => item.id !== POST_ID);
         await axios.patch(`http://localhost:4000/user/${userInfo.id}`, {
-          favorite: userInfo?.favorite.filter((item) => item.id !== POST_ID),
+          favorite,
         });
+        updateUserFavorite(favoriteList);
       }
 
       await axios.patch(`http://localhost:4000/posts/${POST_ID}`, {

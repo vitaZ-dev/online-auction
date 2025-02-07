@@ -39,9 +39,11 @@ export default function Login() {
     const user = userInfo.find(
       (user) => user.email === email && user.password === password
     );
+
     if (user) {
       console.log("login ok");
-      auth.login(user);
+      const { favorite, ...info } = user;
+      auth.login(info);
       navigate("/");
     } else {
       console.log("login no");
@@ -74,14 +76,6 @@ export default function Login() {
       <button style={{ border: "2px solid red" }}>
         <Link to="register">회원가입</Link>
       </button>
-
-      <div>로그인 후 정보</div>
-      <div>{auth.userInfo?.id}</div>
-      <div>{auth.userInfo?.token}</div>
-      <div>{auth.userInfo?.email}</div>
-      <div>{auth.userInfo?.password}</div>
-      <div>{auth.userInfo?.nickname}</div>
-      <div>{auth.userInfo?.role}</div>
     </>
   );
 }

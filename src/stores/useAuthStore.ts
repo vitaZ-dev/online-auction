@@ -9,10 +9,12 @@ type AuthStoreType = {
   isLogin: boolean;
   userInfo: ObjectType | null;
   token: string | null;
+  favorite: Array<ObjectType> | [];
 
   login: (userInfo: ObjectType) => void;
   logout: () => void;
   updateUserInfo: (newUserInfo: ObjectType) => void;
+  updateUserFavorite: (favorite: Array<ObjectType>) => void;
 };
 
 const useAuthStore = create(
@@ -21,11 +23,13 @@ const useAuthStore = create(
       isLogin: false,
       userInfo: null,
       token: null,
+      favorite: [],
 
       login: (userInfo) => set({ isLogin: true, userInfo }),
-      logout: () => set({ isLogin: false, userInfo: null }),
+      logout: () => set({ isLogin: false, userInfo: null, favorite: [] }),
       // 유저 정보 업데이트
       updateUserInfo: (newUserInfo) => set({ userInfo: newUserInfo }),
+      updateUserFavorite: (favorite) => set({ favorite }),
       checkSignIn: () => get().isLogin,
       // checkLogin: () => {
       //   const accessToken = getCookie("accessToken");

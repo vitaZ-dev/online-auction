@@ -11,25 +11,32 @@ import { AuctionListLayout } from "../../styles/CommonStyle";
 
 export default function Mypage() {
   const [userPost, setUserPost] = useState([]);
-  const { userInfo } = useAuthStore();
+  const [userFavorite, setUserFavorite] = useState([]);
+  const { userInfo, favorite } = useAuthStore();
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      const { data } = await axios.get(
-        `http://localhost:4000/posts?user_id=${userInfo?.uuid}&_sort=-created_at&_limit=6`
-      );
-
-      // const filterPost = data.reduce((acc: any[], item: any) => {
-      //   if (acc.length < 6) acc.push(item);
-      //   return acc;
-      // }, []);
-      // setUserPost(filterPost);
-
-      setUserPost(data);
-    };
+    const favoriteFilter = favorite.reduce((acc: any[], item: any) => {
+      if (acc.length < 6) acc.push(item);
+      return acc;
+    }, []);
+    setUserFavorite(favoriteFilter);
 
     fetchPosts();
   }, []);
+
+  const fetchPosts = async () => {
+    const { data } = await axios.get(
+      `http://localhost:4000/posts?user_id=${userInfo?.uuid}&_sort=-created_at&_limit=6`
+    );
+
+    // const filterPost = data.reduce((acc: any[], item: any) => {
+    //   if (acc.length < 6) acc.push(item);
+    //   return acc;
+    // }, []);
+    // setUserPost(filterPost);
+
+    setUserPost(data);
+  };
 
   return (
     <MypageLayout>
@@ -68,6 +75,28 @@ export default function Mypage() {
             <div>판매한 물품이 없습니다</div>
             <Link to="/sell">판매글 작성하러 가기 〉</Link>
           </>
+        )}
+      </section>
+      <br />
+      <section>
+        <h3>좋아요/관심/즐겨찾기 리스트</h3>
+        {userFavorite ? (
+          <>
+            <AuctionListLayout grid={3}>
+              {userFavorite?.map((post) => (
+                <Link to={`/auction/${post?.id}`} key={post?.id}>
+                  <ListPerItem
+                    src={post?.src}
+                    category={findCategory(post?.category_id)}
+                    title={post?.title}
+                    startPrice={post?.start_price}
+                  />
+                </Link>
+              ))}
+            </AuctionListLayout>
+          </>
+        ) : (
+          <div>좋아요 내역이 없습니다</div>
         )}
       </section>
     </MypageLayout>
