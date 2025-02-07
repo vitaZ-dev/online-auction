@@ -24,6 +24,7 @@ import MyList from "./pages/sell/MyList.tsx";
 import Guide from "./pages/guide/Guide.tsx";
 import Mypage from "./pages/mypage/Mypage.tsx";
 import MySellList from "./pages/mypage/MySellList.tsx";
+import MyFavoriteList from "./pages/mypage/MyFavoriteList.tsx";
 import Login from "./pages/login/Login.tsx";
 import Register from "./pages/login/Register.tsx";
 import About from "./pages/About.tsx";
@@ -123,6 +124,10 @@ const router = createBrowserRouter([
           {
             path: "list",
             element: <MySellList />,
+          },
+          {
+            path: "favorite",
+            element: <MyFavoriteList />,
           },
         ],
       },

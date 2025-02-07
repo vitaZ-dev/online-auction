@@ -94,6 +94,7 @@ export default function Mypage() {
                 </Link>
               ))}
             </AuctionListLayout>
+            <Link to="favorite">더 보기 〉</Link>
           </>
         ) : (
           <div>좋아요 내역이 없습니다</div>
