@@ -16,14 +16,16 @@ export default function Mypage() {
   useEffect(() => {
     const fetchPosts = async () => {
       const { data } = await axios.get(
-        `http://localhost:4000/posts?user_id=${userInfo?.uuid}&_sort=-created_at`
+        `http://localhost:4000/posts?user_id=${userInfo?.uuid}&_sort=-created_at&_limit=6`
       );
 
-      const filterPost = data.reduce((acc: any[], item: any) => {
-        if (acc.length < 6) acc.push(item);
-        return acc;
-      }, []);
-      setUserPost(filterPost);
+      // const filterPost = data.reduce((acc: any[], item: any) => {
+      //   if (acc.length < 6) acc.push(item);
+      //   return acc;
+      // }, []);
+      // setUserPost(filterPost);
+
+      setUserPost(data);
     };
 
     fetchPosts();
