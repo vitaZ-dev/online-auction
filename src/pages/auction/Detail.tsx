@@ -118,19 +118,21 @@ export default function Detail() {
       setLoading(false);
       navigate("/auction");
     } catch (error) {
-      console.log(error);
+      console.error(error);
       alert("게시글 삭제에 실패했습니다!");
     }
   };
 
-  const updateFavorite = async (list: any) => {
+  const updateFavorite = async (item: any) => {
     const cnt = favoriteCheck ? favoriteCnt - 1 : favoriteCnt + 1;
     let favorite_list;
     if (favoriteCheck) {
-      favorite_list = list.filter((item) => item.uuid !== userInfo.uuid);
+      favorite_list = item.favorite_list.filter(
+        (item) => item.uuid !== userInfo.uuid
+      );
     } else {
       favorite_list = [
-        ...list,
+        ...item.favorite_list,
         {
           id: userInfo.id,
           uuid: userInfo.uuid,
@@ -141,25 +143,40 @@ export default function Detail() {
       new Map(favorite_list.map((item) => [item.id, item])).values()
     );
 
+    setLoading(true);
     try {
-      setLoading(true);
+      if (!favoriteCheck) {
+        await axios.patch(`http://localhost:4000/user/${userInfo.id}`, {
+          favorite: [
+            {
+              id: item.id,
+              category_id: item.category_id,
+              src: item.src,
+              start_price: item.start_price,
+              title: item.title,
+            },
+            ...userInfo?.favorite,
+          ],
+        });
+      } else {
+        await axios.patch(`http://localhost:4000/user/${userInfo.id}`, {
+          favorite: userInfo?.favorite.filter((item) => item.id !== POST_ID),
+        });
+      }
+
       await axios.patch(`http://localhost:4000/posts/${POST_ID}`, {
         favorite: cnt,
         favorite_check: !favoriteCheck,
         favorite_list,
       });
-      // await axios.patch(`http://localhost:4000/postsLike/${userInfo.id}`, {
-      //   id: userInfo.uuid,
-      //   uuid: userInfo.uuid,
-      // });
       alert("성공");
       setFavoriteCnt(cnt);
       setFavoriteCheck(!favoriteCheck);
-      setLoading(false);
     } catch (error) {
       console.log(error);
       console.log("실패했습니다");
     }
+    setLoading(false);
   };
 
   const auctionBidding = async () => {
@@ -218,7 +235,7 @@ export default function Detail() {
                 <div className="user_utils">
                   {isLogin && (
                     <button
-                      onClick={() => updateFavorite(item.favorite_list)}
+                      onClick={() => updateFavorite(item)}
                       disabled={loading}
                     >
                       {favoriteCheck ? "★" : "☆"}
