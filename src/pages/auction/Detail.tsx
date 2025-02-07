@@ -137,6 +137,9 @@ export default function Detail() {
         },
       ];
     }
+    favorite_list = Array.from(
+      new Map(favorite_list.map((item) => [item.id, item])).values()
+    );
 
     try {
       setLoading(true);
@@ -145,6 +148,10 @@ export default function Detail() {
         favorite_check: !favoriteCheck,
         favorite_list,
       });
+      // await axios.patch(`http://localhost:4000/postsLike/${userInfo.id}`, {
+      //   id: userInfo.uuid,
+      //   uuid: userInfo.uuid,
+      // });
       alert("성공");
       setFavoriteCnt(cnt);
       setFavoriteCheck(!favoriteCheck);
