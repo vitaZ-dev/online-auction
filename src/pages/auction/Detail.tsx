@@ -20,7 +20,7 @@ export default function Detail() {
   const [favoriteCheck, setFavoriteCheck] = useState(false);
   const [openBidding, setOpenBidding] = useState(false);
   const [bidAmount, setBidAmount] = useState(0);
-  const [bidHistory, setBidHistory] = useState([]);
+  const [bidHistoryDetail, setBidHistoryDetail] = useState([]);
 
   const [sellList, setSellList] = useState([]);
 
@@ -30,6 +30,7 @@ export default function Detail() {
     isLogin,
     userInfo,
     favorite,
+    bidHistory,
     bidList,
     updateUserFavorite,
     updateBidHistory,
@@ -84,7 +85,7 @@ export default function Detail() {
     // setDetail(data);
     setUserCheck(data[0].user_id === userInfo?.uuid);
 
-    setBidHistory(data[0]?.bid_history || []);
+    setBidHistoryDetail(data[0]?.bid_history || []);
     // if (data[0]?.bid_history?.length) {
     //   const maxAmount = data[0].bid_history.reduce((max, current) =>
     //     current.amount > max.amount ? current : max
@@ -199,9 +200,16 @@ export default function Detail() {
 
     setLoading(true);
     try {
-      const bidHistoryFilter = bidHistory.filter(
-        (item) => item.uuid === userInfo.uuid
-      );
+      const bid_history = [
+        {
+          id: POST_ID,
+          amount: bidAmount,
+          bidder: userInfo?.nickname || "USER",
+          time: setDateTemp(),
+          uuid: userInfo?.uuid,
+        },
+        ...bidHistory,
+      ];
       let bid_list = [
         {
           id: item.id,
@@ -216,39 +224,24 @@ export default function Detail() {
         new Map(bid_list.map((item) => [item.id, item])).values()
       );
       await axios.patch(`http://localhost:4000/user/${userInfo.id}`, {
-        bid_history: [
-          {
-            amount: bidAmount,
-            bidder: userInfo?.nickname || "USER",
-            time: setDateTemp(),
-            uuid: userInfo?.uuid,
-          },
-          ...bidHistoryFilter,
-        ],
+        bid_history,
         bid_list,
       });
-      updateBidHistory([
-        {
-          amount: bidAmount,
-          bidder: userInfo?.nickname || "USER",
-          time: setDateTemp(),
-          uuid: userInfo?.uuid,
-        },
-        ...bidHistoryFilter,
-      ]);
+      updateBidHistory(bid_history);
       updateBidList(bid_list);
 
       await axios.patch(`http://localhost:4000/posts/${POST_ID}`, {
         now_price: bidAmount,
-        bid_count: bidHistory.length + 1,
+        bid_count: bidHistoryDetail.length + 1,
         bid_history: [
           {
+            id: POST_ID,
             amount: bidAmount,
             bidder: userInfo?.nickname || "USER",
             time: setDateTemp(),
             uuid: userInfo?.uuid,
           },
-          ...bidHistory,
+          ...bidHistoryDetail,
         ],
       });
       alert("입찰 완료!");
@@ -360,8 +353,8 @@ export default function Detail() {
             <section>
               <h3>입찰 내역</h3>
               <p>입찰자 닉네임/입찰가격/입찰일</p>
-              {bidHistory.length ? (
-                bidHistory?.map((item, idx) => (
+              {bidHistoryDetail.length ? (
+                bidHistoryDetail?.map((item, idx) => (
                   <div key={idx}>
                     {item?.bidder} / {item?.amount} / {item?.time}
                   </div>
