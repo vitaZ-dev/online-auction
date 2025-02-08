@@ -28,7 +28,7 @@ export default function MyFavoriteList() {
             })}
           </AuctionListLayout>
         ) : (
-          <p>내가 판매한 물품이 없습니다</p>
+          <p>내가 좋아요 한 물품이 없습니다</p>
         )}
         <Link to="/mypage">마이페이지로 돌아가기</Link>
       </section>

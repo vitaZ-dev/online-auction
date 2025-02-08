@@ -80,7 +80,7 @@ export default function Mypage() {
       <br />
       <section>
         <h3>좋아요/관심/즐겨찾기 리스트</h3>
-        {userFavorite ? (
+        {userFavorite.length ? (
           <>
             <AuctionListLayout grid={3}>
               {userFavorite?.map((post) => (

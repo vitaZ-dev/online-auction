@@ -15,7 +15,9 @@
       "password": "1234",
       "nickname": "A",
       "role": "USER",
-      "favorite": []
+      "favorite": [],
+      "bid_history": [],
+      "bid_list": []
     },
     {
       "id": "2",
@@ -25,7 +27,9 @@
       "password": "1234",
       "nickname": "Z",
       "role": "USER",
-      "favorite": []
+      "favorite": [],
+      "bid_history": [],
+      "bid_list": []
     },
     {
       "id": "3",
@@ -35,7 +39,9 @@
       "password": "1234",
       "nickname": "K",
       "role": "USER",
-      "favorite": []
+      "favorite": [],
+      "bid_history": [],
+      "bid_list": []
     },
     {
       "id": "183f",
@@ -95,7 +101,9 @@
           "start_price": 0,
           "title": "날짜"
         }
-      ]
+      ],
+      "bid_history": [],
+      "bid_list": []
     }
   ],
   "posts": [
@@ -168,7 +176,7 @@
         }
       ],
       "bid": 0,
-      "cnt": 2,
+      "cnt": 3,
       "favorite_check": true
     },
     {
@@ -318,7 +326,7 @@
         }
       ],
       "bid": 0,
-      "cnt": null,
+      "cnt": 1,
       "favorite_check": true
     },
     {
@@ -447,7 +455,7 @@
         }
       ],
       "bid": 0,
-      "cnt": 12
+      "cnt": 13
     },
     {
       "id": "28c9",

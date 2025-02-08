@@ -26,7 +26,15 @@ export default function Detail() {
 
   const { pathname } = useLocation();
   const POST_ID = pathname.split("/")[2];
-  const { isLogin, userInfo, favorite, updateUserFavorite } = useAuthStore();
+  const {
+    isLogin,
+    userInfo,
+    favorite,
+    bidList,
+    updateUserFavorite,
+    updateBidHistory,
+    updateBidList,
+  } = useAuthStore();
   const [cookies, setCookie] = useCookies();
   const navigate = useNavigate();
 
@@ -183,14 +191,53 @@ export default function Detail() {
     setLoading(false);
   };
 
-  const auctionBidding = async () => {
+  const auctionBidding = async (item: any) => {
     if (bidAmount <= detail[0].now_price) {
       alert("입찰가는 현대최대가 보다 높은 값만 입력할 수 있습니다!");
       return false;
     }
 
+    setLoading(true);
     try {
-      setLoading(true);
+      const bidHistoryFilter = bidHistory.filter(
+        (item) => item.uuid === userInfo.uuid
+      );
+      let bid_list = [
+        {
+          id: item.id,
+          category_id: item.category_id,
+          src: item.src,
+          start_price: item.start_price,
+          title: item.title,
+        },
+        ...bidList,
+      ];
+      bid_list = Array.from(
+        new Map(bid_list.map((item) => [item.id, item])).values()
+      );
+      await axios.patch(`http://localhost:4000/user/${userInfo.id}`, {
+        bid_history: [
+          {
+            amount: bidAmount,
+            bidder: userInfo?.nickname || "USER",
+            time: setDateTemp(),
+            uuid: userInfo?.uuid,
+          },
+          ...bidHistoryFilter,
+        ],
+        bid_list,
+      });
+      updateBidHistory([
+        {
+          amount: bidAmount,
+          bidder: userInfo?.nickname || "USER",
+          time: setDateTemp(),
+          uuid: userInfo?.uuid,
+        },
+        ...bidHistoryFilter,
+      ]);
+      updateBidList(bid_list);
+
       await axios.patch(`http://localhost:4000/posts/${POST_ID}`, {
         now_price: bidAmount,
         bid_count: bidHistory.length + 1,
@@ -206,12 +253,16 @@ export default function Detail() {
       });
       alert("입찰 완료!");
       setOpenBidding(false);
-      await fetchPosts();
-      setLoading(falsey);
     } catch (error) {
       console.log(error);
       alert("입찰에 실패했습니다!");
     }
+    try {
+      await fetchPosts();
+    } catch (error) {
+      console.log(error);
+    }
+    setLoading(false);
   };
 
   return (
@@ -297,7 +348,7 @@ export default function Detail() {
                   value={bidAmount}
                   onChange={(e) => setBidAmount(Number(e.target.value))}
                 />
-                <button onClick={() => auctionBidding()} disabled={loading}>
+                <button onClick={() => auctionBidding(item)} disabled={loading}>
                   입찰하기
                 </button>
               </section>
