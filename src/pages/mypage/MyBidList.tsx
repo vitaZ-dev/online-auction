@@ -4,10 +4,22 @@ import { AuctionListLayout } from "../../styles/CommonStyle";
 import { MypageLayout } from "../../styles/MypageStyle";
 import ListPerItem from "../../components/ListPerItem";
 import { findCategory } from "../../modules/category";
-// import ShowBidList from "../../components/mypage/ShowBidList";
+import { useState } from "react";
+import ShowBidList from "../../components/mypage/ShowBidList";
 
 export default function MyBidList() {
   const { userInfo, bidHistory, bidList } = useAuthStore();
+
+  const [toggle, setToggle] = useState(false);
+  const [detailTitle, setDetailTitle] = useState("");
+  const [bidContents, setBidContents] = useState([]);
+
+  const handleDetailBid = (id: string, title: string) => {
+    const re = bidHistory.filter((item) => item.id === id);
+    setBidContents(re);
+    setDetailTitle(title);
+    setToggle(true);
+  };
 
   return (
     <MypageLayout>
@@ -16,15 +28,18 @@ export default function MyBidList() {
         <>
           <AuctionListLayout grid={4}>
             {bidList?.map((item) => (
-              <div key={item?.id}>
-                <Link to={`/auction/${item?.id}`} key={item?.id}>
-                  <ListPerItem
-                    src={item?.src}
-                    category={findCategory(item?.category_id)}
-                    title={item?.title}
-                    startPrice={item?.start_price}
-                  />
-                </Link>
+              <div
+                key={item?.id}
+                onClick={() => handleDetailBid(item.id, item.title)}
+              >
+                {/* <Link to={`/auction/${item?.id}`} key={item?.id}> */}
+                <ListPerItem
+                  src={item?.src}
+                  category={findCategory(item?.category_id)}
+                  title={item?.title}
+                  startPrice={item?.start_price}
+                />
+                {/* </Link> */}
               </div>
             ))}
           </AuctionListLayout>
@@ -32,7 +47,13 @@ export default function MyBidList() {
       ) : (
         <div>나의 입찰 내역이 없습니다.</div>
       )}
-      {/* <ShowBidList /> */}
+      {toggle && (
+        <ShowBidList
+          title={detailTitle}
+          contents={bidContents}
+          setToggle={setToggle}
+        />
+      )}
     </MypageLayout>
   );
 }

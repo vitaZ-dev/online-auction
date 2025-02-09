@@ -1,4 +1,8 @@
-export default function ShowBidList() {
+import { useNavigate } from "react-router-dom";
+
+export default function ShowBidList({ title, contents, setToggle }) {
+  const navigate = useNavigate();
+
   return (
     <div
       style={{
@@ -29,7 +33,20 @@ export default function ShowBidList() {
             background: "white",
           }}
         >
-          detail contents
+          <p style={{ marginBottom: "16px" }}>{title}</p>
+          <div className="scroll">
+            {contents?.map((item, idx) => (
+              <div key={`${item.id}_${idx}`}>
+                <p>
+                  {item.amount}원 / 시간={item.time}
+                </p>
+              </div>
+            ))}
+          </div>
+          <button onClick={() => setToggle(false)}>닫기</button>
+          <button onClick={() => navigate(`/auction/${contents[0].id}`)}>
+            게시글
+          </button>
         </div>
       </div>
     </div>
