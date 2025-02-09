@@ -21,6 +21,11 @@ import {
   SwipeableDrawer,
 } from "@mui/material";
 import List from "@mui/material/List";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import CallMadeIcon from "@mui/icons-material/CallMade";
+import CloseIcon from "@mui/icons-material/Close";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -90,19 +95,30 @@ function App() {
               <Box>
                 <Divider />
                 <div>
-                  {isLogin && (
-                    <div style={{ padding: "12px" }}>
-                      어서오세요, {userInfo?.nickname} 님!
+                  <div
+                    style={{
+                      padding: "12px 16px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: "8px",
+                    }}
+                  >
+                    <NavLink to="/" onClick={toggleDrawer(false)}>
+                      <img src="/images/logo.svg" alt="logo" />
+                    </NavLink>
+                    <div onClick={toggleDrawer(false)}>
+                      <CloseIcon />
                     </div>
-                  )}
+                  </div>
                 </div>
                 <Divider />
                 {/* https://mui.com/material-ui/react-drawer/#toolpad-beta */}
                 <List component="nav">
                   <ListItem disablePadding>
                     <ListItemButton onClick={handleToggleMenu}>
-                      <span>경매 !</span>
-                      {/* {open ? <ExpandLess /> : <ExpandMore />} */}
+                      <ListItemText primary="경매" />
+                      {toggleMenu ? <ExpandLess /> : <ExpandMore />}
                     </ListItemButton>
                   </ListItem>
                   <Collapse in={toggleMenu} timeout="auto" unmountOnExit>
@@ -128,8 +144,8 @@ function App() {
 
                   <ListItem disablePadding>
                     <ListItemButton onClick={handleToggleMenu2}>
-                      <span>판매 !</span>
-                      {/* {open ? <ExpandLess /> : <ExpandMore />} */}
+                      <ListItemText primary="판매" />
+                      {toggleMenu2 ? <ExpandLess /> : <ExpandMore />}
                     </ListItemButton>
                   </ListItem>
                   <Collapse in={toggleMenu2} timeout="auto" unmountOnExit>
@@ -155,8 +171,8 @@ function App() {
 
                   <ListItem disablePadding>
                     <ListItemButton onClick={handleToggleMenu3}>
-                      <span>about/service !</span>
-                      {/* {open ? <ExpandLess /> : <ExpandMore />} */}
+                      <ListItemText primary="about/service" />
+                      {toggleMenu3 ? <ExpandLess /> : <ExpandMore />}
                     </ListItemButton>
                   </ListItem>
                   <Collapse in={toggleMenu3} timeout="auto" unmountOnExit>
@@ -189,31 +205,62 @@ function App() {
                   </Collapse>
                 </List>
                 <Divider />
-                <div style={{ padding: "12px" }}>
-                  {isLogin ? (
-                    <div
-                      style={{
-                        marginBottom: "6px",
-                        display: "flex",
-                        gap: "8px",
-                      }}
-                    >
-                      <p>어서오세요, {userInfo?.nickname} 님!</p>
-                      <div>
+                {isLogin && (
+                  <ListItem disablePadding>
+                    <ListItemButton>
+                      <NavLink
+                        to="/mypage"
+                        onClick={toggleDrawer(false)}
+                        style={{ flex: "1 1 auto" }}
+                      >
+                        <ListItemText primary="mypage →" />
+                      </NavLink>
+                      <CallMadeIcon />
+                    </ListItemButton>
+                  </ListItem>
+                )}
+
+                <div>
+                  <Divider />
+                  <div
+                    style={{
+                      padding: "8px 16px",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
+                  >
+                    <AccountCircleIcon />
+                    {isLogin ? (
+                      <div style={{ display: "flex" }}>
+                        <div style={{ marginRight: "16px" }}>
+                          어서오세요, {userInfo?.nickname} 님!
+                        </div>
+                        <div>
+                          <button
+                            onClick={handelLogout}
+                            style={{ border: "2px solid red" }}
+                          >
+                            logout
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <NavLink to="/login" onClick={toggleDrawer(false)}>
+                          로그인
+                        </NavLink>
                         <NavLink
-                          to="/mypage"
-                          className={({ isActive }) =>
-                            isActive ? "text-lime-500" : "text-white"
-                          }
+                          to="/login/register"
                           onClick={toggleDrawer(false)}
                         >
-                          mypage →
+                          회원가입
                         </NavLink>
-                      </div>
-                    </div>
-                  ) : (
-                    <></>
-                  )}
+                      </>
+                    )}
+                  </div>
+                </div>
+                {/* <div style={{ padding: "12px" }}>
                   {isLogin || (
                     <div>
                       <NavLink
@@ -237,7 +284,7 @@ function App() {
                       </button>
                     </div>
                   )}
-                </div>
+                </div> */}
               </Box>
             </SwipeableDrawer>
           </div>
