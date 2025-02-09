@@ -8,7 +8,7 @@ import ListPerItem from "../../components/ListPerItem";
 // import Pagination from "../../components/common/Pagination";
 
 type searchQueryType = {
-  only_open?: boolean;
+  is_open?: boolean;
   category_id?: string;
   sort_by?: "recent" | "favorite";
   start_price_gte?: number;
@@ -33,6 +33,9 @@ export default function List() {
   const { search } = useLocation();
 
   useEffect(() => {
+    if (query.get("is_open")) {
+      setFilterIsOpen(true);
+    }
     if (query.get("category_id")) {
       setFilterCategory(Number(query.get("category_id")));
     }
@@ -88,6 +91,7 @@ export default function List() {
   // const loadingNextPage = () => setPage(page + 1);
 
   const filterSearchPosts = async () => {
+    filterIsOpen ? query.set("is_open", "1") : query.delete("is_open");
     if (filterCategory) query.set("category_id", filterCategory.toString());
     if (filterSort) {
       const sortText =
@@ -114,7 +118,7 @@ export default function List() {
         {filterCheck && (
           <div>
             <p>(filter area)</p>
-            <div>only_open</div>
+            <div>is_open</div>
             <input
               type="checkbox"
               id="able"

@@ -15,7 +15,7 @@ export default function Mypage() {
   const { userInfo, favorite, bidList } = useAuthStore();
 
   useEffect(() => {
-    const favoriteFilter = favorite.reduce((acc: any[], item: any) => {
+    const favoriteFilter = favorite?.reduce((acc: any[], item: any) => {
       if (acc.length < 6) acc.push(item);
       return acc;
     }, []);
