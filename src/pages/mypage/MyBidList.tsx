@@ -4,6 +4,7 @@ import { AuctionListLayout } from "../../styles/CommonStyle";
 import { MypageLayout } from "../../styles/MypageStyle";
 import ListPerItem from "../../components/ListPerItem";
 import { findCategory } from "../../modules/category";
+// import ShowBidList from "../../components/mypage/ShowBidList";
 
 export default function MyBidList() {
   const { userInfo, bidHistory, bidList } = useAuthStore();
@@ -31,6 +32,7 @@ export default function MyBidList() {
       ) : (
         <div>나의 입찰 내역이 없습니다.</div>
       )}
+      {/* <ShowBidList /> */}
     </MypageLayout>
   );
 }

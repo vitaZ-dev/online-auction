@@ -84,14 +84,13 @@ export default function Mypage() {
           <>
             <AuctionListLayout grid={3}>
               {bidList?.map((item) => (
-                <Link to={`/auction/${item?.id}`} key={item?.id}>
-                  <ListPerItem
-                    src={item?.src}
-                    category={findCategory(item?.category_id)}
-                    title={item?.title}
-                    startPrice={item?.start_price}
-                  />
-                </Link>
+                <ListPerItem
+                  key={item?.id}
+                  src={item?.src}
+                  category={findCategory(item?.category_id)}
+                  title={item?.title}
+                  startPrice={item?.start_price}
+                />
               ))}
             </AuctionListLayout>
             <Link to="bid">더 보기 〉</Link>
