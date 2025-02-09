@@ -25,6 +25,7 @@ import Guide from "./pages/guide/Guide.tsx";
 import Mypage from "./pages/mypage/Mypage.tsx";
 import MySellList from "./pages/mypage/MySellList.tsx";
 import MyFavoriteList from "./pages/mypage/MyFavoriteList.tsx";
+import MyBidList from "./pages/mypage/MyBidList.tsx";
 import Login from "./pages/login/Login.tsx";
 import Register from "./pages/login/Register.tsx";
 import About from "./pages/About.tsx";
@@ -128,6 +129,10 @@ const router = createBrowserRouter([
           {
             path: "favorite",
             element: <MyFavoriteList />,
+          },
+          {
+            path: "bid",
+            element: <MyBidList />,
           },
         ],
       },

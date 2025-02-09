@@ -12,7 +12,7 @@ import { AuctionListLayout } from "../../styles/CommonStyle";
 export default function Mypage() {
   const [userPost, setUserPost] = useState([]);
   const [userFavorite, setUserFavorite] = useState([]);
-  const { userInfo, favorite } = useAuthStore();
+  const { userInfo, favorite, bidList } = useAuthStore();
 
   useEffect(() => {
     const favoriteFilter = favorite.reduce((acc: any[], item: any) => {
@@ -75,6 +75,29 @@ export default function Mypage() {
             <div>판매한 물품이 없습니다</div>
             <Link to="/sell">판매글 작성하러 가기 〉</Link>
           </>
+        )}
+      </section>
+      <br />
+      <section>
+        <h3>나의 입찰 내역</h3>
+        {bidList?.length ? (
+          <>
+            <AuctionListLayout grid={3}>
+              {bidList?.map((item) => (
+                <Link to={`/auction/${item?.id}`} key={item?.id}>
+                  <ListPerItem
+                    src={item?.src}
+                    category={findCategory(item?.category_id)}
+                    title={item?.title}
+                    startPrice={item?.start_price}
+                  />
+                </Link>
+              ))}
+            </AuctionListLayout>
+            <Link to="bid">더 보기 〉</Link>
+          </>
+        ) : (
+          <div>나의 입찰 내역이 없습니다.</div>
         )}
       </section>
       <br />
