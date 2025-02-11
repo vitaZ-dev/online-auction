@@ -26,6 +26,8 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CallMadeIcon from "@mui/icons-material/CallMade";
 import CloseIcon from "@mui/icons-material/Close";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -293,9 +295,26 @@ function App() {
           <Outlet />
         </MainLayout>
         <FooterLayout>
-          <div style={{}}>
-            <img src="/images/logo.svg" alt="logo" />
-            <span>Copyrightⓒ2025 XX All rights reserved.</span>
+          <div
+          // style={{
+          //   display: "flex",
+          //   alignItems: "center",
+          //   justifyContent: "space-between",
+          // }}
+          >
+            <span>Copyrightⓒ 2025. XX. All rights reserved.</span>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                // justifyContent: "space-between",
+                gap: 8,
+              }}
+            >
+              <GitHubIcon />
+              <GitHubIcon />
+              <MailOutlineIcon />
+            </div>
           </div>
         </FooterLayout>
       </BaseLayout>

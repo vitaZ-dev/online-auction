@@ -57,7 +57,7 @@ const HeaderLayout = styled.header`
 `;
 
 const MainLayout = styled.main`
-  min-height: calc(100vh - 300px);
+  min-height: calc(100vh - 100px);
   height: 100%;
   /* padding: 72px 32px 32px; */
   padding-top: 72px;
