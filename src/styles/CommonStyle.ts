@@ -115,3 +115,48 @@ export const CommonTitleStyle = styled.div`
     align-items: center;
   }
 `;
+
+export const CommonModalStyle = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #4b44449e;
+  z-index: 999;
+  overflow: hidden;
+
+  .modal_wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    padding: 10px;
+    width: 100%;
+    max-width: 640px;
+    height: 100%;
+  }
+
+  .modal_box {
+    width: 96%;
+    max-width: 500px;
+    padding: 16px;
+    background: var(--white);
+    border-radius: 10px;
+  }
+
+  .modal_title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    .title {
+      font-size: 20px;
+      font-weight: 600;
+    }
+  }
+`;
