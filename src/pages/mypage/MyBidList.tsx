@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
 import { AuctionListLayout } from "../../styles/CommonStyle";
 import { MypageLayout } from "../../styles/MypageStyle";
@@ -6,6 +5,7 @@ import ListPerItem from "../../components/ListPerItem";
 import { findCategory } from "../../modules/category";
 import { useState } from "react";
 import ShowBidList from "../../components/mypage/ShowBidList";
+import CommonTitle from "../../components/UI/CommonTitle";
 
 export default function MyBidList() {
   const { userInfo, bidHistory, bidList } = useAuthStore();
@@ -23,7 +23,8 @@ export default function MyBidList() {
 
   return (
     <MypageLayout>
-      <h1>{userInfo?.nickname} 님의 입찰 내역들</h1>
+      <CommonTitle type={1} title={`${userInfo?.nickname} 님의 입찰 내역들`} />
+
       {bidList?.length ? (
         <>
           <AuctionListLayout grid={4}>

@@ -6,6 +6,7 @@ import { findCategory } from "../../modules/category";
 import { Link, useLocation } from "react-router-dom";
 import ListPerItem from "../../components/ListPerItem";
 import { AuctionListLayout } from "../../styles/CommonStyle";
+import CommonTitle from "../../components/UI/CommonTitle";
 
 export default function MySellList() {
   const [userPostAll, setUserPostAll] = useState([]);
@@ -38,7 +39,10 @@ export default function MySellList() {
 
   return (
     <MypageLayout>
-      <h1>{state?.nickname ?? userInfo.nickname} 님이 판매한 물품 목록</h1>
+      <CommonTitle
+        type={1}
+        title={`${state?.nickname ?? userInfo.nickname} 님이 판매한 물품 목록`}
+      />
 
       <br />
 

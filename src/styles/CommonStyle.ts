@@ -18,7 +18,7 @@ export const AuctionListLayout = styled.div`
   padding: 0 var(--padding-size);
 
   article {
-    padding: 4px;
+    padding: 4px 0;
     width: 100%;
     height: 100%;
     display: flex;

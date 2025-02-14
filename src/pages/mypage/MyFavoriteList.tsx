@@ -4,13 +4,17 @@ import { AuctionListLayout } from "../../styles/CommonStyle";
 import { MypageLayout } from "../../styles/MypageStyle";
 import ListPerItem from "../../components/ListPerItem";
 import { findCategory } from "../../modules/category";
+import CommonTitle from "../../components/UI/CommonTitle";
 
 export default function MyFavoriteList() {
   const { userInfo, favorite } = useAuthStore();
 
   return (
     <MypageLayout>
-      <h1>{userInfo?.nickname} 님의 좋아요 리스트</h1>
+      <CommonTitle
+        type={1}
+        title={`${userInfo?.nickname} 님의 좋아요 리스트`}
+      />
       <section>
         {favorite?.length ? (
           <AuctionListLayout grid={4}>

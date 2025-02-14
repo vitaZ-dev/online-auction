@@ -10,7 +10,7 @@ export default function CommonTitle({
 }: {
   type: number;
   title: string;
-  link?: string;
+  link?: string | false;
   linkTitle?: string;
 }) {
   const titleTag = {

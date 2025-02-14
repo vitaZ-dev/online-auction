@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { findCategory } from "../../modules/category";
 import ListPerItem from "../../components/ListPerItem";
 import { AuctionListLayout } from "../../styles/CommonStyle";
+import CommonTitle from "../../components/UI/CommonTitle";
 
 export default function Mypage() {
   const [userPost, setUserPost] = useState([]);
@@ -26,14 +27,8 @@ export default function Mypage() {
 
   const fetchPosts = async () => {
     const { data } = await axios.get(
-      `http://localhost:4000/posts?user_id=${userInfo?.uuid}&_sort=-created_at&_limit=6`
+      `http://localhost:4000/posts?user_id=${userInfo?.uuid}&_sort=-created_at&_limit=4`
     );
-
-    // const filterPost = data.reduce((acc: any[], item: any) => {
-    //   if (acc.length < 6) acc.push(item);
-    //   return acc;
-    // }, []);
-    // setUserPost(filterPost);
 
     setUserPost(data);
   };
@@ -51,10 +46,14 @@ export default function Mypage() {
 
       <br />
       <section>
-        <h3>최근 판매 물품 목록</h3>
+        <CommonTitle
+          type={3}
+          title="최근 판매 물품 목록"
+          link={Boolean(userPost?.length) && "list"}
+        />
         {userPost.length ? (
           <>
-            <AuctionListLayout grid={3}>
+            <AuctionListLayout grid={4}>
               {userPost?.map((post) => {
                 return (
                   <Link to={`/auction/${post?.id}`} key={post?.id}>
@@ -68,7 +67,6 @@ export default function Mypage() {
                 );
               })}
             </AuctionListLayout>
-            <Link to="list">더 보기 〉</Link>
           </>
         ) : (
           <>
@@ -79,10 +77,14 @@ export default function Mypage() {
       </section>
       <br />
       <section>
-        <h3>나의 입찰 내역</h3>
+        <CommonTitle
+          type={3}
+          title="나의 입찰 내역"
+          link={Boolean(bidList?.length) && "bid"}
+        />
         {bidList?.length ? (
           <>
-            <AuctionListLayout grid={3}>
+            <AuctionListLayout grid={4}>
               {bidList?.map((item) => (
                 <ListPerItem
                   key={item?.id}
@@ -93,7 +95,6 @@ export default function Mypage() {
                 />
               ))}
             </AuctionListLayout>
-            <Link to="bid">더 보기 〉</Link>
           </>
         ) : (
           <div>나의 입찰 내역이 없습니다.</div>
@@ -101,10 +102,14 @@ export default function Mypage() {
       </section>
       <br />
       <section>
-        <h3>좋아요/관심/즐겨찾기 리스트</h3>
+        <CommonTitle
+          type={3}
+          title="좋아요/관심/즐겨찾기 리스트"
+          link={Boolean(userFavorite?.length) && "favorite"}
+        />
         {userFavorite.length ? (
           <>
-            <AuctionListLayout grid={3}>
+            <AuctionListLayout grid={4}>
               {userFavorite?.map((post) => (
                 <Link to={`/auction/${post?.id}`} key={post?.id}>
                   <ListPerItem
@@ -116,7 +121,6 @@ export default function Mypage() {
                 </Link>
               ))}
             </AuctionListLayout>
-            <Link to="favorite">더 보기 〉</Link>
           </>
         ) : (
           <div>좋아요 내역이 없습니다</div>
