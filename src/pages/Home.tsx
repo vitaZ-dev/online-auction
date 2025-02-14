@@ -9,6 +9,7 @@ import { CATEGORY, findCategory } from "../modules/category";
 import { Swiper, SwiperSlide } from "swiper/react";
 // import { Navigation } from "swiper/modules";
 import "swiper/swiper-bundle.css";
+import CommonTitle from "../components/UI/CommonTitle";
 
 export default function Home() {
   const [recent, setRecent] = useState([]);
@@ -32,39 +33,49 @@ export default function Home() {
 
   return (
     <HomeLayout>
-      <h1>Home</h1>
       <section className="category_list">
-        <h3 className="title">인기 카테고리</h3>
-        <div className="h200">
+        <CommonTitle type={3} title="인기 카테고리" />
+        <div style={{ padding: 16 }}>
           <Swiper
             // modules={[Navigation]}
             // navigation={true}
             spaceBetween={16}
-            slidesPerView={4}
+            slidesPerView={1}
+            breakpoints={{
+              280: {
+                slidesPerView: 2,
+                spaceBetween: 20,
+              },
+              475: {
+                slidesPerView: 3,
+                spaceBetween: 20,
+              },
+              640: {
+                slidesPerView: 4,
+                spaceBetween: 20,
+              },
+            }}
           >
-            {CATEGORY.map((item) => {
-              return (
-                <SwiperSlide key={`cate_${item.category_id}`}>
-                  <Link
-                    to={`/auction?category_id=${item.category_id}`}
-                    key={`cate_${item.category_id}`}
-                  >
-                    <SwiperLayout>
-                      <div className="category_img">
-                        <div className="img_wrap">f</div>
-                      </div>
-                      <div className="category_title">{item.category_name}</div>
-                    </SwiperLayout>
-                  </Link>
-                </SwiperSlide>
-              );
-            })}
+            {CATEGORY.map((item) => (
+              <SwiperSlide key={`cate_${item.category_id}`}>
+                <Link
+                  to={`/auction?category_id=${item.category_id}`}
+                  key={`cate_${item.category_id}`}
+                >
+                  <SwiperLayout>
+                    <div className="category_img">
+                      <div className="img_wrap">f</div>
+                    </div>
+                    <div className="category_title">{item.category_name}</div>
+                  </SwiperLayout>
+                </Link>
+              </SwiperSlide>
+            ))}
           </Swiper>
         </div>
       </section>
       <section className="recent_list">
-        <h3 className="title">최근 올라온 물품</h3>
-        <Link to="/auction">더 보기</Link>
+        <CommonTitle type={3} title="최근 올라온 물품" link="/auction" />
         <div>
           <AuctionListLayout grid={4}>
             {recent?.map((r) => {
@@ -83,8 +94,11 @@ export default function Home() {
         </div>
       </section>
       <section className="ranking_list">
-        <h3 className="title">즐겨찾기 랭킹</h3>
-        <Link to="/auction?sort_by=favorite">더 보기</Link>
+        <CommonTitle
+          type={3}
+          title="즐겨찾기 랭킹"
+          link="/auction?sort_by=favorite"
+        />
         <div>
           {favorite.length ? (
             <AuctionListLayout grid={4}>
@@ -107,7 +121,7 @@ export default function Home() {
         </div>
       </section>
       <section className="auction_guide">
-        <h3 className="title">online-auction 가이드</h3>
+        <CommonTitle type={3} title="online-auction 가이드" />
         <div className="guide_wrap">
           <div className="left">How to Buy</div>
           <div className="right">How to Sell</div>

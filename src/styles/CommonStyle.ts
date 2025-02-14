@@ -7,9 +7,15 @@ export const AuctionListLayout = styled.div`
   row-gap: ${({ grid }) => (grid === 2 ? "32px" : "20px")};
   @media (max-width: 475px) {
     grid-template-columns: repeat(2, 1fr);
-    column-gap: 15px;
+    column-gap: 16px;
     row-gap: 32px;
   }
+  @media (max-width: 280px) {
+    grid-template-columns: 1fr;
+    column-gap: 8px;
+    row-gap: 16px;
+  }
+  padding: 0 var(--padding-size);
 
   article {
     padding: 4px;
@@ -96,6 +102,14 @@ export const CommonTitleStyle = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 4px var(--padding-size);
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+  }
   .link_text {
     display: flex;
     align-items: center;

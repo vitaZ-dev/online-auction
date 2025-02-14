@@ -1,10 +1,6 @@
 import styled from "@emotion/styled";
 
 export const HomeLayout = styled.div`
-  .h200 {
-    height: 200px;
-    background-color: lightblue;
-  }
   .auction_guide {
     width: "100%";
     background: "rgb(250, 250, 250)";
@@ -15,6 +11,11 @@ export const HomeLayout = styled.div`
       background-color: lightgreen;
     }
   }
+
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  /* padding: 8px 0; */
 `;
 
 export const SwiperLayout = styled.div`
