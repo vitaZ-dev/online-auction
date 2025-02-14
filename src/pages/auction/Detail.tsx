@@ -9,6 +9,8 @@ import { useCookies } from "react-cookie";
 import { setDateTemp } from "../../modules";
 import ListPerItem from "../../components/ListPerItem";
 import { AuctionListLayout } from "../../styles/CommonStyle";
+import ShowListTable from "../../components/ShowListTable";
+import CommonTitle from "../../components/UI/CommonTitle";
 
 export default function Detail() {
   const [loading, setLoading] = useState(false);
@@ -294,7 +296,7 @@ export default function Detail() {
             </div>
             <hr />
             <p>{findCategory(item?.category_id)}</p>
-            <h1>{item.title}</h1>
+            <CommonTitle type={1} title={item.title} />
             <p>{item.start_date}</p>
             <p>조회수 | {item?.cnt}</p>
             <p>관심 | {favoriteCnt}</p>
@@ -314,7 +316,7 @@ export default function Detail() {
             </div> */}
 
             <section>
-              <h3>품목 세부 정보</h3>
+              <CommonTitle type={3} title="품목 세부 정보" />
               {/* <p>카테고리/시작가격/시작날짜/종료날짜</p> */}
               <p>
                 카테고리 | {findCategory(item?.category_id)} <br />
@@ -347,18 +349,18 @@ export default function Detail() {
               </section>
             )}
             <section>
-              <h4>상세내용</h4>
+              <CommonTitle type={4} title="상세내용" />
               <p>{item.contents}</p>
             </section>
             <section>
-              <h3>입찰 내역</h3>
+              <CommonTitle type={3} title="입찰내역" />
               <p>입찰자 닉네임/입찰가격/입찰일</p>
               {bidHistoryDetail.length ? (
-                bidHistoryDetail?.map((item, idx) => (
-                  <div key={idx}>
-                    {item?.bidder} / {item?.amount} / {item?.time}
-                  </div>
-                ))
+                <ShowListTable
+                  tableGrid={[1, 1, 2]}
+                  tableHeader={["bidder", "amount", "time"]}
+                  tableList={bidHistoryDetail}
+                />
               ) : (
                 <div>입찰자가 없습니다</div>
               )}
@@ -368,21 +370,19 @@ export default function Detail() {
       })}
       {/* 다른내용 */}
       <section>
-        <h2>판매자의 다른 판매 물품</h2>
-        <p>
-          <span
-            onClick={() =>
-              navigate(`/mypage/list`, {
-                state: {
-                  uuid: sellList[0]?.user_id,
-                  nickname: sellList[0]?.user_info,
-                },
-              })
-            }
-          >
-            더 보기 ▷
-          </span>
-        </p>
+        <div>
+          <CommonTitle
+            type={2}
+            title="판매자의 다른 판매 물품"
+            link="/mypage/list"
+            linkProps={{
+              state: {
+                uuid: sellList[0]?.user_id,
+                nickname: sellList[0]?.user_info,
+              },
+            }}
+          />
+        </div>
         <AuctionListLayout grid={4}>
           {sellList?.map((item) => (
             <Link to={`/auction/${item.id}`} key={`item_${item.id}`}>
