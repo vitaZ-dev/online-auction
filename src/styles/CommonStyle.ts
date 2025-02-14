@@ -113,6 +113,7 @@ export const CommonTitleStyle = styled.div`
   .link_text {
     display: flex;
     align-items: center;
+    cursor: pointer;
   }
 `;
 
