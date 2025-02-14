@@ -24,7 +24,7 @@ export const ShowListTableLayout = styled.div`
   }
 
   .table_contents {
-    height: 70vh;
+    max-height: 70vh;
     overflow-y: auto;
     span {
       padding: 0 8px;
