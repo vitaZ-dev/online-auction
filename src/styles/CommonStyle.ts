@@ -89,3 +89,15 @@ export const PaginationLayout = styled.div`
   margin-top: 20px;
   height: 40px;
 `;
+
+// common UI
+export const CommonTitleStyle = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px var(--padding-size);
+  .link_text {
+    display: flex;
+    align-items: center;
+  }
+`;

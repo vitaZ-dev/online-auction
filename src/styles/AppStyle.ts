@@ -22,6 +22,8 @@ const light = css`
     --white: #fff;
     --black: #181818;
     --button-bar-txt-color: #7e7e7e;
+
+    --padding-size: 16px;
   }
 `;
 
