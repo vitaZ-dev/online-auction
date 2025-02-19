@@ -181,7 +181,6 @@ export default function Detail() {
 
       await axios.patch(`http://localhost:4000/posts/${POST_ID}`, {
         favorite: cnt,
-        favorite_check: !favoriteCheck,
         favorite_list,
       });
       alert("성공");

@@ -108,9 +108,13 @@ export default function Sell() {
         status: true,
         src: imgSrc,
         contents,
-        cnt: 0,
-        bid: 0,
         created_at: new Date(),
+        favorite: 1,
+        favorite_list: [],
+        bid: 0,
+        cnt: 0,
+        bid_count: 3,
+        bid_history: [],
       });
       alert("ok");
       navigate("/auction");
