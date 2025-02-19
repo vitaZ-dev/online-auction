@@ -161,3 +161,14 @@ export const CommonModalStyle = styled.div`
     }
   }
 `;
+
+export const CommonCategoryBadgeStyle = styled.div`
+  .category_badge {
+    display: inline-block;
+    padding: 4px 8px;
+    margin-bottom: 4px;
+    border-radius: 12px;
+    background-color: lightblue;
+    font-size: 12px;
+  }
+`;

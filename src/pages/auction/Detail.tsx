@@ -11,6 +11,7 @@ import ListPerItem from "../../components/ListPerItem";
 import { AuctionListLayout } from "../../styles/CommonStyle";
 import ShowListTable from "../../components/ShowListTable";
 import CommonTitle from "../../components/UI/CommonTitle";
+import CommonCategoryBadge from "../../components/UI/CommonCategoryBadge";
 
 export default function Detail() {
   const [loading, setLoading] = useState(false);
@@ -294,7 +295,8 @@ export default function Detail() {
               )}
             </div>
             <hr />
-            <p>{findCategory(item?.category_id)}</p>
+            {/* <p>{findCategory(item?.category_id)}</p> */}
+            <CommonCategoryBadge categoryID={item?.category_id} />
             <CommonTitle type={1} title={item.title} />
             <p>{item.start_date}</p>
             <p>조회수 | {item?.cnt}</p>
