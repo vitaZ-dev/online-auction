@@ -105,7 +105,7 @@ export default function Sell() {
         price: 9999,
         start_price,
         now_price: 0,
-        status: true,
+        is_open: 1,
         src: imgSrc,
         contents,
         created_at: new Date(),
