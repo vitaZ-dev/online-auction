@@ -97,6 +97,11 @@ export const PaginationLayout = styled.div`
 `;
 
 // common UI
+export const CommonPaddingBox = styled.div`
+  padding: 0 16px;
+`;
+
+// common Component
 export const CommonTitleStyle = styled.div`
   display: flex;
   justify-content: space-between;

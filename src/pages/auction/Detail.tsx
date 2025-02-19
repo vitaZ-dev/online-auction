@@ -8,7 +8,7 @@ import FullSizeImage from "../../components/common/FullSizeImage";
 import { useCookies } from "react-cookie";
 import { setDateTemp } from "../../modules";
 import ListPerItem from "../../components/ListPerItem";
-import { AuctionListLayout } from "../../styles/CommonStyle";
+import { AuctionListLayout, CommonPaddingBox } from "../../styles/CommonStyle";
 import ShowListTable from "../../components/ShowListTable";
 import CommonTitle from "../../components/UI/CommonTitle";
 import CommonCategoryBadge from "../../components/UI/CommonCategoryBadge";
@@ -298,9 +298,11 @@ export default function Detail() {
             {/* <p>{findCategory(item?.category_id)}</p> */}
             <CommonCategoryBadge categoryID={item?.category_id} />
             <CommonTitle type={1} title={item.title} />
-            <p>{item.start_date}</p>
-            <p>조회수 | {item?.cnt}</p>
-            <p>관심 | {favoriteCnt}</p>
+            <CommonPaddingBox>
+              <p>{item.start_date}</p>
+              <p>조회수 | {item?.cnt}</p>
+              <p>관심 | {favoriteCnt}</p>
+            </CommonPaddingBox>
             {/* <div className="item_info">
               <div>
                 <p>현재 입찰가</p>
@@ -319,13 +321,15 @@ export default function Detail() {
             <section>
               <CommonTitle type={3} title="품목 세부 정보" />
               {/* <p>카테고리/시작가격/시작날짜/종료날짜</p> */}
-              <p>
-                카테고리 | {findCategory(item?.category_id)} <br />
-                시작가 | {item?.start_price}원 <br />
-                입찰횟수 | {item?.bid_count} <br />
-                현재최대가 | {item?.now_price} <br />
-                마감일 | {item?.end_date}
-              </p>
+              <CommonPaddingBox>
+                <p>
+                  카테고리 | {findCategory(item?.category_id)} <br />
+                  시작가 | {item?.start_price}원 <br />
+                  입찰횟수 | {item?.bid_count} <br />
+                  현재최대가 | {item?.now_price} <br />
+                  마감일 | {item?.end_date}
+                </p>
+              </CommonPaddingBox>
             </section>
             {userCheck || (
               <>
@@ -336,35 +340,45 @@ export default function Detail() {
             )}
             {openBidding && (
               <section>
-                가격을 입력해주세요! <br />* 한 번 입찰하면 취소할 수 없습니다!
-                <br />
-                <input
-                  type="number"
-                  min={item?.start_price}
-                  value={bidAmount}
-                  onChange={(e) => setBidAmount(Number(e.target.value))}
-                />
-                <button onClick={() => auctionBidding(item)} disabled={loading}>
-                  입찰하기
-                </button>
+                <CommonPaddingBox>
+                  가격을 입력해주세요! <br />* 한 번 입찰하면 취소할 수
+                  없습니다!
+                  <br />
+                  <input
+                    type="number"
+                    min={item?.start_price}
+                    value={bidAmount}
+                    onChange={(e) => setBidAmount(Number(e.target.value))}
+                  />
+                  <button
+                    onClick={() => auctionBidding(item)}
+                    disabled={loading}
+                  >
+                    입찰하기
+                  </button>
+                </CommonPaddingBox>
               </section>
             )}
             <section>
               <CommonTitle type={4} title="상세내용" />
-              <p>{item.contents}</p>
+              <CommonPaddingBox>
+                <p>{item.contents}</p>
+              </CommonPaddingBox>
             </section>
             <section>
               <CommonTitle type={3} title="입찰내역" />
-              <p>입찰자 닉네임/입찰가격/입찰일</p>
-              {bidHistoryDetail.length ? (
-                <ShowListTable
-                  tableGrid={[1, 1, 2]}
-                  tableHeader={["bidder", "amount", "time"]}
-                  tableList={bidHistoryDetail}
-                />
-              ) : (
-                <div>입찰자가 없습니다</div>
-              )}
+              <CommonPaddingBox>
+                <p>입찰자 닉네임/입찰가격/입찰일</p>
+                {bidHistoryDetail.length ? (
+                  <ShowListTable
+                    tableGrid={[1, 1, 2]}
+                    tableHeader={["bidder", "amount", "time"]}
+                    tableList={bidHistoryDetail}
+                  />
+                ) : (
+                  <div>입찰자가 없습니다</div>
+                )}
+              </CommonPaddingBox>
             </section>
           </section>
         );
