@@ -5,14 +5,14 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 export default function CommonTitle({
   type = 1,
   title = "TITLE",
-  closed = false,
+  isOpen = true,
   link = "",
   linkProps = {},
   linkTitle = "더 보기",
 }: {
   type: number;
   title: string;
-  closed?: boolean;
+  isOpen?: boolean;
   link?: string | false;
   linkProps?: object;
   linkTitle?: string;
@@ -31,7 +31,7 @@ export default function CommonTitle({
   return (
     <CommonTitleStyle>
       <div className="title_text">
-        {closed && <span className="closed">판매완료</span>}
+        {!isOpen && <span className="closed">판매완료</span>}
         {titleTag[type]}
       </div>
       {link && (
