@@ -108,12 +108,16 @@ export const CommonTitleStyle = styled.div`
   align-items: center;
   padding: 4px var(--padding-size);
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  .title_text {
+    display: flex;
+    align-items: center;
+    .title_tag {
+    }
+    .closed {
+      color: gray;
+      font-weight: 700;
+      margin-right: 4px;
+    }
   }
   .link_text {
     display: flex;

@@ -341,7 +341,7 @@ export default function Detail() {
             <hr />
             {/* <p>{findCategory(item?.category_id)}</p> */}
             <CommonCategoryBadge categoryID={item?.category_id} />
-            <CommonTitle type={1} title={item.title} />
+            <CommonTitle type={1} title={item.title} closed={true} />
             <CommonPaddingBox>
               <p>{item.start_date}</p>
               <p>조회수 | {item?.cnt}</p>

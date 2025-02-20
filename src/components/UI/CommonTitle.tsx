@@ -5,12 +5,14 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 export default function CommonTitle({
   type = 1,
   title = "TITLE",
+  closed = false,
   link = "",
   linkProps = {},
   linkTitle = "더 보기",
 }: {
   type: number;
   title: string;
+  closed?: boolean;
   link?: string | false;
   linkProps?: object;
   linkTitle?: string;
@@ -18,17 +20,20 @@ export default function CommonTitle({
   const navigate = useNavigate();
 
   const titleTag = {
-    1: <h1>{title}</h1>,
-    2: <h2>{title}</h2>,
-    3: <h3>{title}</h3>,
-    4: <h4>{title}</h4>,
-    5: <h5>{title}</h5>,
-    6: <h6>{title}</h6>,
+    1: <h1 className="title_tag">{title}</h1>,
+    2: <h2 className="title_tag">{title}</h2>,
+    3: <h3 className="title_tag">{title}</h3>,
+    4: <h4 className="title_tag">{title}</h4>,
+    5: <h5 className="title_tag">{title}</h5>,
+    6: <h6 className="title_tag">{title}</h6>,
   };
 
   return (
     <CommonTitleStyle>
-      {titleTag[type]}
+      <div className="title_text">
+        {closed && <span className="closed">판매완료</span>}
+        {titleTag[type]}
+      </div>
       {link && (
         <div className="link_text" onClick={() => navigate(link, linkProps)}>
           {linkTitle}
