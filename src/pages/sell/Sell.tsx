@@ -108,7 +108,7 @@ export default function Sell() {
         is_open: 1,
         src: imgSrc,
         contents,
-        created_at: new Date(),
+        created_at: start_date,
         favorite: 1,
         favorite_list: [],
         bid: 0,
