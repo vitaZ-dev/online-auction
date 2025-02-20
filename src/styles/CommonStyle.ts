@@ -102,7 +102,7 @@ export const CommonPaddingBox = styled.div`
 `;
 
 export const CommonNodataBox = styled.div`
-  padding: 0 16px;
+  padding: 16px;
   display: flex;
   justify-content: center;
   align-items: center;

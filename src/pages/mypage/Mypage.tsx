@@ -7,17 +7,26 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { findCategory } from "../../modules/category";
 import ListPerItem from "../../components/ListPerItem";
-import { AuctionListLayout } from "../../styles/CommonStyle";
+import { AuctionListLayout, CommonNodataBox } from "../../styles/CommonStyle";
 import CommonTitle from "../../components/UI/CommonTitle";
 
 export default function Mypage() {
   const [userPost, setUserPost] = useState([]);
   const [userFavorite, setUserFavorite] = useState([]);
-  const { userInfo, favorite, bidList } = useAuthStore();
+  const [userBidAward, setUserBidAward] = useState([]);
+  const { userInfo, favorite, bidList, bidAward } = useAuthStore();
 
   useEffect(() => {
+    // 낙찰 내역
+    const awardFilter = bidAward?.reduce((acc: any[], item: any) => {
+      if (acc.length < 4) acc.push(item);
+      return acc;
+    }, []);
+    setUserBidAward(awardFilter);
+
+    // 좋아요 리스트
     const favoriteFilter = favorite?.reduce((acc: any[], item: any) => {
-      if (acc.length < 6) acc.push(item);
+      if (acc.length < 4) acc.push(item);
       return acc;
     }, []);
     setUserFavorite(favoriteFilter);
@@ -69,10 +78,10 @@ export default function Mypage() {
             </AuctionListLayout>
           </>
         ) : (
-          <>
+          <CommonNodataBox>
             <div>판매한 물품이 없습니다</div>
             <Link to="/sell">판매글 작성하러 가기 〉</Link>
-          </>
+          </CommonNodataBox>
         )}
       </section>
       <br />
@@ -97,7 +106,37 @@ export default function Mypage() {
             </AuctionListLayout>
           </>
         ) : (
-          <div>나의 입찰 내역이 없습니다.</div>
+          <CommonNodataBox>
+            <div>나의 입찰 내역이 없습니다.</div>
+          </CommonNodataBox>
+        )}
+      </section>
+      <br />
+      <section>
+        <CommonTitle
+          type={3}
+          title="나의 낙찰 내역"
+          link={Boolean(userBidAward?.length) && "award"}
+        />
+        {userBidAward.length ? (
+          <>
+            <AuctionListLayout grid={4}>
+              {userBidAward?.map((post) => (
+                <Link to={`/auction/${post?.id}`} key={post?.id}>
+                  <ListPerItem
+                    src={post?.src}
+                    category={findCategory(post?.category_id)}
+                    title={post?.title}
+                    startPrice={post?.amount}
+                  />
+                </Link>
+              ))}
+            </AuctionListLayout>
+          </>
+        ) : (
+          <CommonNodataBox>
+            <div>낙찰받은 내역이 없습니다</div>
+          </CommonNodataBox>
         )}
       </section>
       <br />
@@ -123,7 +162,9 @@ export default function Mypage() {
             </AuctionListLayout>
           </>
         ) : (
-          <div>좋아요 내역이 없습니다</div>
+          <CommonNodataBox>
+            <div>좋아요 내역이 없습니다</div>
+          </CommonNodataBox>
         )}
       </section>
     </MypageLayout>

@@ -38,6 +38,7 @@ export default function Detail() {
     updateUserFavorite,
     updateBidHistory,
     updateBidList,
+    updateBidAward,
   } = useAuthStore();
   const [cookies, setCookie] = useCookies();
   const navigate = useNavigate();
@@ -333,6 +334,7 @@ export default function Detail() {
             bid_award,
           }
         );
+        updateBidAward(bid_award);
       }
       alert("마감 처리되었습니다!");
       setLoading(false);

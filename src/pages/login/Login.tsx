@@ -42,11 +42,12 @@ export default function Login() {
 
     if (user) {
       console.log("login ok");
-      const { favorite, bid_history, bid_list, ...info } = user;
+      const { favorite, bid_history, bid_list, bid_award, ...info } = user;
       auth.login(info);
       auth.updateUserFavorite(favorite);
       auth.updateBidHistory(bid_history);
       auth.updateBidList(bid_list);
+      auth.updateBidAward(bid_award);
       navigate("/");
     } else {
       console.log("login no");

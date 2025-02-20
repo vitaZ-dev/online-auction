@@ -12,6 +12,7 @@ type AuthStoreType = {
   favorite: Array<ObjectType> | [];
   bidHistory: Array<ObjectType> | [];
   bidList: Array<ObjectType> | [];
+  bidAward: Array<ObjectType> | [];
 
   login: (userInfo: ObjectType) => void;
   logout: () => void;
@@ -19,6 +20,7 @@ type AuthStoreType = {
   updateUserFavorite: (favorite: Array<ObjectType>) => void;
   updateBidHistory: (bidHistory: Array<ObjectType>) => void;
   updateBidList: (bidList: Array<ObjectType>) => void;
+  updateBidAward: (bidAward: Array<ObjectType>) => void;
 };
 
 const useAuthStore = create(
@@ -30,6 +32,7 @@ const useAuthStore = create(
       favorite: [],
       bidHistory: [],
       bidList: [],
+      bidAward: [],
 
       login: (userInfo) => set({ isLogin: true, userInfo }),
       logout: () =>
@@ -39,12 +42,15 @@ const useAuthStore = create(
           favorite: [],
           bidHistory: [],
           bidList: [],
+          bidAward: [],
         }),
       // 유저 정보 업데이트
       updateUserInfo: (newUserInfo) => set({ userInfo: newUserInfo }),
       updateUserFavorite: (favorite) => set({ favorite }),
       updateBidHistory: (bidHistory) => set({ bidHistory }),
       updateBidList: (bidList) => set({ bidList }),
+      updateBidAward: (bidAward) => set({ bidAward }),
+
       checkSignIn: () => get().isLogin,
       // checkLogin: () => {
       //   const accessToken = getCookie("accessToken");
