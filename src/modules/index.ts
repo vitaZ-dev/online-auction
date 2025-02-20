@@ -1,5 +1,5 @@
 /**
- * 현재 날짜 불러옴 / 해당 날짜보다 30일 뒤의 날짜
+ * 현재 날짜 불러옴 / 해당 날짜보다 14일 뒤의 날짜
  */
 export const setDateTemp = (format: string = ".") => {
   const now = new Date();
@@ -12,13 +12,13 @@ export const setDateTemp = (format: string = ".") => {
 
   return `${year}${format}${month}${format}${day} ${hour}:${minutes}:${seconds}`;
 };
-export const setDate30Temp = (date: string) => {
-  const day30 = new Date(date.replace(/\./g, "-"));
-  day30.setDate(day30.getDate() + 31);
+export const setDate14Temp = (date: string) => {
+  const day14 = new Date(date.replace(/\./g, "-"));
+  day14.setDate(day14.getDate() + 15);
 
-  const year = day30.getFullYear();
-  const month = String(day30.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작하므로 +1
-  const day = String(day30.getDate()).padStart(2, "0");
+  const year = day14.getFullYear();
+  const month = String(day14.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작하므로 +1
+  const day = String(day14.getDate()).padStart(2, "0");
 
   return `${year}.${month}.${day} 00:00:00`;
 };

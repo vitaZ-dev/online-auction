@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
-import { setDate30Temp, setDateTemp } from "../../modules";
+import { setDate14Temp, setDateTemp } from "../../modules";
 import { CATEGORY } from "../../modules/category";
 
 export default function Sell() {
@@ -92,7 +92,7 @@ export default function Sell() {
 
     const start_price = Math.abs(Number(price));
     const start_date = setDateTemp();
-    const end_date = setDate30Temp(start_date);
+    const end_date = setDate14Temp(start_date);
 
     try {
       axios.post("http://localhost:4000/posts", {
