@@ -101,6 +101,13 @@ export const CommonPaddingBox = styled.div`
   padding: 0 16px;
 `;
 
+export const CommonNodataBox = styled.div`
+  padding: 0 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 // common Component
 export const CommonTitleStyle = styled.div`
   display: flex;
@@ -165,6 +172,11 @@ export const CommonModalStyle = styled.div`
     margin-bottom: 16px;
 
     .title {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
       font-size: 20px;
       font-weight: 600;
     }
