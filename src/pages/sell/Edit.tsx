@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
 import { CATEGORY } from "../../modules/category";
+import CommonTitle from "../../components/UI/CommonTitle";
+import { CommonPaddingBox } from "../../styles/CommonStyle";
 
 export default function Edit() {
   const [pageCheck, setPageCheck] = useState(true);
@@ -14,6 +16,7 @@ export default function Edit() {
   const [imgSrc, setImgSrc] = useState("");
   const [price, setPrice] = useState(0); //start_price
   const [priceNoEdit, setPriceNoEdit] = useState(false);
+  const [isBidOpen, setIsBidOpen] = useState(false);
 
   const { pathname } = useLocation();
   const POST_ID = pathname.split("/")[2];
@@ -21,23 +24,24 @@ export default function Edit() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      const { data } = await axios.get(
-        `http://localhost:4000/posts?id=${POST_ID}`
-      );
-      setPageCheck(Boolean(data.length));
-      setUserCheck(data[0]?.user_id === userInfo?.uuid);
-      // 내용세팅
-      setTitle(data[0]?.title);
-      setContents(data[0]?.contents);
-      setImgSrc(data[0]?.src);
-      setCategory(data[0]?.category_id ?? -1);
-      setPrice(data[0]?.start_price);
-      setPriceNoEdit(Boolean(data[0]?.bid_count));
-    };
-
     fetchPosts();
   }, []);
+
+  const fetchPosts = async () => {
+    const { data } = await axios.get(
+      `http://localhost:4000/posts?id=${POST_ID}`
+    );
+    setPageCheck(Boolean(data.length));
+    setUserCheck(data[0]?.user_id === userInfo?.uuid);
+    // 내용세팅
+    setTitle(data[0]?.title);
+    setContents(data[0]?.contents);
+    setImgSrc(data[0]?.src);
+    setCategory(data[0]?.category_id ?? -1);
+    setPrice(data[0]?.start_price);
+    setPriceNoEdit(Boolean(data[0]?.bid_count));
+    setIsBidOpen(Boolean(data[0]?.is_open));
+  };
 
   const onChangeFile = (e: Event) => {
     const file = e.target?.files[0];
@@ -97,6 +101,10 @@ export default function Edit() {
   };
 
   const editPost = async () => {
+    if (!isBidOpen) {
+      alert("입찰 완료된 게시글은 수정할 수 없습니다!");
+      return false;
+    }
     const start_price = Math.abs(Number(price));
 
     try {
@@ -120,89 +128,93 @@ export default function Edit() {
       {pageCheck ? (
         userCheck ? (
           <div>
-            <h1>게시글 수정</h1>
-            <form className="login-form" onSubmit={() => editPost()}>
-              <label htmlFor="title">제목</label>
-              <input
-                type="text"
-                id="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                maxLength={50}
-              />
-              <span>{title.length}/50</span>
+            <CommonTitle type={1} title="게시글 수정" />
+            <CommonPaddingBox>
+              {!isBidOpen && <p>*입찰 완료된 게시글은 수정할 수 없습니다!</p>}
+              <form className="login-form" onSubmit={() => editPost()}>
+                <label htmlFor="title">제목</label>
+                <input
+                  type="text"
+                  id="title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  maxLength={50}
+                />
+                <span>{title.length}/50</span>
 
-              <br />
-              <br />
+                <br />
+                <br />
 
-              <label htmlFor="contents">내용</label>
-              <textarea
-                id="contents"
-                value={contents}
-                onChange={(e) => setContents(e.target.value)}
-                style={{ width: "100%", height: "100px" }}
-                maxLength={1000}
-              ></textarea>
-              <span>{contents.length}/1000</span>
+                <label htmlFor="contents">내용</label>
+                <textarea
+                  id="contents"
+                  value={contents}
+                  onChange={(e) => setContents(e.target.value)}
+                  style={{ width: "100%", height: "100px" }}
+                  maxLength={1000}
+                ></textarea>
+                <span>{contents.length}/1000</span>
 
-              <br />
-              <br />
-              <label htmlFor="imgfile">이미지</label>
-              <input
-                type="file"
-                accept="image/*"
-                id="imgfile"
-                onChange={(e) => onChangeFile(e)}
-              />
-              <img src={imgSrc} alt="preview_file" />
+                <br />
+                <br />
+                <label htmlFor="imgfile">이미지</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  id="imgfile"
+                  onChange={(e) => onChangeFile(e)}
+                />
+                <img src={imgSrc} alt="preview_file" />
 
-              <br />
-              <br />
+                <br />
+                <br />
 
-              <label htmlFor="category">카테고리</label>
-              <select
-                name="category"
-                id="category"
-                onChange={(e) => setCategory(Number(e.target.value))}
-                value={category}
-              >
-                <option value={-1} disabled>
-                  카테고리
-                </option>
-                {CATEGORY.map((cate) => (
-                  <option value={cate.category_id} key={cate.category_id}>
-                    {cate.category_name}
+                <label htmlFor="category">카테고리</label>
+                <select
+                  name="category"
+                  id="category"
+                  onChange={(e) => setCategory(Number(e.target.value))}
+                  value={category}
+                >
+                  <option value={-1} disabled>
+                    카테고리
                   </option>
-                ))}
-              </select>
+                  {CATEGORY.map((cate) => (
+                    <option value={cate.category_id} key={cate.category_id}>
+                      {cate.category_name}
+                    </option>
+                  ))}
+                </select>
 
-              <br />
-              <br />
+                <br />
+                <br />
 
-              <label htmlFor="price">시작가</label>
-              <input
-                type="number"
-                id="price"
-                value={price}
-                onChange={(e) =>
-                  priceNoEdit || setPrice(Number(e.target.value))
-                }
-                min={0}
-                disabled={priceNoEdit}
-              />
-              {priceNoEdit && <span>*입찰 내역이 있으면 가격 수정 불가</span>}
-            </form>
-            <br />
-            <button
-              onClick={() => editPost()}
-              style={{
-                width: "100%",
-                border: "1px solid silver",
-                padding: "12px",
-              }}
-            >
-              수정하기
-            </button>
+                <label htmlFor="price">시작가</label>
+                <input
+                  type="number"
+                  id="price"
+                  value={price}
+                  onChange={(e) =>
+                    priceNoEdit || setPrice(Number(e.target.value))
+                  }
+                  min={0}
+                  disabled={priceNoEdit}
+                />
+                {priceNoEdit && <span>*입찰 내역이 있으면 가격 수정 불가</span>}
+              </form>
+              <br />
+              <button
+                onClick={() => editPost()}
+                style={{
+                  width: "100%",
+                  border: "1px solid silver",
+                  padding: "12px",
+                }}
+                disabled={!isBidOpen}
+              >
+                수정하기
+              </button>
+            </CommonPaddingBox>
           </div>
         ) : (
           <div>해당 게시글에 접근 권한이 없습니다</div>

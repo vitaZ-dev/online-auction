@@ -66,7 +66,7 @@ const MainLayout = styled.main`
 `;
 
 export const FooterLayout = styled.footer`
-  padding: 32px;
+  padding: 16px 32px 0;
 `;
 
 export { light, BaseLayout, HeaderLayout, MainLayout };

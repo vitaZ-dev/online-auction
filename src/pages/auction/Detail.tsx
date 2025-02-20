@@ -80,6 +80,7 @@ export default function Detail() {
         getSellList(id);
         setLoading(false);
       });
+    setLoading(false);
   }, [pathname]);
 
   const fetchPosts = async () => {
@@ -121,9 +122,20 @@ export default function Detail() {
 
   const openComponent = () => setShow(true);
 
-  const editPost = () => navigate(`/sell/${POST_ID}`);
+  const editPost = (isOpen: boolean) => {
+    if (!isOpen) {
+      alert("입찰 완료된 게시글은 수정할 수 없습니다!");
+      return false;
+    }
+    navigate(`/sell/${POST_ID}`);
+  };
 
-  const deletePost = async () => {
+  const deletePost = async (isOpen: boolean) => {
+    if (!isOpen) {
+      alert("입찰 완료된 게시글은 삭제할 수 없습니다!");
+      return false;
+    }
+
     try {
       setLoading(true);
       await axios.delete(`http://localhost:4000/posts/${POST_ID}`);
@@ -347,8 +359,16 @@ export default function Detail() {
               <h2>{item.user_info}</h2>
               {userCheck ? (
                 <div className="user_utils">
-                  <button onClick={() => editPost()}>수정</button>
-                  <button onClick={() => deletePost()} disabled={loading}>
+                  <button
+                    onClick={() => editPost(item.is_open)}
+                    disabled={!item.is_open}
+                  >
+                    수정
+                  </button>
+                  <button
+                    onClick={() => deletePost(item.is_open)}
+                    disabled={loading || !item.is_open}
+                  >
                     삭제
                   </button>
                 </div>
