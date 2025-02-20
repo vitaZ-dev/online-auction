@@ -448,7 +448,7 @@ export default function Detail() {
                 </button>
               </CommonPaddingBox>
             )}
-            {!userCheck && (
+            {!userCheck && Boolean(item.is_open) && (
               <>
                 <button onClick={() => setOpenBidding(!openBidding)}>
                   {openBidding ? <>닫기</> : <>입찰하기</>}
