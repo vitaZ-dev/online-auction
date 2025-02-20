@@ -43,6 +43,7 @@ export default function Detail() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     setLoading(true);
     fetchPosts()
       .then((post) => {
@@ -260,15 +261,41 @@ export default function Detail() {
     setLoading(false);
   };
 
-  const closeAuction = async (is_open: boolean) => {
-    if (!is_open) return false;
+  const closeAuction = async (
+    isOpen: boolean,
+    endDate: string,
+    history: any
+  ) => {
+    console.log("a", history);
+
+    // 입찰 마감 처리는 최소 14일 이후에 가능+
+    if (!isOpen) return false;
+
+    if (new Date() < new Date(endDate)) {
+      alert("최소 마감일 이후에 마감할 수 있습니다.");
+      return false;
+    }
+
+    const last_bidder = [];
+    if (history.length) {
+      const bidder = history.reduce(
+        (acc, curr) => (curr.amount > acc.amount ? curr : acc),
+        history[0]
+      );
+      last_bidder.push(bidder);
+      console.log(bidder); // { name: 'item2', count: 20 }
+    }
+
     try {
       await axios.patch(`http://localhost:4000/posts/${POST_ID}`, {
         is_open: 0,
         end_date: setDateTemp(),
+        last_bidder,
       });
+      alert("마감 처리되었습니다!");
     } catch (error) {
       console.log(error);
+      alert("실패했습니다!");
     }
   };
 
@@ -345,8 +372,15 @@ export default function Detail() {
             </section>
             {userCheck && (
               <CommonPaddingBox>
+                <p>*가장 높은 금액을 입력한 유저에게 자동으로 낙찰됩니다!</p>
                 <button
-                  onClick={() => closeAuction(item?.is_open)}
+                  onClick={() =>
+                    closeAuction(
+                      item?.is_open,
+                      item?.end_date,
+                      item.bid_history
+                    )
+                  }
                   disabled={!item?.is_open}
                 >
                   입찰 마감 처리
@@ -387,6 +421,14 @@ export default function Detail() {
                 <p>{item.contents}</p>
               </CommonPaddingBox>
             </section>
+            {item.is_open && (
+              <section>
+                <CommonTitle type={3} title="최종 입찰자" />
+                <CommonPaddingBox>
+                  <button>입찰자 이름</button>
+                </CommonPaddingBox>
+              </section>
+            )}
             <section>
               <CommonTitle type={3} title="입찰내역" />
               <CommonPaddingBox>
