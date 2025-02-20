@@ -209,6 +209,7 @@ export default function Detail() {
           amount: bidAmount,
           bidder: userInfo?.nickname || "USER",
           time: setDateTemp(),
+          user_id: userInfo?.id,
           uuid: userInfo?.uuid,
         },
         ...bidHistory,
@@ -242,6 +243,7 @@ export default function Detail() {
             amount: bidAmount,
             bidder: userInfo?.nickname || "USER",
             time: setDateTemp(),
+            user_id: userInfo?.id,
             uuid: userInfo?.uuid,
           },
           ...bidHistoryDetail,
@@ -264,10 +266,11 @@ export default function Detail() {
   const closeAuction = async (
     isOpen: boolean,
     endDate: string,
-    history: any
+    history: any,
+    title: string,
+    src: string,
+    category_id: number
   ) => {
-    console.log("a", history);
-
     // 입찰 마감 처리는 최소 14일 이후에 가능+
     if (!isOpen) return false;
 
@@ -283,7 +286,6 @@ export default function Detail() {
         history[0]
       );
       last_bidder.push(bidder);
-      console.log(bidder); // { name: 'item2', count: 20 }
     }
 
     try {
@@ -293,14 +295,39 @@ export default function Detail() {
         last_bidder,
       });
       if (last_bidder.length) {
-        await axios.patch(`http://localhost:4000/user/${last_bidder[0].id}`, {
-          bid_award: [],
-        });
+        setLoading(true);
+        const { data } = await axios.get(
+          `http://localhost:4000/user/${last_bidder[0].user_id}`
+        );
+        const award = data?.bid_award;
+
+        let bid_award = [
+          {
+            award_date: setDateTemp(),
+            amount: last_bidder[0].amount,
+            id: last_bidder[0].id,
+            time: last_bidder[0].time,
+            title,
+            src,
+            category_id,
+          },
+        ];
+        if (award) {
+          bid_award = [...bid_award, ...award];
+        }
+        await axios.patch(
+          `http://localhost:4000/user/${last_bidder[0].user_id}`,
+          {
+            bid_award,
+          }
+        );
       }
       alert("마감 처리되었습니다!");
+      setLoading(false);
     } catch (error) {
       console.log(error);
       alert("실패했습니다!");
+      setLoading(false);
     }
   };
 
@@ -341,7 +368,11 @@ export default function Detail() {
             <hr />
             {/* <p>{findCategory(item?.category_id)}</p> */}
             <CommonCategoryBadge categoryID={item?.category_id} />
-            <CommonTitle type={1} title={item.title} closed={true} />
+            <CommonTitle
+              type={1}
+              title={item.title}
+              isOpen={Boolean(item?.is_open)}
+            />
             <CommonPaddingBox>
               <p>{item.start_date}</p>
               <p>조회수 | {item?.cnt}</p>
@@ -383,7 +414,10 @@ export default function Detail() {
                     closeAuction(
                       item?.is_open,
                       item?.end_date,
-                      item.bid_history
+                      item.bid_history,
+                      item?.title,
+                      item?.src,
+                      item?.category_id
                     )
                   }
                   disabled={!item?.is_open}
@@ -431,7 +465,7 @@ export default function Detail() {
                 <CommonTitle type={3} title="최종 입찰자" />
                 <CommonPaddingBox>
                   <button>
-                    {item.last_bidder[0]?.bidder || "입찰자가 없습니다."}
+                    {item.last_bidder?.[0]?.bidder || "입찰자가 없습니다."}
                   </button>
                 </CommonPaddingBox>
               </section>
