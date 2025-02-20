@@ -260,6 +260,18 @@ export default function Detail() {
     setLoading(false);
   };
 
+  const closeAuction = async (is_open: boolean) => {
+    if (!is_open) return false;
+    try {
+      await axios.patch(`http://localhost:4000/posts/${POST_ID}`, {
+        is_open: 0,
+        end_date: setDateTemp(),
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <ItemDetailLayout>
       {/* 제품 */}
@@ -331,7 +343,17 @@ export default function Detail() {
                 </p>
               </CommonPaddingBox>
             </section>
-            {userCheck || (
+            {userCheck && (
+              <CommonPaddingBox>
+                <button
+                  onClick={() => closeAuction(item?.is_open)}
+                  disabled={!item?.is_open}
+                >
+                  입찰 마감 처리
+                </button>
+              </CommonPaddingBox>
+            )}
+            {!userCheck && (
               <>
                 <button onClick={() => setOpenBidding(!openBidding)}>
                   {openBidding ? <>닫기</> : <>입찰하기</>}
