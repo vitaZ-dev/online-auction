@@ -292,6 +292,11 @@ export default function Detail() {
         end_date: setDateTemp(),
         last_bidder,
       });
+      if (last_bidder.length) {
+        await axios.patch(`http://localhost:4000/user/${last_bidder[0].id}`, {
+          bid_award: [],
+        });
+      }
       alert("마감 처리되었습니다!");
     } catch (error) {
       console.log(error);
@@ -421,18 +426,19 @@ export default function Detail() {
                 <p>{item.contents}</p>
               </CommonPaddingBox>
             </section>
-            {item.is_open && (
+            {!item.is_open && (
               <section>
                 <CommonTitle type={3} title="최종 입찰자" />
                 <CommonPaddingBox>
-                  <button>입찰자 이름</button>
+                  <button>
+                    {item.last_bidder[0]?.bidder || "입찰자가 없습니다."}
+                  </button>
                 </CommonPaddingBox>
               </section>
             )}
             <section>
               <CommonTitle type={3} title="입찰내역" />
               <CommonPaddingBox>
-                <p>입찰자 닉네임/입찰가격/입찰일</p>
                 {bidHistoryDetail.length ? (
                   <ShowListTable
                     tableGrid={[1, 1, 2]}
