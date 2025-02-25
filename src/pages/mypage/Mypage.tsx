@@ -7,7 +7,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { findCategory } from "../../modules/category";
 import CommonList from "../../components/UI/CommonList";
-import ListPerItem from "../../components/ListPerItem";
+import CommonListItem from "../../components/UI/CommonListItem";
 import { CommonNodataBox } from "../../styles/CommonStyle";
 import CommonTitle from "../../components/UI/CommonTitle";
 
@@ -67,11 +67,12 @@ export default function Mypage() {
               {userPost?.map((post) => {
                 return (
                   <Link to={`/auction/${post?.id}`} key={post?.id}>
-                    <ListPerItem
+                    <CommonListItem
                       src={post?.src}
                       category={findCategory(post?.category_id)}
                       title={post?.title}
                       startPrice={post?.start_price}
+                      isOpen={post.is_open}
                     />
                   </Link>
                 );
@@ -96,12 +97,13 @@ export default function Mypage() {
           <>
             <CommonList grid={4}>
               {bidList?.map((item) => (
-                <ListPerItem
+                <CommonListItem
                   key={item?.id}
                   src={item?.src}
                   category={findCategory(item?.category_id)}
                   title={item?.title}
                   startPrice={item?.start_price}
+                  isOpen={item.is_open}
                 />
               ))}
             </CommonList>
@@ -124,11 +126,12 @@ export default function Mypage() {
             <CommonList grid={4}>
               {userBidAward?.map((post) => (
                 <Link to={`/auction/${post?.id}`} key={post?.id}>
-                  <ListPerItem
+                  <CommonListItem
                     src={post?.src}
                     category={findCategory(post?.category_id)}
                     title={post?.title}
                     startPrice={post?.amount}
+                    isOpen={post.is_open}
                   />
                 </Link>
               ))}
@@ -152,11 +155,12 @@ export default function Mypage() {
             <CommonList grid={4}>
               {userFavorite?.map((post) => (
                 <Link to={`/auction/${post?.id}`} key={post?.id}>
-                  <ListPerItem
+                  <CommonListItem
                     src={post?.src}
                     category={findCategory(post?.category_id)}
                     title={post?.title}
                     startPrice={post?.start_price}
+                    isOpen={post.is_open}
                   />
                 </Link>
               ))}

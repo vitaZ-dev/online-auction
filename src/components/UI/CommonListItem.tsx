@@ -1,15 +1,17 @@
-import { moneyFormat } from "../utils";
+import { moneyFormat } from "../../utils";
 
-export default function ListPerItem({
+export default function CommonListItem({
   src,
   category,
   title,
   startPrice,
+  isOpen = true,
 }: {
   src: string;
   category: string;
   title: string;
   startPrice: string;
+  isOpen?: boolean;
 }) {
   // jsx
   return (
@@ -18,6 +20,7 @@ export default function ListPerItem({
         <div className="img_wrap">
           <img src={src} alt="img" />
         </div>
+        {!isOpen && <span className="closed">마감</span>}
       </div>
       <div className="post_info">
         <div className="category_badge">{category}</div>

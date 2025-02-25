@@ -51,6 +51,22 @@ export const AuctionListLayout = styled.div`
         object-fit: cover;
         border-radius: 10px;
       }
+
+      .closed {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1px 5px;
+        border-radius: 2px;
+        background-color: #868b94;
+        font-size: 11px;
+        color: white;
+        font-weight: 700;
+        line-height: 1.5;
+      }
     }
 
     .post_info {

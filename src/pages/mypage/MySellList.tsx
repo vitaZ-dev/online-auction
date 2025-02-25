@@ -5,7 +5,7 @@ import axios from "axios";
 import { findCategory } from "../../modules/category";
 import { Link, useLocation } from "react-router-dom";
 import CommonList from "../../components/UI/CommonList";
-import ListPerItem from "../../components/ListPerItem";
+import CommonListItem from "../../components/UI/CommonListItem";
 import CommonTitle from "../../components/UI/CommonTitle";
 
 export default function MySellList() {
@@ -63,11 +63,12 @@ export default function MySellList() {
             {userPostAll?.map((post) => {
               return (
                 <Link to={`/auction/${post?.id}`} key={post?.id}>
-                  <ListPerItem
+                  <CommonListItem
                     src={post?.src}
                     category={findCategory(post?.category_id)}
                     title={post?.title}
                     startPrice={post?.start_price}
+                    isOpen={post.is_open}
                   />
                 </Link>
               );

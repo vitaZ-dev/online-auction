@@ -4,7 +4,7 @@ import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { Pagination, Stack } from "@mui/material";
 import { CATEGORY, findCategory } from "../../modules/category";
 import CommonList from "../../components/UI/CommonList";
-import ListPerItem from "../../components/ListPerItem";
+import CommonListItem from "../../components/UI/CommonListItem";
 // import Pagination from "../../components/common/Pagination";
 
 type searchQueryType = {
@@ -194,11 +194,12 @@ export default function List() {
             {posts?.map((post) => {
               return (
                 <Link to={`${post.id}`} key={post.id}>
-                  <ListPerItem
+                  <CommonListItem
                     src={post.src}
                     category={findCategory(post?.category_id)}
                     title={post.title}
                     startPrice={post.start_price}
+                    isOpen={post.is_open}
                   />
                 </Link>
               );

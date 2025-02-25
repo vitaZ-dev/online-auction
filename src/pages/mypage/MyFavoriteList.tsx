@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
 import { MypageLayout } from "../../styles/MypageStyle";
 import CommonList from "../../components/UI/CommonList";
-import ListPerItem from "../../components/ListPerItem";
+import CommonListItem from "../../components/UI/CommonListItem";
 import { findCategory } from "../../modules/category";
 import CommonTitle from "../../components/UI/CommonTitle";
 
@@ -21,11 +21,12 @@ export default function MyFavoriteList() {
             {favorite?.map((post) => {
               return (
                 <Link to={`/auction/${post?.id}`} key={post?.id}>
-                  <ListPerItem
+                  <CommonListItem
                     src={post?.src}
                     category={findCategory(post?.category_id)}
                     title={post?.title}
                     startPrice={post?.start_price}
+                    isOpen={post.is_open}
                   />
                 </Link>
               );

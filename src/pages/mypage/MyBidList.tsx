@@ -2,7 +2,7 @@ import { useState } from "react";
 import useAuthStore from "../../stores/useAuthStore";
 import { MypageLayout } from "../../styles/MypageStyle";
 import CommonList from "../../components/UI/CommonList";
-import ListPerItem from "../../components/ListPerItem";
+import CommonListItem from "../../components/UI/CommonListItem";
 import { findCategory } from "../../modules/category";
 import CommonTitle from "../../components/UI/CommonTitle";
 import CommonModal from "../../components/common/CommonModal";
@@ -41,11 +41,12 @@ export default function MyBidList() {
                 onClick={() => handleDetailBid(item.id, item.title)}
               >
                 {/* <Link to={`/auction/${item?.id}`} key={item?.id}> */}
-                <ListPerItem
+                <CommonListItem
                   src={item?.src}
                   category={findCategory(item?.category_id)}
                   title={item?.title}
                   startPrice={item?.start_price}
+                  isOpen={item.is_open}
                 />
                 {/* </Link> */}
               </div>

@@ -3,7 +3,7 @@ import { HomeLayout, SwiperLayout } from "../styles/HomeStyle";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import CommonList from "../components/UI/CommonList";
-import ListPerItem from "../components/ListPerItem";
+import CommonListItem from "../components/UI/CommonListItem";
 import { CATEGORY, findCategory } from "../modules/category";
 
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -81,11 +81,12 @@ export default function Home() {
             {recent?.map((r) => {
               return (
                 <Link to={`/auction/${r?.id}`} key={r?.id}>
-                  <ListPerItem
+                  <CommonListItem
                     src={r?.src}
                     category={findCategory(r?.category_id)}
                     title={r?.title}
                     startPrice={r?.start_price}
+                    isOpen={r.is_open}
                   />
                 </Link>
               );
@@ -105,11 +106,12 @@ export default function Home() {
               {favorite?.map((r) => {
                 return (
                   <Link to={`/auction/${r?.id}`} key={r?.id}>
-                    <ListPerItem
+                    <CommonListItem
                       src={r?.src}
                       category={findCategory(r?.category_id)}
                       title={r?.title}
                       startPrice={r?.start_price}
+                      isOpen={r.is_open}
                     />
                   </Link>
                 );
