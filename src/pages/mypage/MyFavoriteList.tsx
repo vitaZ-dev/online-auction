@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
-import { AuctionListLayout } from "../../styles/CommonStyle";
 import { MypageLayout } from "../../styles/MypageStyle";
+import CommonList from "../../components/UI/CommonList";
 import ListPerItem from "../../components/ListPerItem";
 import { findCategory } from "../../modules/category";
 import CommonTitle from "../../components/UI/CommonTitle";
@@ -17,7 +17,7 @@ export default function MyFavoriteList() {
       />
       <section>
         {favorite?.length ? (
-          <AuctionListLayout grid={4}>
+          <CommonList grid={4}>
             {favorite?.map((post) => {
               return (
                 <Link to={`/auction/${post?.id}`} key={post?.id}>
@@ -30,7 +30,7 @@ export default function MyFavoriteList() {
                 </Link>
               );
             })}
-          </AuctionListLayout>
+          </CommonList>
         ) : (
           <p>내가 좋아요 한 물품이 없습니다</p>
         )}

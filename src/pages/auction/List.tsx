@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { AuctionListLayout } from "../../styles/CommonStyle";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { Pagination, Stack } from "@mui/material";
 import { CATEGORY, findCategory } from "../../modules/category";
+import CommonList from "../../components/UI/CommonList";
 import ListPerItem from "../../components/ListPerItem";
 // import Pagination from "../../components/common/Pagination";
 
@@ -102,9 +102,11 @@ export default function List() {
   };
 
   const clearAllFilter = async () => {
+    setFilterCheck(false);
     setFilterIsOpen(false);
     setFilterCategory(0);
     setFilterSort("");
+    window.scrollTo(0, 0);
     setQuery({});
     // await fetchPosts(1);
   };
@@ -127,7 +129,7 @@ export default function List() {
             />
             <label htmlFor="able">거래 가능만 보기</label>
             <div>category_id</div>
-            <AuctionListLayout grid={3}>
+            <CommonList grid={3}>
               {CATEGORY.map((item) => (
                 <div key={item.category_id}>
                   <input
@@ -143,7 +145,7 @@ export default function List() {
                   </label>
                 </div>
               ))}
-            </AuctionListLayout>
+            </CommonList>
             <div>sort_by</div>
             <div>
               <input
@@ -188,7 +190,7 @@ export default function List() {
       </div>
       {posts.length ? (
         <>
-          <AuctionListLayout>
+          <CommonList>
             {posts?.map((post) => {
               return (
                 <Link to={`${post.id}`} key={post.id}>
@@ -201,7 +203,7 @@ export default function List() {
                 </Link>
               );
             })}
-          </AuctionListLayout>
+          </CommonList>
           {/* <Pagination pageInfo={pagination} /> */}
           <div
             style={{

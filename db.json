@@ -385,7 +385,7 @@
         }
       ],
       "bid": 0,
-      "cnt": 4,
+      "cnt": 5,
       "bid_count": 3,
       "bid_history": [
         {
@@ -596,7 +596,7 @@
       "favorite": 0,
       "favorite_list": [],
       "bid": 0,
-      "cnt": 9
+      "cnt": 10
     },
     {
       "id": "ca90",
@@ -704,7 +704,7 @@
         }
       ],
       "bid": 0,
-      "cnt": 19,
+      "cnt": 20,
       "bid_count": 2,
       "bid_history": [
         {
@@ -757,7 +757,7 @@
         }
       ],
       "bid": 0,
-      "cnt": 24,
+      "cnt": 25,
       "bid_count": 4,
       "bid_history": [
         {
@@ -870,7 +870,7 @@
       "favorite": 1,
       "favorite_list": [],
       "bid": 0,
-      "cnt": 1,
+      "cnt": 3,
       "bid_count": 1,
       "bid_history": [
         {

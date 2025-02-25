@@ -4,8 +4,8 @@ import { MypageLayout } from "../../styles/MypageStyle";
 import axios from "axios";
 import { findCategory } from "../../modules/category";
 import { Link, useLocation } from "react-router-dom";
+import CommonList from "../../components/UI/CommonList";
 import ListPerItem from "../../components/ListPerItem";
-import { AuctionListLayout } from "../../styles/CommonStyle";
 import CommonTitle from "../../components/UI/CommonTitle";
 
 export default function MySellList() {
@@ -59,7 +59,7 @@ export default function MySellList() {
       </div>
       <section>
         {userPostAll.length ? (
-          <AuctionListLayout grid={4}>
+          <CommonList grid={4}>
             {userPostAll?.map((post) => {
               return (
                 <Link to={`/auction/${post?.id}`} key={post?.id}>
@@ -72,7 +72,7 @@ export default function MySellList() {
                 </Link>
               );
             })}
-          </AuctionListLayout>
+          </CommonList>
         ) : (
           <p>내가 판매한 물품이 없습니다</p>
         )}

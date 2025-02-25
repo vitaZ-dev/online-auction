@@ -6,8 +6,9 @@ import defaultImg from "/images/profile_default.png";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { findCategory } from "../../modules/category";
+import CommonList from "../../components/UI/CommonList";
 import ListPerItem from "../../components/ListPerItem";
-import { AuctionListLayout, CommonNodataBox } from "../../styles/CommonStyle";
+import { CommonNodataBox } from "../../styles/CommonStyle";
 import CommonTitle from "../../components/UI/CommonTitle";
 
 export default function Mypage() {
@@ -62,7 +63,7 @@ export default function Mypage() {
         />
         {userPost.length ? (
           <>
-            <AuctionListLayout grid={4}>
+            <CommonList grid={4}>
               {userPost?.map((post) => {
                 return (
                   <Link to={`/auction/${post?.id}`} key={post?.id}>
@@ -75,7 +76,7 @@ export default function Mypage() {
                   </Link>
                 );
               })}
-            </AuctionListLayout>
+            </CommonList>
           </>
         ) : (
           <CommonNodataBox>
@@ -93,7 +94,7 @@ export default function Mypage() {
         />
         {bidList?.length ? (
           <>
-            <AuctionListLayout grid={4}>
+            <CommonList grid={4}>
               {bidList?.map((item) => (
                 <ListPerItem
                   key={item?.id}
@@ -103,7 +104,7 @@ export default function Mypage() {
                   startPrice={item?.start_price}
                 />
               ))}
-            </AuctionListLayout>
+            </CommonList>
           </>
         ) : (
           <CommonNodataBox>
@@ -120,7 +121,7 @@ export default function Mypage() {
         />
         {userBidAward.length ? (
           <>
-            <AuctionListLayout grid={4}>
+            <CommonList grid={4}>
               {userBidAward?.map((post) => (
                 <Link to={`/auction/${post?.id}`} key={post?.id}>
                   <ListPerItem
@@ -131,7 +132,7 @@ export default function Mypage() {
                   />
                 </Link>
               ))}
-            </AuctionListLayout>
+            </CommonList>
           </>
         ) : (
           <CommonNodataBox>
@@ -148,7 +149,7 @@ export default function Mypage() {
         />
         {userFavorite.length ? (
           <>
-            <AuctionListLayout grid={4}>
+            <CommonList grid={4}>
               {userFavorite?.map((post) => (
                 <Link to={`/auction/${post?.id}`} key={post?.id}>
                   <ListPerItem
@@ -159,7 +160,7 @@ export default function Mypage() {
                   />
                 </Link>
               ))}
-            </AuctionListLayout>
+            </CommonList>
           </>
         ) : (
           <CommonNodataBox>

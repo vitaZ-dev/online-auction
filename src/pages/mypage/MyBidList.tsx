@@ -1,7 +1,7 @@
 import { useState } from "react";
 import useAuthStore from "../../stores/useAuthStore";
-import { AuctionListLayout } from "../../styles/CommonStyle";
 import { MypageLayout } from "../../styles/MypageStyle";
+import CommonList from "../../components/UI/CommonList";
 import ListPerItem from "../../components/ListPerItem";
 import { findCategory } from "../../modules/category";
 import CommonTitle from "../../components/UI/CommonTitle";
@@ -34,7 +34,7 @@ export default function MyBidList() {
 
       {bidList?.length ? (
         <>
-          <AuctionListLayout grid={4}>
+          <CommonList grid={4}>
             {bidList?.map((item) => (
               <div
                 key={item?.id}
@@ -50,7 +50,7 @@ export default function MyBidList() {
                 {/* </Link> */}
               </div>
             ))}
-          </AuctionListLayout>
+          </CommonList>
         </>
       ) : (
         <div>나의 입찰 내역이 없습니다.</div>

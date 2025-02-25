@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { HomeLayout, SwiperLayout } from "../styles/HomeStyle";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { AuctionListLayout } from "../styles/CommonStyle";
+import CommonList from "../components/UI/CommonList";
 import ListPerItem from "../components/ListPerItem";
 import { CATEGORY, findCategory } from "../modules/category";
 
@@ -77,7 +77,7 @@ export default function Home() {
       <section className="recent_list">
         <CommonTitle type={3} title="최근 올라온 물품" link="/auction" />
         <div>
-          <AuctionListLayout grid={4}>
+          <CommonList grid={4}>
             {recent?.map((r) => {
               return (
                 <Link to={`/auction/${r?.id}`} key={r?.id}>
@@ -90,7 +90,7 @@ export default function Home() {
                 </Link>
               );
             })}
-          </AuctionListLayout>
+          </CommonList>
         </div>
       </section>
       <section className="ranking_list">
@@ -101,7 +101,7 @@ export default function Home() {
         />
         <div>
           {favorite.length ? (
-            <AuctionListLayout grid={4}>
+            <CommonList grid={4}>
               {favorite?.map((r) => {
                 return (
                   <Link to={`/auction/${r?.id}`} key={r?.id}>
@@ -114,7 +114,7 @@ export default function Home() {
                   </Link>
                 );
               })}
-            </AuctionListLayout>
+            </CommonList>
           ) : (
             <div>no data</div>
           )}

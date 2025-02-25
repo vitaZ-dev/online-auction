@@ -7,8 +7,9 @@ import useAuthStore from "../../stores/useAuthStore";
 import FullSizeImage from "../../components/common/FullSizeImage";
 import { useCookies } from "react-cookie";
 import { setDateTemp } from "../../modules";
+import CommonList from "../../components/UI/CommonList";
 import ListPerItem from "../../components/ListPerItem";
-import { AuctionListLayout, CommonPaddingBox } from "../../styles/CommonStyle";
+import { CommonPaddingBox } from "../../styles/CommonStyle";
 import ShowListTable from "../../components/ShowListTable";
 import CommonTitle from "../../components/UI/CommonTitle";
 import CommonCategoryBadge from "../../components/UI/CommonCategoryBadge";
@@ -524,7 +525,7 @@ export default function Detail() {
             }}
           />
         </div>
-        <AuctionListLayout grid={4}>
+        <CommonList grid={4}>
           {sellList?.map((item) => (
             <Link to={`/auction/${item.id}`} key={`item_${item.id}`}>
               <ListPerItem
@@ -536,7 +537,7 @@ export default function Detail() {
               />
             </Link>
           ))}
-        </AuctionListLayout>
+        </CommonList>
       </section>
     </ItemDetailLayout>
   );
