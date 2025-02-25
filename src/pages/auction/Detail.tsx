@@ -294,7 +294,7 @@ export default function Detail() {
     }
 
     const last_bidder = [];
-    if (history.length) {
+    if (history?.length) {
       const bidder = history.reduce(
         (acc, curr) => (curr.amount > acc.amount ? curr : acc),
         history[0]
@@ -338,10 +338,18 @@ export default function Detail() {
         updateBidAward(bid_award);
       }
       alert("마감 처리되었습니다!");
-      setLoading(false);
     } catch (error) {
       console.log(error);
       alert("실패했습니다!");
+      setLoading(false);
+    }
+
+    try {
+      const post = await axios.get(`http://localhost:4000/posts?id=${POST_ID}`);
+      setDetail(post?.data);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
       setLoading(false);
     }
   };
