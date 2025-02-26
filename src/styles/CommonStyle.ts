@@ -24,6 +24,7 @@ export const AuctionListLayout = styled.div`
     display: flex;
     flex-direction: column;
     gap: 12px;
+    cursor: pointer;
 
     &:hover .img_wrap {
       transform: scale(1.06);

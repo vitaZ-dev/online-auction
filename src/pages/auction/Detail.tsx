@@ -268,7 +268,8 @@ export default function Detail() {
     setLoading(false);
   };
 
-  const auctionBidding = async (item: any) => {
+  /*
+  const auctionBiddingPrev = async (item: any) => {
     if (bidAmount <= detail[0].now_price) {
       alert("입찰가는 현대최대가 보다 높은 값만 입력할 수 있습니다!");
       return false;
@@ -330,8 +331,106 @@ export default function Detail() {
     }
     try {
       await fetchPosts();
+      setLoading(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
+    }
+    setLoading(false);
+  };
+  */
+
+  const auctionBidding = async (item: any) => {
+    // console.log(item);
+    // console.log(item?.bid_history); // ~ 새로고침 해야 값이 갱신?
+    // console.log(bidHistoryDetail);
+    if (bidAmount <= detail[0].now_price) {
+      alert("입찰가는 현대최대가 보다 높은 값만 입력할 수 있습니다!");
+      return false;
+    }
+
+    const patch = bidHistoryDetail.some((i) => i.uuid === userInfo.uuid);
+
+    setLoading(true);
+    const nowTime = setDateTemp();
+    try {
+      if (patch) {
+        // patch
+        const filterHistory = bidHistoryDetail.filter(
+          (i) => i.uuid === userInfo.uuid
+        );
+
+        await axios.patch(
+          `http://localhost:4000/bid_list/${userInfo.id + POST_ID}`,
+          {
+            history: [
+              {
+                item_id: POST_ID,
+                user_id: userInfo?.id,
+                uuid: userInfo?.uuid,
+                amount: bidAmount,
+                bidder: userInfo?.nickname || "USER",
+                time: nowTime,
+              },
+              ...filterHistory,
+            ],
+          }
+        );
+      } else {
+        // post
+        await axios.post(`http://localhost:4000/bid_list`, {
+          id: userInfo.id + POST_ID,
+          item_id: POST_ID,
+          user_id: userInfo.id,
+          uuid: userInfo.uuid,
+          bidder: userInfo?.nickname || "USER",
+          amount: bidAmount,
+          time: nowTime,
+          title: item.title,
+          src: item.src,
+          category_id: item.category_id,
+          start_price: item.start_price,
+          history: [
+            {
+              item_id: POST_ID,
+              user_id: userInfo?.id,
+              uuid: userInfo?.uuid,
+              amount: bidAmount,
+              bidder: userInfo?.nickname || "USER",
+              time: nowTime,
+            },
+          ],
+        });
+      }
+
+      await axios.patch(`http://localhost:4000/posts/${POST_ID}`, {
+        now_price: bidAmount,
+        bid_count: bidHistoryDetail.length + 1,
+        bid_history: [
+          {
+            id: POST_ID,
+            user_id: userInfo?.id,
+            uuid: userInfo?.uuid,
+            amount: bidAmount,
+            bidder: userInfo?.nickname || "USER",
+            time: nowTime,
+          },
+          ...bidHistoryDetail,
+        ],
+      });
+      alert("입찰 완료!");
+      setOpenBidding(false);
+    } catch (error) {
+      console.log(error);
+      alert("입찰에 실패했습니다!");
+    }
+
+    try {
+      await fetchPosts();
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
     }
     setLoading(false);
   };
