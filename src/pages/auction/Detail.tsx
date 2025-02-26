@@ -13,6 +13,7 @@ import { CommonPaddingBox } from "../../styles/CommonStyle";
 import ShowListTable from "../../components/ShowListTable";
 import CommonTitle from "../../components/UI/CommonTitle";
 import CommonCategoryBadge from "../../components/UI/CommonCategoryBadge";
+import { numberFormat } from "../../utils";
 
 export default function Detail() {
   const [loading, setLoading] = useState(false);
@@ -464,8 +465,8 @@ export default function Detail() {
             />
             <CommonPaddingBox>
               <p>{item.start_date}</p>
-              <p>조회수 | {item?.cnt}</p>
-              <p>관심 | {favoriteCnt}</p>
+              <p>조회수 | {numberFormat(item?.cnt)}</p>
+              <p>관심 | {numberFormat(favoriteCnt)}</p>
             </CommonPaddingBox>
             {/* <div className="item_info">
               <div>
@@ -488,9 +489,9 @@ export default function Detail() {
               <CommonPaddingBox>
                 <p>
                   카테고리 | {findCategory(item?.category_id)} <br />
-                  시작가 | {item?.start_price}원 <br />
-                  입찰횟수 | {item?.bid_count} <br />
-                  현재최대가 | {item?.now_price} <br />
+                  시작가 | {numberFormat(item?.start_price)}원 <br />
+                  입찰횟수 | {numberFormat(item?.bid_count)} <br />
+                  현재최대가 | {numberFormat(item?.now_price)} <br />
                   마감일 | {item?.end_date}
                 </p>
               </CommonPaddingBox>

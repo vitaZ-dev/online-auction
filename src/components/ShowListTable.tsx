@@ -1,5 +1,5 @@
 import { ShowListTableLayout } from "../styles/TempStyle";
-import { moneyFormat } from "../utils";
+import { numberFormat } from "../utils";
 
 export default function ShowListTable({ tableGrid, tableHeader, tableList }) {
   return (
@@ -17,7 +17,7 @@ export default function ShowListTable({ tableGrid, tableHeader, tableList }) {
               .map((_, index) => (
                 <span key={`table_list_${idx}_${index}`}>
                   {Number.isInteger(list[tableHeader[index]])
-                    ? moneyFormat(list[tableHeader[index]])
+                    ? numberFormat(list[tableHeader[index]])
                     : list[tableHeader[index]]}
                 </span>
               ))}

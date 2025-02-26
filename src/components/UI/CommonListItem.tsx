@@ -1,4 +1,4 @@
-import { moneyFormat } from "../../utils";
+import { numberFormat } from "../../utils";
 
 export default function CommonListItem({
   src,
@@ -25,7 +25,7 @@ export default function CommonListItem({
       <div className="post_info">
         <div className="category_badge">{category}</div>
         <h5 className="ellipsis-1">{title}</h5>
-        <p className="ellipsis-1">{moneyFormat(startPrice)}원 ~</p>
+        <p className="ellipsis-1">{numberFormat(startPrice)}원 ~</p>
       </div>
     </article>
   );
