@@ -150,6 +150,7 @@ export default function Detail() {
     }
   };
 
+  /*
   const updateFavorite = async (item: any) => {
     const cnt = favoriteCheck ? favoriteCnt - 1 : favoriteCnt + 1;
     let favorite_list;
@@ -195,6 +196,63 @@ export default function Detail() {
         updateUserFavorite(favoriteList);
       }
 
+      await axios.patch(`http://localhost:4000/posts/${POST_ID}`, {
+        favorite: cnt,
+        favorite_list,
+      });
+      alert("성공");
+      setFavoriteCnt(cnt);
+      setFavoriteCheck(!favoriteCheck);
+    } catch (error) {
+      console.log(error);
+      console.log("실패했습니다");
+    }
+    setLoading(false);
+  };
+*/
+
+  const updateFavorite = async (item: any) => {
+    const cnt = favoriteCheck ? favoriteCnt - 1 : favoriteCnt + 1;
+    let favorite_list;
+    if (favoriteCheck) {
+      favorite_list = item.favorite_list.filter(
+        (item) => item.uuid !== userInfo.uuid
+      );
+    } else {
+      favorite_list = [
+        ...item.favorite_list,
+        {
+          id: userInfo.id,
+          uuid: userInfo.uuid,
+        },
+      ];
+    }
+    favorite_list = Array.from(
+      new Map(favorite_list.map((item) => [item.id, item])).values()
+    );
+
+    setLoading(true);
+    try {
+      if (favoriteCheck) {
+        // 좋아요 해제
+        await axios.delete(
+          `http://localhost:4000/favorite/${userInfo.id + POST_ID}`
+        );
+      } else {
+        // 좋아요 등록
+        await axios.post(`http://localhost:4000/favorite`, {
+          id: userInfo.id + POST_ID,
+          item_id: POST_ID,
+          user_id: userInfo.id,
+          uuid: userInfo.uuid,
+          title: item.title,
+          src: item.src,
+          category_id: item.category_id,
+          start_price: item.start_price,
+        });
+      }
+
+      // 해당 제품 db 내용 업데이트
       await axios.patch(`http://localhost:4000/posts/${POST_ID}`, {
         favorite: cnt,
         favorite_list,
