@@ -336,7 +336,8 @@ export default function Detail() {
     setLoading(false);
   };
 
-  const closeAuction = async (
+  /*
+  const closeAuctionPrev = async (
     isOpen: boolean,
     endDate: string,
     history: any,
@@ -403,6 +404,70 @@ export default function Detail() {
       setLoading(false);
     }
 
+    try {
+      const post = await axios.get(`http://localhost:4000/posts?id=${POST_ID}`);
+      setDetail(post?.data);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
+  */
+
+  const closeAuction = async (
+    isOpen: boolean,
+    endDate: string,
+    history: any,
+    title: string,
+    src: string,
+    category_id: number
+  ) => {
+    // 입찰 마감 처리는 최소 14일 이후에 가능+
+    if (!isOpen) return false;
+
+    if (new Date() < new Date(endDate)) {
+      alert("최소 마감일 이후에 마감할 수 있습니다.");
+      return false;
+    }
+
+    let last_bidder = null;
+    if (history?.length) {
+      last_bidder = history.reduce(
+        (acc, curr) => (curr.amount > acc.amount ? curr : acc),
+        history[0]
+      );
+    }
+    console.log(last_bidder);
+
+    const nowDate = setDateTemp();
+    try {
+      setLoading(true);
+      await axios.patch(`http://localhost:4000/posts/${POST_ID}`, {
+        is_open: 0,
+        end_date: nowDate,
+        last_bidder,
+      });
+      if (last_bidder) {
+        await axios.post(`http://localhost:4000/bid_award`, {
+          id: userInfo.id + POST_ID,
+          item_id: POST_ID,
+          user_id: userInfo.id,
+          uuid: userInfo.uuid,
+          award_date: nowDate,
+          time: last_bidder.time,
+          amount: last_bidder.amount,
+          title,
+          category_id,
+          src,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+
+    // data 갱신
     try {
       const post = await axios.get(`http://localhost:4000/posts?id=${POST_ID}`);
       setDetail(post?.data);
@@ -555,7 +620,7 @@ export default function Detail() {
                 <CommonTitle type={3} title="최종 입찰자" />
                 <CommonPaddingBox>
                   <button>
-                    {item.last_bidder?.[0]?.bidder || "입찰자가 없습니다."}
+                    {item?.last_bidder?.bidder || "입찰자가 없습니다."}
                   </button>
                 </CommonPaddingBox>
               </section>
