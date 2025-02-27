@@ -9,16 +9,16 @@ type AuthStoreType = {
   isLogin: boolean;
   userInfo: ObjectType | null;
   token: string | null;
-  favorite: Array<ObjectType> | [];
-  bidHistory: Array<ObjectType> | [];
-  bidList: Array<ObjectType> | [];
-  bidAward: Array<ObjectType> | [];
+  salesHistory: Array<ObjectType> | null;
+  favorite: Array<ObjectType> | null;
+  bidList: Array<ObjectType> | null;
+  bidAward: Array<ObjectType> | null;
 
   login: (userInfo: ObjectType) => void;
   logout: () => void;
   updateUserInfo: (newUserInfo: ObjectType) => void;
+  updateSalesHistory: (salesHistory: Array<ObjectType>) => void;
   updateUserFavorite: (favorite: Array<ObjectType>) => void;
-  updateBidHistory: (bidHistory: Array<ObjectType>) => void;
   updateBidList: (bidList: Array<ObjectType>) => void;
   updateBidAward: (bidAward: Array<ObjectType>) => void;
 };
@@ -29,25 +29,25 @@ const useAuthStore = create(
       isLogin: false,
       userInfo: null,
       token: null,
-      favorite: [],
-      bidHistory: [],
-      bidList: [],
-      bidAward: [],
+      salesHistory: null,
+      favorite: null,
+      bidList: null,
+      bidAward: null,
 
       login: (userInfo) => set({ isLogin: true, userInfo }),
       logout: () =>
         set({
           isLogin: false,
           userInfo: null,
-          favorite: [],
-          bidHistory: [],
-          bidList: [],
-          bidAward: [],
+          salesHistory: null,
+          favorite: null,
+          bidList: null,
+          bidAward: null,
         }),
       // 유저 정보 업데이트
       updateUserInfo: (newUserInfo) => set({ userInfo: newUserInfo }),
+      updateSalesHistory: (salesHistory) => set({ salesHistory }),
       updateUserFavorite: (favorite) => set({ favorite }),
-      updateBidHistory: (bidHistory) => set({ bidHistory }),
       updateBidList: (bidList) => set({ bidList }),
       updateBidAward: (bidAward) => set({ bidAward }),
 
