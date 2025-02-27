@@ -135,9 +135,9 @@ export default function Mypage() {
         {bidList?.length ? (
           <>
             <CommonList grid={4}>
-              {bidList?.map((item) => (
+              {bidList?.map((item, idx) => (
                 <CommonListItem
-                  key={item?.id}
+                  key={`bidlist_${idx}`}
                   src={item?.src}
                   category={findCategory(item?.category_id)}
                   title={item?.title}
@@ -163,8 +163,8 @@ export default function Mypage() {
         {bidAward?.length ? (
           <>
             <CommonList grid={4}>
-              {bidAward?.map((post) => (
-                <Link to={`/auction/${post?.id}`} key={post?.id}>
+              {bidAward?.map((post, idx) => (
+                <Link to={`/auction/${post?.item_id}`} key={`award_${idx}`}>
                   <CommonListItem
                     src={post?.src}
                     category={findCategory(post?.category_id)}
@@ -192,8 +192,8 @@ export default function Mypage() {
         {userFavorite.length ? (
           <>
             <CommonList grid={4}>
-              {userFavorite?.map((post) => (
-                <Link to={`/auction/${post?.id}`} key={post?.id}>
+              {userFavorite?.map((post, idx) => (
+                <Link to={`/auction/${post?.item_id}`} key={`favorite_${idx}`}>
                   <CommonListItem
                     src={post?.src}
                     category={findCategory(post?.category_id)}

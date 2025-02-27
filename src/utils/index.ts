@@ -1,5 +1,5 @@
 export const numberFormat = (num: number | string) => {
-  return num.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+  return num?.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 };
 
 export const moneyFormatLocaleString = (

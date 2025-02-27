@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useAuthStore from "../../stores/useAuthStore";
 import { MypageLayout } from "../../styles/MypageStyle";
 import CommonList from "../../components/UI/CommonList";
@@ -9,9 +9,15 @@ import CommonModal from "../../components/common/CommonModal";
 import ShowListTable from "../../components/ShowListTable";
 import { useNavigate } from "react-router-dom";
 import CallMadeIcon from "@mui/icons-material/CallMade";
+import axios from "axios";
+import { Pagination, Stack } from "@mui/material";
 
 export default function MyBidList() {
-  const { userInfo, bidHistory, bidList } = useAuthStore();
+  const { userInfo } = useAuthStore();
+
+  const [bidListAll, setBidListAll] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
 
   const [toggle, setToggle] = useState(false);
   const [detailID, setDetailId] = useState("");
@@ -20,11 +26,22 @@ export default function MyBidList() {
 
   const navigate = useNavigate();
 
-  const handleDetailBid = (id: string, title: string) => {
-    const re = bidHistory.filter((item) => item.id === id);
-    setDetailId(id);
-    setBidContents(re);
+  useEffect(() => {
+    getUserPostList(page);
+  }, [page]);
+
+  const getUserPostList = async (page: number) => {
+    const { data } = await axios.get(
+      `http://localhost:4000/bid_list?uuid=${userInfo.uuid}&_sort=-created_at&_page=${page}&_per_page=16`
+    );
+    setBidListAll(data.data);
+    setTotalPage(data.pages);
+  };
+
+  const handleDetailBid = (idx: number, item_id: string, title: string) => {
+    setDetailId(item_id);
     setDetailTitle(title);
+    setBidContents(bidListAll[idx]?.history);
     setToggle(true);
   };
 
@@ -32,13 +49,13 @@ export default function MyBidList() {
     <MypageLayout>
       <CommonTitle type={1} title={`${userInfo?.nickname} 님의 입찰 내역들`} />
 
-      {bidList?.length ? (
+      {bidListAll?.length ? (
         <>
           <CommonList grid={4}>
-            {bidList?.map((item) => (
+            {bidListAll?.map((item, idx) => (
               <div
                 key={item?.id}
-                onClick={() => handleDetailBid(item.id, item.title)}
+                onClick={() => handleDetailBid(idx, item.item_id, item.title)}
               >
                 {/* <Link to={`/auction/${item?.id}`} key={item?.id}> */}
                 <CommonListItem
@@ -52,6 +69,23 @@ export default function MyBidList() {
               </div>
             ))}
           </CommonList>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "12px",
+            }}
+          >
+            <Stack spacing={2}>
+              <Pagination
+                count={totalPage}
+                variant="outlined"
+                color="secondary"
+                onChange={(_, changePage) => setPage(changePage)}
+              />
+            </Stack>
+          </div>
         </>
       ) : (
         <div>나의 입찰 내역이 없습니다.</div>
