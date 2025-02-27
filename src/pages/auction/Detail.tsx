@@ -537,7 +537,6 @@ export default function Detail() {
         history[0]
       );
     }
-    console.log(last_bidder);
 
     const nowDate = setDateTemp();
     try {
@@ -549,10 +548,10 @@ export default function Detail() {
       });
       if (last_bidder) {
         await axios.post(`http://localhost:4000/bid_award`, {
-          id: userInfo.id + POST_ID,
+          id: last_bidder.id + POST_ID,
           item_id: POST_ID,
-          user_id: userInfo.id,
-          uuid: userInfo.uuid,
+          user_id: last_bidder.id,
+          uuid: last_bidder.uuid,
           award_date: nowDate,
           time: last_bidder.time,
           amount: last_bidder.amount,
