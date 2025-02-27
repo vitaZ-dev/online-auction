@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
 import { Link } from "react-router-dom";
@@ -7,26 +7,12 @@ import { Link } from "react-router-dom";
 export default function Login() {
   const auth = useAuthStore();
 
-  const [userInfo, setUserInfo] = useState([]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const getUserInfo = async () => {
-      try {
-        const { data } = await axios.get("http://localhost:4000/user");
-        setUserInfo(data);
-      } catch (err) {
-        console.log(err);
-        setUserInfo([]);
-      }
-    };
-    getUserInfo();
-  }, []);
-
-  const login = () => {
+  const login = async () => {
     if (!email) {
       alert("이메일을 입력하십시오");
       return;
@@ -36,22 +22,20 @@ export default function Login() {
       return;
     }
 
-    const user = userInfo.find(
-      (user) => user.email === email && user.password === password
-    );
-
-    if (user) {
-      console.log("login ok");
-      const { favorite, bid_history, bid_list, bid_award, ...info } = user;
-      auth.login(info);
-      auth.updateUserFavorite(favorite);
-      auth.updateBidHistory(bid_history);
-      auth.updateBidList(bid_list);
-      auth.updateBidAward(bid_award);
-      navigate("/");
-    } else {
-      console.log("login no");
-      alert("일치하는 회원 정보가 없습니다");
+    try {
+      const { data } = await axios.get(
+        `http://localhost:4000/user?email=${email}&password=${password}`
+      );
+      if (data?.length) {
+        auth.login(data[0]);
+        navigate("/");
+      } else {
+        console.log("login fail");
+        alert("일치하는 회원 정보가 없습니다.");
+      }
+    } catch (error) {
+      console.log(error);
+      alert("에러가 발생했습니다.");
     }
   };
 
