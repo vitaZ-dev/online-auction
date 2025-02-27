@@ -12,12 +12,30 @@ import { CommonNodataBox } from "../../styles/CommonStyle";
 import CommonTitle from "../../components/UI/CommonTitle";
 
 export default function Mypage() {
-  const [userPost, setUserPost] = useState([]);
   const [userFavorite, setUserFavorite] = useState([]);
-  const [userBidAward, setUserBidAward] = useState([]);
-  const { userInfo, favorite, bidList, bidAward } = useAuthStore();
+  const {
+    userInfo,
+    salesHistory,
+    updateSalesHistory,
+    bidList,
+    updateBidList,
+    bidAward,
+    updateBidAward,
+  } = useAuthStore();
 
   useEffect(() => {
+    // 판매 내역
+    if (!salesHistory) getSalesHistory();
+
+    // 입찰 내역
+    if (!bidList) getBidList();
+
+    // 낙찰 내역
+    if (!bidAward) getBidAward();
+
+    // 좋아요 리스트
+    getFavorite();
+    /*
     // 낙찰 내역
     const awardFilter = bidAward?.reduce((acc: any[], item: any) => {
       if (acc.length < 4) acc.push(item);
@@ -33,14 +51,35 @@ export default function Mypage() {
     setUserFavorite(favoriteFilter);
 
     fetchPosts();
+    */
   }, []);
 
-  const fetchPosts = async () => {
+  const getSalesHistory = async () => {
     const { data } = await axios.get(
       `http://localhost:4000/posts?user_id=${userInfo?.uuid}&_sort=-created_at&_limit=4`
     );
+    updateSalesHistory(data);
+  };
 
-    setUserPost(data);
+  const getBidList = async () => {
+    const { data } = await axios.get(
+      `http://localhost:4000/bid_list?uuid=${userInfo?.uuid}&_sort=-created_at&_limit=4`
+    );
+    updateBidList(data);
+  };
+
+  const getBidAward = async () => {
+    const { data } = await axios.get(
+      `http://localhost:4000/bid_award?uuid=${userInfo?.uuid}&_sort=-created_at&_limit=4`
+    );
+    updateBidAward(data);
+  };
+
+  const getFavorite = async () => {
+    const { data } = await axios.get(
+      `http://localhost:4000/favorite?uuid=${userInfo?.uuid}&_sort=-created_at&_limit=4`
+    );
+    setUserFavorite(data);
   };
 
   return (
@@ -59,12 +98,12 @@ export default function Mypage() {
         <CommonTitle
           type={3}
           title="최근 판매 물품 목록"
-          link={Boolean(userPost?.length) && "list"}
+          link={Boolean(salesHistory?.length) && "list"}
         />
-        {userPost.length ? (
+        {salesHistory?.length ? (
           <>
             <CommonList grid={4}>
-              {userPost?.map((post) => {
+              {salesHistory?.map((post) => {
                 return (
                   <Link to={`/auction/${post?.id}`} key={post?.id}>
                     <CommonListItem
@@ -119,12 +158,12 @@ export default function Mypage() {
         <CommonTitle
           type={3}
           title="나의 낙찰 내역"
-          link={Boolean(userBidAward?.length) && "award"}
+          link={Boolean(bidAward?.length) && "award"}
         />
-        {userBidAward.length ? (
+        {bidAward?.length ? (
           <>
             <CommonList grid={4}>
-              {userBidAward?.map((post) => (
+              {bidAward?.map((post) => (
                 <Link to={`/auction/${post?.id}`} key={post?.id}>
                   <CommonListItem
                     src={post?.src}
