@@ -3,33 +3,46 @@ import useAuthStore from "../../stores/useAuthStore";
 import { MypageLayout } from "../../styles/MypageStyle";
 import axios from "axios";
 import { findCategory } from "../../modules/category";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import CommonList from "../../components/UI/CommonList";
 import CommonListItem from "../../components/UI/CommonListItem";
 import CommonTitle from "../../components/UI/CommonTitle";
 import { Pagination, Stack } from "@mui/material";
+import { CommonPaddingBox } from "../../styles/CommonStyle";
 
 export default function MySellList() {
   const [userPostAll, setUserPostAll] = useState([]);
 
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
+  const [isOpen, setIsOpen] = useState<"all" | "0" | "1">("all");
 
   const { userInfo } = useAuthStore();
 
-  const { state } = useLocation();
+  const [query, setQuery] = useSearchParams();
+  const { state, search } = useLocation();
   const USER_ID = state?.uuid ?? userInfo?.uuid;
 
   useEffect(() => {
-    getUserPostList(page);
-  }, [page]);
+    getUserPostList(page, search.slice(-1));
+  }, [page, search]);
 
-  const getUserPostList = async (page: number) => {
-    const { data } = await axios.get(
-      `http://localhost:4000/posts?user_id=${USER_ID}&_sort=-created_at&_page=${page}&_per_page=16`
-    );
+  const getUserPostList = async (page: number, search: string = "") => {
+    let url = `http://localhost:4000/posts?user_id=${USER_ID}&_sort=-created_at&_page=${page}&_per_page=16`;
+    if (search) url += `&is_open=${search}`;
+    const { data } = await axios.get(url);
     setUserPostAll(data.data);
     setTotalPage(data.pages);
+  };
+
+  const searchIsOpen = async (e) => {
+    setIsOpen(e.target.value);
+
+    if (e.target.value === "all") query.delete("is_open");
+    else query.set("is_open", e.target.value);
+    setQuery(query);
+
+    if (page !== 1) setPage(1);
   };
 
   /*
@@ -55,7 +68,7 @@ export default function MySellList() {
 
       <br />
 
-      <div style={{ display: "flex", gap: "12px" }}>
+      {/* <div style={{ display: "flex", gap: "12px" }}>
         <button style={{ border: "1px solid gray", padding: "4px 8px" }}>
           all
         </button>
@@ -65,7 +78,46 @@ export default function MySellList() {
         <button style={{ border: "1px solid gray", padding: "4px 8px" }}>
           end
         </button>
-      </div>
+      </div> */}
+      <CommonPaddingBox>
+        <div style={{ display: "flex", gap: "12px" }}>
+          <div style={{ padding: "4px 8px", border: "1px solid silver" }}>
+            <input
+              type="radio"
+              name="open_filter"
+              id="all"
+              value="all"
+              onChange={(e) => searchIsOpen(e)}
+              checked={isOpen === "all"}
+            />
+            <label htmlFor="all">all</label>
+          </div>
+          <div style={{ padding: "4px 8px", border: "1px solid silver" }}>
+            <input
+              type="radio"
+              name="open_filter"
+              id="open"
+              value="1"
+              onChange={(e) => searchIsOpen(e)}
+              checked={isOpen === "1"}
+            />
+            <label htmlFor="open">open</label>
+          </div>
+          <div style={{ padding: "4px 8px", border: "1px solid silver" }}>
+            <input
+              type="radio"
+              name="open_filter"
+              id="close"
+              value="0"
+              onChange={(e) => searchIsOpen(e)}
+              checked={isOpen === "0"}
+            />
+            <label htmlFor="close">close</label>
+          </div>
+        </div>
+      </CommonPaddingBox>
+      <br />
+
       <section>
         {userPostAll.length ? (
           <>
