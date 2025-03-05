@@ -10,6 +10,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 // import { Navigation } from "swiper/modules";
 import "swiper/swiper-bundle.css";
 import CommonTitle from "../components/UI/CommonTitle";
+import { CommonNodataBox, CommonPaddingBox } from "../styles/CommonStyle";
 
 export default function Home() {
   const [recent, setRecent] = useState([]);
@@ -77,9 +78,9 @@ export default function Home() {
       <section className="recent_list">
         <CommonTitle type={3} title="최근 올라온 물품" link="/auction" />
         <div>
-          <CommonList grid={4}>
-            {recent?.map((r) => {
-              return (
+          {recent?.length ? (
+            <CommonList grid={4}>
+              {recent?.map((r) => (
                 <Link to={`/auction/${r?.id}`} key={r?.id}>
                   <CommonListItem
                     src={r?.src}
@@ -89,9 +90,11 @@ export default function Home() {
                     isOpen={r.is_open}
                   />
                 </Link>
-              );
-            })}
-          </CommonList>
+              ))}
+            </CommonList>
+          ) : (
+            <CommonNodataBox>게시글이 없습니다.</CommonNodataBox>
+          )}
         </div>
       </section>
       <section className="ranking_list">
@@ -118,7 +121,7 @@ export default function Home() {
               })}
             </CommonList>
           ) : (
-            <div>no data</div>
+            <CommonNodataBox>즐겨찾기된 게시글이 없습니다.</CommonNodataBox>
           )}
         </div>
       </section>
