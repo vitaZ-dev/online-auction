@@ -29,6 +29,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 
+import { ReactQueryDevtools } from "react-query/devtools";
+
 function App() {
   const [open, setOpen] = useState(false);
   const toggleDrawer = (newOpen: boolean) => () => {
@@ -318,6 +320,7 @@ function App() {
           </div>
         </FooterLayout>
       </BaseLayout>
+      <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
     </>
   );
 }

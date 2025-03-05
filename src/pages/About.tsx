@@ -1,7 +1,23 @@
 import useCounterStore from "../stores/useCounterStore";
+// import { useQuery } from "react-query";
+// import axios from "axios";
 
 export default function About() {
   const { count, increase, decrease } = useCounterStore();
+
+  /*
+  const { isLoading, data, isError, error } = useQuery(
+    "get-product",
+    () => {
+      // const { data } = useQuery("get-product", () => {
+      return axios.get("http://localhost:4000/posts");
+    },
+    { staleTime: 30000, refetchOnMount: "always", refetchOnWindowFocus: false }
+  );
+  // console.log(data);
+  console.log(isLoading, data, isError, error);
+  */
+
   return (
     <>
       <div>

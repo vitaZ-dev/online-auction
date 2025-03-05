@@ -5,6 +5,7 @@ import {
   RouterProvider,
   // useNavigate,
 } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { Suspense } from "react";
 
 // import useAuthStore from "./stores/useAuthStore.ts";
@@ -172,6 +173,10 @@ const router = createBrowserRouter([
   },
 ]);
 
+const queryClient = new QueryClient();
+
 createRoot(document.getElementById("root")!).render(
-  <RouterProvider router={router} />
+  <QueryClientProvider client={queryClient}>
+    <RouterProvider router={router} />
+  </QueryClientProvider>
 );
