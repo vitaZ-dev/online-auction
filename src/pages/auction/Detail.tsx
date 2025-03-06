@@ -21,6 +21,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 export default function Detail() {
   const [loading, setLoading] = useState(false);
   const [pageLoading, setPageLoading] = useState(true);
+  const [sellListLoading, setSellListLoading] = useState(true);
 
   const [detail, setDetail] = useState([]);
   const [userCheck, setUserCheck] = useState(false);
@@ -126,6 +127,7 @@ export default function Detail() {
     );
 
     setSellList(data.filter((item) => item.id !== POST_ID));
+    setSellListLoading(false);
   };
 
   const openComponent = () => setShow(true);
@@ -803,7 +805,7 @@ export default function Detail() {
             },
           }}
         />
-        <CommonList grid={4}>
+        <CommonList grid={4} loading={sellListLoading}>
           {sellList?.map((sell) => (
             <Link to={`/auction/${sell.id}`} key={`item_${sell.id}`}>
               <CommonListItem

@@ -5,6 +5,7 @@ import { Pagination, Stack } from "@mui/material";
 import { CATEGORY, findCategory } from "../../modules/category";
 import CommonList from "../../components/UI/CommonList";
 import CommonListItem from "../../components/UI/CommonListItem";
+import { CommonNodataBox } from "../../styles/CommonStyle";
 // import Pagination from "../../components/common/Pagination";
 
 type searchQueryType = {
@@ -25,7 +26,9 @@ export default function List() {
 
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
+  const [isData, setIsData] = useState(true);
   const [posts, setPosts] = useState<Array<any>>([]);
+  const [pageLoading, setPageLoading] = useState(true);
   // const [showLoadBtn, setShowLoadBtn] = useState(true);
   // const [pagination, setPagination] = useState({});
 
@@ -61,6 +64,8 @@ export default function List() {
   }, [page, search]);
 
   const fetchPosts = async (page: number, query: searchQueryType = {}) => {
+    setPageLoading(true);
+
     let url = `http://localhost:4000/posts?&_page=${page}&_per_page=10`;
     query?.sort_by && query.sort_by === "favorite"
       ? (url += "&_sort=-favorite,-created_at")
@@ -86,6 +91,9 @@ export default function List() {
     //   total_count: data.items,
     //   total_pages: data.pages,
     // });
+    setPageLoading(false);
+
+    if (data.data.length === 0) setIsData(false);
   };
 
   // const loadingNextPage = () => setPage(page + 1);
@@ -188,9 +196,9 @@ export default function List() {
           </div>
         )}
       </div>
-      {posts.length ? (
+      {isData ? (
         <>
-          <CommonList>
+          <CommonList loading={pageLoading}>
             {posts?.map((post) => {
               return (
                 <Link to={`${post.id}`} key={post.id}>
@@ -238,7 +246,7 @@ export default function List() {
           )} */}
         </>
       ) : (
-        <p>게시글이 없습니다</p>
+        <CommonNodataBox>게시글이 없습니다</CommonNodataBox>
       )}
     </>
   );
