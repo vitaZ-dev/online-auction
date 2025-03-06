@@ -82,12 +82,13 @@ header {
 main {
   width: 100%;
   min-height: 500px;
-  background-color: lavender;
+  background-color: #f5f5f6;
+  box-shadow: 0 0 16px #0000001a;
 }
 footer {
   width: 100%;
   min-height: 100px;
-  background-color: lightgray;
+  background-color: #e9e9eb;
 }
 .d-flex {
   display: flex;

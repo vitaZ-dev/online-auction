@@ -49,13 +49,25 @@ export const ItemDetailLayout = styled.article`
 
   .item_info {
     display: flex;
+    flex-wrap: wrap;
     margin: 24px auto;
+    padding: 0 16px;
     div {
+      /* width: calc((100% - 32px) / 3); */
+      /* flex: 1 1 auto; */
       padding: 0 24px;
       border-left: 1px solid black;
+      text-align: center;
       &:first-of-type {
         padding-left: 0;
-        border-left: none;
+        border-left: transparent;
+      }
+
+      p:first-of-type {
+        margin-bottom: 8px;
+        color: gray;
+        font-size: 14px;
+        font-weight: 700;
       }
     }
   }
@@ -66,6 +78,21 @@ export const ItemDetailLayout = styled.article`
     margin: 24px 0;
     border: 1px solid silver;
   }
+`;
+
+export const ItemDetailBox = styled.div`
+  margin: 16px 0;
+  padding: 16px;
+  border: 1px solid gray;
+  border-radius: 10px;
+  background-color: white;
+  color: rgb(139, 139, 139);
+  font-weight: 600;
+  --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color),
+    0 1px 2px -1px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(0 0 #0000, 0 0 #0000),
+    var(--tw-shadow);
 `;
 
 export const FullImageLayout = styled.div`
