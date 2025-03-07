@@ -212,3 +212,47 @@ export const CommonCategoryBadgeStyle = styled.div`
     font-size: 12px;
   }
 `;
+
+export const CommonInputStyle = styled.div`
+  input.common-input {
+    background: #fff;
+    border: 1px solid silver;
+    border-radius: 6px;
+    padding: 6px 12px;
+    width: ${({ length }) => (length === "full" ? "100%" : "20px")};
+    height: 40px;
+    outline: none;
+
+    &::placeholder {
+      color: lightgray;
+    }
+    &:focus,
+    &:active {
+      border: 1px solid #ff3c5a;
+      box-shadow: 0 0 0 0.5px #ff3c5a;
+    }
+  }
+`;
+
+export const CommonTextareaStyle = styled.div`
+  textarea.common-input {
+    width: 100%;
+    height: 200px;
+    outline: none;
+    border: 1px solid silver;
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-weight: 400;
+    color: #181818;
+    resize: none;
+
+    &::placeholder {
+      color: lightgray;
+    }
+    &:focus,
+    &:active {
+      border: 1px solid #ff3c5a;
+      box-shadow: 0 0 0 0.5px #ff3c5a;
+    }
+  }
+`;
