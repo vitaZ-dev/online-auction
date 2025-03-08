@@ -226,10 +226,16 @@ export const CommonInputStyle = styled.div`
     &::placeholder {
       color: lightgray;
     }
-    &:focus,
-    &:active {
+    &:focus:not(:disabled),
+    &:active:not(:disabled) {
       border: 1px solid #ff3c5a;
       box-shadow: 0 0 0 0.5px #ff3c5a;
+    }
+
+    &:disabled {
+      border: 1px solid silver;
+      background-color: #eaeaf0;
+      color: #85858f;
     }
   }
 `;
