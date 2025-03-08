@@ -4,6 +4,10 @@ import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
 import { setDate14Temp, setDateTemp } from "../../modules";
 import { CATEGORY } from "../../modules/category";
+import CommonTitle from "../../components/UI/CommonTitle";
+import { WritepageLayout } from "../../styles/SellPageStyle";
+import CommonInput from "../../components/common/CommonInput";
+import CommonTextarea from "../../components/common/CommonTextarea";
 
 export default function Sell() {
   const [title, setTitle] = useState("");
@@ -125,83 +129,107 @@ export default function Sell() {
   };
 
   return (
-    <>
-      <h1>Sell</h1>
+    <WritepageLayout>
+      <CommonTitle type={1} title="경매 출품 게시글 작성" />
 
-      <form className="login-form" onSubmit={() => registerPost()}>
-        <label htmlFor="title">제목</label>
-        <input
-          type="text"
-          id="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          maxLength={50}
-        />
-        <span>{title.length}/50</span>
+      <div className="write_area">
+        <div>
+          <div className="item_img">
+            <div className="img_wrap">
+              {imgSrc ? (
+                <img src={imgSrc} />
+              ) : (
+                <label htmlFor="imgfile" className="img_notice">
+                  이미지를
+                  <br />
+                  선택해주세요
+                </label>
+              )}
+            </div>
+          </div>
+          <input
+            type="file"
+            accept="image/*"
+            id="imgfile"
+            onChange={(e) => onChangeFile(e)}
+            style={{ display: "none" }}
+          />
+          <label htmlFor="imgfile" className="img_btn">
+            파일선택
+          </label>
+        </div>
 
-        <br />
-        <br />
+        <div>
+          <label htmlFor="title">제목</label>
+          <CommonInput
+            type="text"
+            id="title"
+            value={title}
+            setValue={(e) => setTitle(e.target.value)}
+            length="full"
+            maxLength={50}
+            placeholder="제목을 입력해주세요"
+          />
+          <span className="text_length">{title.length}/50</span>
+        </div>
 
-        <label htmlFor="contents">내용</label>
-        <textarea
-          id="contents"
-          value={contents}
-          onChange={(e) => setContents(e.target.value)}
-          style={{ width: "100%", height: "100px" }}
-          maxLength={1000}
-        ></textarea>
-        <span>{contents.length}/1000</span>
+        <div>
+          <label htmlFor="contents">내용</label>
+          <CommonTextarea
+            id="contents"
+            value={contents}
+            setValue={setContents}
+            maxLength={1000}
+            placeholder="내용을 입력해주세요"
+          />
+          <span className="text_length">{contents.length}/1000</span>
+        </div>
 
-        <br />
-        <br />
-        <label htmlFor="imgfile">이미지</label>
-        <input
-          type="file"
-          accept="image/*"
-          id="imgfile"
-          onChange={(e) => onChangeFile(e)}
-        />
-        <img src={imgSrc} alt="preview_file" />
+        <div className="flex_seperate">
+          <div>
+            <label htmlFor="category">카테고리</label>
+            <select
+              name="category"
+              id="category"
+              onChange={(e) => setCategory(Number(e.target.value))}
+              value={category}
+            >
+              <option value={-1} disabled>
+                카테고리
+              </option>
+              {CATEGORY.map((cate) => (
+                <option value={cate.category_id} key={cate.category_id}>
+                  {cate.category_name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label htmlFor="price">시작가</label>
+            <CommonInput
+              id="price"
+              type="number"
+              value={price}
+              setValue={(e) => setPrice(Number(e.target.value))}
+              min={0}
+              placeholder="시작가"
+            />
+          </div>
+        </div>
 
-        <br />
-        <br />
-
-        <label htmlFor="category">카테고리</label>
-        <select
-          name="category"
-          id="category"
-          onChange={(e) => setCategory(Number(e.target.value))}
-          value={category}
-        >
-          <option value={-1} disabled>
-            카테고리
-          </option>
-          {CATEGORY.map((cate) => (
-            <option value={cate.category_id} key={cate.category_id}>
-              {cate.category_name}
-            </option>
-          ))}
-        </select>
-
-        <br />
-        <br />
-
-        <label htmlFor="price">시작가</label>
-        <input
-          type="number"
-          id="price"
-          value={price}
-          onChange={(e) => setPrice(Number(e.target.value))}
-          min={0}
-        />
-      </form>
-      <br />
-      <button
-        onClick={() => registerPost()}
-        style={{ width: "100%", border: "1px solid silver", padding: "12px" }}
-      >
-        등록하기
-      </button>
-    </>
+        <div>
+          <button
+            onClick={() => registerPost()}
+            style={{
+              width: "100%",
+              border: "1px solid silver",
+              padding: "12px",
+            }}
+          >
+            등록하기
+          </button>
+        </div>
+      </div>
+    </WritepageLayout>
   );
 }
