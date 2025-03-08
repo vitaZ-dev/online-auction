@@ -15,8 +15,10 @@ import CommonTitle from "../../components/UI/CommonTitle";
 import CommonCategoryBadge from "../../components/UI/CommonCategoryBadge";
 import { numberFormat } from "../../utils";
 import { CircularProgress } from "@mui/material";
-import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function Detail() {
   const [loading, setLoading] = useState(false);
@@ -617,17 +619,29 @@ export default function Detail() {
               <h2>{detail.user_info}</h2>
               {userCheck ? (
                 <div className="user_utils">
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <FavoriteTwoToneIcon color="secondary" />
+                    <span style={{ fontSize: 11 }}>
+                      {numberFormat(favoriteCnt)}
+                    </span>
+                  </div>
                   <button
                     onClick={() => editPost(detail.is_open)}
                     disabled={!detail.is_open}
                   >
-                    수정
+                    <EditIcon color="secondary" />
                   </button>
                   <button
                     onClick={() => deletePost(detail.is_open)}
                     disabled={loading || !detail.is_open}
                   >
-                    삭제
+                    <DeleteIcon color="secondary" />
                   </button>
                 </div>
               ) : (
@@ -643,9 +657,9 @@ export default function Detail() {
                       disabled={loading}
                     >
                       {favoriteCheck ? (
-                        <FavoriteIcon />
+                        <FavoriteTwoToneIcon color="secondary" />
                       ) : (
-                        <FavoriteBorderIcon />
+                        <FavoriteBorderIcon color="secondary" />
                       )}
                       <span style={{ fontSize: 11 }}>
                         {numberFormat(favoriteCnt)}
@@ -659,7 +673,9 @@ export default function Detail() {
           <hr />
           <section>
             {/* <p>{findCategory(detail?.category_id)}</p> */}
-            <CommonCategoryBadge categoryID={detail?.category_id} />
+            <div style={{ padding: "8px 16px 0" }}>
+              <CommonCategoryBadge categoryID={detail?.category_id} />
+            </div>
             <CommonTitle
               type={1}
               title={detail.title}
@@ -688,7 +704,7 @@ export default function Detail() {
             </div>
             <div>
               <p>총 입찰</p>
-              <p>{detail.bid_count}</p>
+              <p>{detail.bid_count || 0}</p>
             </div>
             <div>
               <p>종료일</p>
@@ -713,7 +729,9 @@ export default function Detail() {
           </section>
           {userCheck && (
             <CommonPaddingBox>
-              <p>*가장 높은 금액을 입력한 유저에게 자동으로 낙찰됩니다!</p>
+              <p className="notice">
+                *가장 높은 금액을 입력한 유저에게 자동으로 낙찰됩니다!
+              </p>
               <button
                 onClick={() =>
                   closeAuction(

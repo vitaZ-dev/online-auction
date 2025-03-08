@@ -1,7 +1,24 @@
 import styled from "@emotion/styled";
 
 export const ItemDetailLayout = styled.article`
-  display: block;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-bottom: 24px;
+
+  section {
+    margin-top: 24px;
+    &:first-of-type {
+      margin-top: 0;
+    }
+  }
+
+  .notice {
+    color: #ff3c5a;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
   .item_img {
     position: relative;
     overflow: hidden;
@@ -50,16 +67,15 @@ export const ItemDetailLayout = styled.article`
   .item_info {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
     margin: 24px auto;
-    padding: 0 16px;
     div {
-      /* width: calc((100% - 32px) / 3); */
-      /* flex: 1 1 auto; */
-      padding: 0 24px;
-      border-left: 1px solid black;
+      width: calc(100% / 3);
+      padding: 0 6px;
+      border-left: 1px solid lightgray;
       text-align: center;
       &:first-of-type {
-        padding-left: 0;
         border-left: transparent;
       }
 

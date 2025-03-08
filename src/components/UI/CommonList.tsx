@@ -25,7 +25,7 @@ export default function CommonList({
             .fill(0)
             .map((_, idx) => (
               <>
-                <div key={idx}>
+                <div key={`commonlist_${idx}_${idx}`}>
                   <Skeleton
                     variant="rounded"
                     height={height}
