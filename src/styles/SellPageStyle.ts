@@ -5,7 +5,7 @@ export const WritepageLayout = styled.div`
     display: flex;
     flex-direction: column;
     gap: 16px;
-    padding: 24px 16px;
+    padding: 12px 16px 24px;
   }
 
   .flex_seperate {
@@ -16,6 +16,13 @@ export const WritepageLayout = styled.div`
     & > div {
       flex: 0 1 calc(50% - 12px); /* flex-grow: 0, flex-shrink: 1, flex-basis: 50% */
       box-sizing: border-box;
+    }
+    .price_edit_no {
+      display: block;
+      margin-top: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #ff3c5a;
     }
   }
 
