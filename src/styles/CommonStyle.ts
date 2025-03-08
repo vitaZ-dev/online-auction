@@ -290,3 +290,38 @@ export const CommonRadioBtnStyle = styled.div`
     }
   }
 `;
+
+export const CommonButtonStyle = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid silver;
+  border-radius: 5px;
+  color: ${({ textColor }) => textColor};
+  background-color: ${({ bgColor }) => bgColor};
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &.small {
+    min-width: 48px;
+    height: 24px;
+  }
+
+  &.medium {
+    min-width: 100px;
+    height: 36px;
+    border-radius: 20px;
+    padding: 0 20px;
+  }
+
+  &.large {
+    width: 100%;
+    height: 48px;
+    padding: 0 12px;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+`;
