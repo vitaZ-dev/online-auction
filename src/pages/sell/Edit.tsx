@@ -4,12 +4,15 @@ import { useLocation, useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
 import { CATEGORY } from "../../modules/category";
 import CommonTitle from "../../components/UI/CommonTitle";
-import { CommonPaddingBox } from "../../styles/CommonStyle";
+import { CommonNodataBox } from "../../styles/CommonStyle";
 import { WritepageLayout } from "../../styles/SellPageStyle";
 import CommonInput from "../../components/common/CommonInput";
 import CommonTextarea from "../../components/common/CommonTextarea";
+import { CircularProgress } from "@mui/material";
 
 export default function Edit() {
+  const [loading, setLoading] = useState(true);
+
   const [pageCheck, setPageCheck] = useState(true);
   const [userCheck, setUserCheck] = useState(false);
 
@@ -31,6 +34,8 @@ export default function Edit() {
   }, []);
 
   const fetchPosts = async () => {
+    setLoading(true);
+
     const { data } = await axios.get(
       `http://localhost:4000/posts?id=${POST_ID}`
     );
@@ -44,6 +49,8 @@ export default function Edit() {
     setPrice(data[0]?.start_price);
     setPriceNoEdit(Boolean(data[0]?.bid_count));
     setIsBidOpen(Boolean(data[0]?.is_open));
+
+    setLoading(false);
   };
 
   const onChangeFile = (e: Event) => {
@@ -128,7 +135,19 @@ export default function Edit() {
 
   return (
     <>
-      {pageCheck ? (
+      {loading ? (
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+            height: "200px",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CircularProgress sx={{}} />
+        </div>
+      ) : pageCheck ? (
         userCheck ? (
           <WritepageLayout>
             <CommonTitle type={1} title="게시글 수정" />
@@ -244,10 +263,13 @@ export default function Edit() {
             </div>
           </WritepageLayout>
         ) : (
-          <div>해당 게시글에 접근 권한이 없습니다</div>
+          <CommonNodataBox>
+            <p>해당 게시글에 접근 권한이 없습니다.</p>
+            <button onClick={() => navigate(-1)}>뒤로가기</button>
+          </CommonNodataBox>
         )
       ) : (
-        <div>페이지를 찾을 수 없어요</div>
+        <CommonNodataBox>페이지를 찾을 수 없어요</CommonNodataBox>
       )}
     </>
   );

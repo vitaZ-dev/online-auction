@@ -122,8 +122,10 @@ export const CommonNodataBox = styled.div`
   padding: 16px;
   height: 200px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 12px;
   text-align: center;
 `;
 
