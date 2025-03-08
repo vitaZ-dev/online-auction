@@ -1,6 +1,12 @@
 import styled from "@emotion/styled";
 
 export const WritepageLayout = styled.div`
+  .bid_close {
+    font-size: 14px;
+    font-weight: 600;
+    margin-left: 2px;
+    color: #ff3c5a;
+  }
   .write_area {
     display: flex;
     flex-direction: column;

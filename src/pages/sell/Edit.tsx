@@ -133,7 +133,11 @@ export default function Edit() {
           <WritepageLayout>
             <CommonTitle type={1} title="게시글 수정" />
             <div className="write_area">
-              {!isBidOpen && <p>*입찰 완료된 게시글은 수정할 수 없습니다!</p>}
+              {!isBidOpen && (
+                <p className="bid_close">
+                  *입찰 완료된 게시글은 수정할 수 없습니다!
+                </p>
+              )}
               <div>
                 <div className="item_img">
                   <div className="img_wrap">
