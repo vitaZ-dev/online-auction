@@ -264,3 +264,29 @@ export const CommonTextareaStyle = styled.div`
     }
   }
 `;
+
+export const CommonRadioBtnStyle = styled.div`
+  display: inline-block;
+
+  input[type="radio"].common-input-radio {
+    appearance: none;
+    display: none !important;
+
+    & + label {
+      display: inline-block;
+      height: 30px;
+      padding: 6px 10px;
+      border-radius: 20px;
+      border: 1px solid silver;
+      font-size: 14px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #6495ed80;
+      }
+      &.checked {
+        background-color: cornflowerblue;
+      }
+    }
+  }
+`;
