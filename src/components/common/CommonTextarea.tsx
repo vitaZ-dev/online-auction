@@ -23,7 +23,7 @@ export default function CommonTextarea({
         className="common-input"
         id={id}
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={setValue}
         maxLength={maxLength}
         placeholder={placeholder}
         disabled={disabled}

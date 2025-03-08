@@ -178,7 +178,7 @@ export default function Sell() {
           <CommonTextarea
             id="contents"
             value={contents}
-            setValue={setContents}
+            setValue={(e) => setContents(e.target.value)}
             maxLength={1000}
             placeholder="내용을 입력해주세요"
           />
