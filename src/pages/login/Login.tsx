@@ -3,6 +3,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
 import { Link } from "react-router-dom";
+import { LoginPageLayout } from "../../styles/LoginPageStyle";
+import CommonButton from "../../components/common/CommonButton";
+import CommonInput from "../../components/common/CommonInput";
 
 export default function Login() {
   const auth = useAuthStore();
@@ -39,31 +42,43 @@ export default function Login() {
     }
   };
 
+  const preparing = () => alert("준비중인 서비스 입니다!");
+
   return (
-    <>
-      <h1>Login</h1>
-      <form className="login-form" onSubmit={() => login()}>
-        <label htmlFor="username">이메일</label>
-        <input
+    <LoginPageLayout>
+      <h1>로그인</h1>
+      <div className="login_form">
+        <CommonInput
           type="text"
           id="username"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          setValue={(e) => setEmail(e.target.value)}
+          length="full"
+          placeholder="이메일"
         />
 
-        <label htmlFor="password">비밀번호</label>
-        <input
+        <CommonInput
           type="password"
           id="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          setValue={(e) => setPassword(e.target.value)}
+          length="full"
+          placeholder="비밀번호"
         />
-      </form>
-      <button onClick={() => login()}>로그인</button>
+        <div>
+          <input type="checkbox" id="rememberID" />
+          <label htmlFor="rememberID">아이디 기억</label>
+        </div>
+        <CommonButton text="로그인" btnType="large" onClick={() => login()} />
+      </div>
 
-      <button style={{ border: "2px solid red" }}>
-        <Link to="register">회원가입</Link>
-      </button>
-    </>
+      <ul className="find_area">
+        <li onClick={preparing}>비밀번호 찾기</li>
+        <li onClick={preparing}>아이디 찾기</li>
+        <li>
+          <Link to="register">회원가입</Link>
+        </li>
+      </ul>
+    </LoginPageLayout>
   );
 }

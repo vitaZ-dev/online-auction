@@ -223,6 +223,7 @@ export const CommonInputStyle = styled.div`
     padding: 6px 12px;
     width: ${({ length }) => (length === "full" ? "100%" : "20px")};
     height: 40px;
+    font-size: 14px;
     outline: none;
 
     &::placeholder {
@@ -308,6 +309,7 @@ export const CommonButtonStyle = styled.button`
   &.small {
     min-width: 48px;
     height: 24px;
+    padding: 0 6px;
   }
 
   &.medium {

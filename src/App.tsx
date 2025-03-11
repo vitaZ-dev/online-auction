@@ -30,6 +30,7 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 
 import { ReactQueryDevtools } from "react-query/devtools";
+import CommonButton from "./components/common/CommonButton";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -241,12 +242,11 @@ function App() {
                           어서오세요, {userInfo?.nickname} 님!
                         </div>
                         <div>
-                          <button
+                          <CommonButton
+                            text="logout"
+                            btnType="small"
                             onClick={handelLogout}
-                            style={{ border: "2px solid red" }}
-                          >
-                            logout
-                          </button>
+                          />
                         </div>
                       </div>
                     ) : (
