@@ -1,20 +1,22 @@
 import { CommonButtonStyle } from "../../styles/CommonStyle";
 
 interface CommonButtonProps {
-  text: string;
+  text?: string;
   btnType: "small" | "medium" | "large";
   bgColor?: string;
   textColor?: string;
   onClick: VoidFunction;
   disabled?: boolean;
+  children?: any;
 }
 export default function CommonButton({
-  text,
+  text = "",
   btnType = "large",
   bgColor = "white",
   textColor = "pink",
   onClick,
   disabled,
+  children,
 }: CommonButtonProps) {
   return (
     <CommonButtonStyle
@@ -24,7 +26,7 @@ export default function CommonButton({
       onClick={onClick}
       disabled={disabled}
     >
-      <>{text}</>
+      <>{text || children}</>
     </CommonButtonStyle>
   );
 }
