@@ -1,5 +1,5 @@
 import { Skeleton } from "@mui/material";
-import { AuctionListLayout } from "../../styles/CommonStyle";
+import { CommonListLayout } from "../../styles/CommonStyle";
 import { useEffect, useState } from "react";
 
 export default function CommonList({
@@ -19,7 +19,7 @@ export default function CommonList({
 
   return (
     <>
-      <AuctionListLayout grid={grid}>
+      <CommonListLayout grid={grid}>
         {loading ? (
           Array(4)
             .fill(0)
@@ -40,7 +40,7 @@ export default function CommonList({
         ) : (
           <>{children}</>
         )}
-      </AuctionListLayout>
+      </CommonListLayout>
     </>
   );
 }

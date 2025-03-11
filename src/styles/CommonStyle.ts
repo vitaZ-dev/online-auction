@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-export const AuctionListLayout = styled.div`
+export const CommonListLayout = styled.div`
   display: grid;
   grid-template-columns: ${({ grid }) => `repeat(${grid || 2}, 1fr)`};
   column-gap: 15px;
@@ -139,6 +139,18 @@ export const CommonTitleStyle = styled.div`
   .title_text {
     display: flex;
     align-items: center;
+    h1 {
+      font-size: 20px;
+    }
+    h2,
+    h3,
+    h4 {
+      font-size: 18px;
+    }
+    h5,
+    h6 {
+      font-size: 16px;
+    }
     .title_tag {
     }
     .closed {
@@ -275,11 +287,13 @@ export const CommonRadioBtnStyle = styled.div`
 
     & + label {
       display: inline-block;
-      height: 30px;
+      min-width: 45px;
+      min-height: 30px;
       padding: 6px 10px;
       border-radius: 20px;
       border: 1px solid silver;
       font-size: 14px;
+      text-align: center;
       cursor: pointer;
 
       &:hover {
