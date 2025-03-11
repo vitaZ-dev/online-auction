@@ -1,11 +1,18 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
-import { Pagination, Stack } from "@mui/material";
 import { CATEGORY, findCategory } from "../../modules/category";
 import CommonList from "../../components/UI/CommonList";
 import CommonListItem from "../../components/UI/CommonListItem";
 import { CommonNodataBox } from "../../styles/CommonStyle";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import TuneIcon from "@mui/icons-material/Tune";
+import CommonRadioBtn from "../../components/common/CommonRadioBtn";
+import CommonButton from "../../components/common/CommonButton";
+import CommonTitle from "../../components/UI/CommonTitle";
+import { AuctionListLayout } from "../../styles/AuctionStyle";
+import MUIPagination from "../../components/common/MUIPagination";
 // import Pagination from "../../components/common/Pagination";
 
 type searchQueryType = {
@@ -21,8 +28,8 @@ export default function List() {
   const [filterCheck, setFilterCheck] = useState<boolean>(false);
   const [filterCategory, setFilterCategory] = useState<number>(0);
   const [filterSort, setFilterSort] = useState<"" | "1" | "2">("");
-  const [filterStartPrice, setFilterStartPrice] = useState(0);
-  const [filterEndPrice, setFilterEndPrice] = useState(0);
+  // const [filterStartPrice, setFilterStartPrice] = useState(0);
+  // const [filterEndPrice, setFilterEndPrice] = useState(0);
 
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
@@ -93,7 +100,13 @@ export default function List() {
     // });
     setPageLoading(false);
 
-    if (data.data.length === 0) setIsData(false);
+    /**
+     * TODO 필터 검색 시 오류 수정
+     * 1. 카테고리 검색 후 조건에 맞는 결과가 없음
+     * 2. 다른 카테고리 검색 시 결과가 있어도 '게시글 없음' 결과가 뜸
+     * 3. 아래 영역에서 조건 처리
+     */
+    setIsData(data.data.length !== 0);
   };
 
   // const loadingNextPage = () => setPage(page + 1);
@@ -120,79 +133,98 @@ export default function List() {
   };
 
   return (
-    <>
-      <h1>List</h1>
-      <div>
-        <p>카테고리 별 검색</p>
-        <button onClick={() => setFilterCheck(!filterCheck)}>필터</button>
+    <AuctionListLayout>
+      <CommonTitle type={1} title="경매 물품" />
+      <div className="filter_box">
+        <CommonButton
+          btnType="medium"
+          onClick={() => setFilterCheck(!filterCheck)}
+        >
+          <TuneIcon />
+          <span>필터</span>
+          {filterCheck ? <ExpandMore /> : <ExpandLess />}
+        </CommonButton>
         {filterCheck && (
-          <div>
-            <p>(filter area)</p>
-            <div>is_open</div>
-            <input
-              type="checkbox"
-              id="able"
-              checked={filterIsOpen}
-              onChange={(e) => setFilterIsOpen(e.target.checked)}
-            />
-            <label htmlFor="able">거래 가능만 보기</label>
-            <div>category_id</div>
-            <CommonList grid={3}>
-              {CATEGORY.map((item) => (
-                <div key={item.category_id}>
-                  <input
-                    type="radio"
-                    name="category_filter"
+          <div className="filter_area">
+            <div>
+              <input
+                type="checkbox"
+                id="able"
+                checked={filterIsOpen}
+                onChange={(e) => setFilterIsOpen(e.target.checked)}
+              />
+              <label htmlFor="able">거래 가능만 보기</label>
+            </div>
+
+            <div>
+              <p>카테고리</p>
+              <div className="radio_wrap">
+                {CATEGORY.map((item) => (
+                  <CommonRadioBtn
+                    key={item.category_id}
+                    text={item.category_name}
                     id={String(item.category_id)}
+                    name="category_filter"
                     value={item.category_id}
                     onChange={(e) => setFilterCategory(+e.target.value)}
                     checked={filterCategory === item.category_id}
                   />
-                  <label htmlFor={String(item.category_id)}>
-                    {item.category_name}
-                  </label>
-                </div>
-              ))}
-            </CommonList>
-            <div>sort_by</div>
-            <div>
-              <input
-                type="radio"
-                name="sort_filter"
-                id="recent"
-                value="1"
-                onChange={(e) => setFilterSort(e.target.value)}
-                checked={filterSort === "1"}
-              />
-              <label htmlFor="recent">최신순</label>
-              <input
-                type="radio"
-                name="sort_filter"
-                id="favorite"
-                value="2"
-                onChange={(e) => setFilterSort(e.target.value)}
-                checked={filterSort === "2"}
-              />
-              <label htmlFor="favorite">인기순</label>
+                ))}
+              </div>
             </div>
-            <div>price</div>
-            <input
-              type="number"
-              id="start_price"
-              value={filterStartPrice}
-              onChange={(e) => setFilterStartPrice(+e.target.value)}
-              min={0}
-            />
-            <input
-              type="number"
-              id="end_price"
-              value={filterEndPrice}
-              onChange={(e) => setFilterEndPrice(+e.target.value)}
-              min={0}
-            />
-            <br />
-            <button onClick={filterSearchPosts}>검색</button>
-            <button onClick={clearAllFilter}>전체해제</button>
+
+            <div>
+              <p>정렬</p>
+              <div className="radio_wrap">
+                <CommonRadioBtn
+                  text="최신순"
+                  id="recent"
+                  name="sort_filter"
+                  value="1"
+                  onChange={(e) => setFilterSort(e.target.value)}
+                  checked={filterSort === "1"}
+                />
+                <CommonRadioBtn
+                  text="인기순"
+                  id="favorite"
+                  name="sort_filter"
+                  value="2"
+                  onChange={(e) => setFilterSort(e.target.value)}
+                  checked={filterSort === "2"}
+                />
+              </div>
+            </div>
+
+            {/* <div>
+              <p>가격</p>
+              <input
+                type="number"
+                id="start_price"
+                value={filterStartPrice}
+                onChange={(e) => setFilterStartPrice(+e.target.value)}
+                min={0}
+              />
+              <input
+                type="number"
+                id="end_price"
+                value={filterEndPrice}
+                onChange={(e) => setFilterEndPrice(+e.target.value)}
+                min={0}
+              />
+            </div> */}
+
+            <div className="filter_btns">
+              <CommonButton
+                text="전체해제"
+                btnType="medium"
+                onClick={clearAllFilter}
+              />
+              <CommonButton
+                text="검색"
+                btnType="medium"
+                onClick={filterSearchPosts}
+              />
+            </div>
           </div>
         )}
       </div>
@@ -213,24 +245,7 @@ export default function List() {
               );
             })}
           </CommonList>
-          {/* <Pagination pageInfo={pagination} /> */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              padding: "12px",
-            }}
-          >
-            <Stack spacing={2}>
-              <Pagination
-                count={totalPage}
-                variant="outlined"
-                color="secondary"
-                onChange={(_, changePage) => setPage(changePage)}
-              />
-            </Stack>
-          </div>
+          <MUIPagination totalPage={totalPage} setPage={setPage} />
           {/* {showLoadBtn && (
             <button
               style={{
@@ -248,6 +263,6 @@ export default function List() {
       ) : (
         <CommonNodataBox>게시글이 없습니다</CommonNodataBox>
       )}
-    </>
+    </AuctionListLayout>
   );
 }

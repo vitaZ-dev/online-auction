@@ -1,5 +1,40 @@
 import styled from "@emotion/styled";
 
+export const AuctionListLayout = styled.div`
+  padding-bottom: 12px;
+
+  .filter_box {
+    padding: 16px;
+  }
+  .filter_area {
+    padding: 0 8px;
+    & > div {
+      padding: 16px 0;
+      border-bottom: 1px solid gray;
+    }
+    p {
+      margin-bottom: 8px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .radio_wrap {
+      display: flex;
+      flex-wrap: wrap;
+      column-gap: 6px;
+      row-gap: 12px;
+    }
+
+    .filter_btns {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 8px;
+      border-bottom: 1px solid transparent;
+    }
+  }
+`;
+
 export const ItemDetailLayout = styled.article`
   display: flex;
   flex-direction: column;
