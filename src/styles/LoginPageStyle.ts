@@ -17,6 +17,12 @@ export const LoginPageLayout = styled.div`
     display: flex;
     flex-direction: column;
     gap: 4px;
+    span {
+      font-size: 12px;
+      line-height: 1;
+      padding-left: 6px;
+      color: #ff3c5a;
+    }
 
     button {
       margin-top: 10px;
@@ -50,6 +56,15 @@ export const LoginPageLayout = styled.div`
     }
     li:first-of-type::before {
       background-color: transparent;
+    }
+  }
+  .go_login_page {
+    padding-top: 16px;
+    text-align: center;
+    & > a {
+      color: #7a7575;
+      font-size: 14px;
+      text-decoration: underline;
     }
   }
 `;
