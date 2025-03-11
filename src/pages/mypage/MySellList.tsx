@@ -3,12 +3,19 @@ import useAuthStore from "../../stores/useAuthStore";
 import { MypageLayout } from "../../styles/MypageStyle";
 import axios from "axios";
 import { findCategory } from "../../modules/category";
-import { Link, useLocation, useSearchParams } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import CommonList from "../../components/UI/CommonList";
 import CommonListItem from "../../components/UI/CommonListItem";
 import CommonTitle from "../../components/UI/CommonTitle";
 import { Pagination, Stack } from "@mui/material";
-import { CommonPaddingBox } from "../../styles/CommonStyle";
+import { CommonNodataBox } from "../../styles/CommonStyle";
+import CommonRadioBtn from "../../components/common/CommonRadioBtn";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 
 export default function MySellList() {
   const [userPostAll, setUserPostAll] = useState([]);
@@ -18,6 +25,7 @@ export default function MySellList() {
   const [isOpen, setIsOpen] = useState<"all" | "0" | "1">("all");
 
   const { userInfo } = useAuthStore();
+  const navigate = useNavigate();
 
   const [query, setQuery] = useSearchParams();
   const { state, search } = useLocation();
@@ -33,6 +41,11 @@ export default function MySellList() {
     const { data } = await axios.get(url);
     setUserPostAll(data.data);
     setTotalPage(data.pages);
+  };
+
+  const goPrevPage = () => {
+    if (state) navigate(-1);
+    else navigate("/mypage");
   };
 
   const searchIsOpen = async (e) => {
@@ -61,12 +74,18 @@ export default function MySellList() {
 
   return (
     <MypageLayout>
-      <CommonTitle
-        type={1}
-        title={`${state?.nickname ?? userInfo.nickname} 님이 판매한 물품 목록`}
-      />
-
-      <br />
+      <div className="go_back">
+        <ArrowBackIosNewIcon
+          className="back_icon"
+          onClick={() => goPrevPage()}
+        />
+        <CommonTitle
+          type={1}
+          title={`${
+            state?.nickname ?? userInfo.nickname
+          } 님이 판매한 물품 목록`}
+        />
+      </div>
 
       {/* <div style={{ display: "flex", gap: "12px" }}>
         <button style={{ border: "1px solid gray", padding: "4px 8px" }}>
@@ -79,44 +98,32 @@ export default function MySellList() {
           end
         </button>
       </div> */}
-      <CommonPaddingBox>
-        <div style={{ display: "flex", gap: "12px" }}>
-          <div style={{ padding: "4px 8px", border: "1px solid silver" }}>
-            <input
-              type="radio"
-              name="open_filter"
-              id="all"
-              value="all"
-              onChange={(e) => searchIsOpen(e)}
-              checked={isOpen === "all"}
-            />
-            <label htmlFor="all">all</label>
-          </div>
-          <div style={{ padding: "4px 8px", border: "1px solid silver" }}>
-            <input
-              type="radio"
-              name="open_filter"
-              id="open"
-              value="1"
-              onChange={(e) => searchIsOpen(e)}
-              checked={isOpen === "1"}
-            />
-            <label htmlFor="open">open</label>
-          </div>
-          <div style={{ padding: "4px 8px", border: "1px solid silver" }}>
-            <input
-              type="radio"
-              name="open_filter"
-              id="close"
-              value="0"
-              onChange={(e) => searchIsOpen(e)}
-              checked={isOpen === "0"}
-            />
-            <label htmlFor="close">close</label>
-          </div>
-        </div>
-      </CommonPaddingBox>
-      <br />
+      <div className="sell_list_filter">
+        <CommonRadioBtn
+          text="all"
+          id="all"
+          name="open_filter"
+          value="all"
+          onChange={(e) => searchIsOpen(e)}
+          checked={isOpen === "all"}
+        />
+        <CommonRadioBtn
+          text="open"
+          id="open"
+          name="open_filter"
+          value="1"
+          onChange={(e) => searchIsOpen(e)}
+          checked={isOpen === "1"}
+        />
+        <CommonRadioBtn
+          text="close"
+          id="close"
+          name="open_filter"
+          value="0"
+          onChange={(e) => searchIsOpen(e)}
+          checked={isOpen === "0"}
+        />
+      </div>
 
       <section>
         {userPostAll.length ? (
@@ -155,9 +162,8 @@ export default function MySellList() {
             </div>
           </>
         ) : (
-          <p>내가 판매한 물품이 없습니다</p>
+          <CommonNodataBox>판매한 물품이 없습니다.</CommonNodataBox>
         )}
-        <Link to="/mypage">마이페이지로 돌아가기</Link>
       </section>
     </MypageLayout>
   );
