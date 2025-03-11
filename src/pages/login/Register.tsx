@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { useNavigate } from "react-router-dom";
+import { LoginPageLayout } from "../../styles/LoginPageStyle";
+import CommonInput from "../../components/common/CommonInput";
+import CommonButton from "../../components/common/CommonButton";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -52,35 +55,49 @@ export default function Register() {
   };
 
   return (
-    <>
+    <LoginPageLayout>
       <h1>회원가입</h1>
 
-      <form className="login-form" onSubmit={() => register()}>
-        <label htmlFor="username">이메일</label>
-        <input
-          type="text"
-          id="username"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+      <div className="login_form">
+        <div>
+          <CommonInput
+            type="text"
+            id="username"
+            value={email}
+            setValue={(e) => setEmail(e.target.value)}
+            length="full"
+            placeholder="이메일"
+          />
+        </div>
 
-        <label htmlFor="password">비밀번호</label>
-        <input
+        <CommonInput
           type="password"
           id="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          setValue={(e) => setPassword(e.target.value)}
+          length="full"
+          placeholder="비밀번호"
         />
 
-        <label htmlFor="nickname">닉네임</label>
-        <input
-          type="text"
-          id="nickname"
-          value={nickname}
-          onChange={(e) => setNickname(e.target.value)}
+        <div>
+          <CommonInput
+            type="text"
+            id="nickname"
+            value={nickname}
+            setValue={(e) => setNickname(e.target.value)}
+            length="full"
+            placeholder="닉네임"
+          />
+        </div>
+
+        <div></div>
+
+        <CommonButton
+          text="회원가입"
+          btnType="large"
+          onClick={() => register()}
         />
-      </form>
-      <button onClick={() => register()}>회원가입</button>
-    </>
+      </div>
+    </LoginPageLayout>
   );
 }
