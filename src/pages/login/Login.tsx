@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
 import { Link } from "react-router-dom";
@@ -12,8 +12,17 @@ export default function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberID, setRememberID] = useState(false);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const ID = localStorage.getItem("remember_id");
+    if (ID) {
+      setRememberID(true);
+      setEmail(ID);
+    }
+  }, []);
 
   const login = async () => {
     if (!email) {
@@ -31,6 +40,13 @@ export default function Login() {
       );
       if (data?.length) {
         auth.login(data[0]);
+
+        if (rememberID) {
+          localStorage.setItem("remember_id", email);
+        } else {
+          localStorage.removeItem("remember_id");
+        }
+
         navigate("/");
       } else {
         console.log("login fail");
@@ -65,10 +81,17 @@ export default function Login() {
           length="full"
           placeholder="비밀번호"
         />
+
         <div>
-          <input type="checkbox" id="rememberID" />
+          <input
+            type="checkbox"
+            id="rememberID"
+            checked={rememberID}
+            onChange={(e) => setRememberID(e.target.checked)}
+          />
           <label htmlFor="rememberID">아이디 기억</label>
         </div>
+
         <CommonButton text="로그인" btnType="large" onClick={() => login()} />
       </div>
 
