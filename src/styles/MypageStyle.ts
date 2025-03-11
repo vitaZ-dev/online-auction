@@ -1,8 +1,9 @@
 import styled from "@emotion/styled";
 
 export const MypageLayout = styled.div`
-  .go_back {
+  .mypage_title {
     padding: 0 16px;
+    margin: 8px auto 16px;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -14,8 +15,10 @@ export const MypageLayout = styled.div`
       padding-left: 0;
     }
   }
+
   .sell_list_filter {
-    padding: 16px 16px 8px;
+    margin: 16px auto 8px;
+    padding: 0 16px;
     display: flex;
     gap: 12px;
   }

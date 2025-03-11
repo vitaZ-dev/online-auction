@@ -12,10 +12,10 @@ import {
 import CommonList from "../../components/UI/CommonList";
 import CommonListItem from "../../components/UI/CommonListItem";
 import CommonTitle from "../../components/UI/CommonTitle";
-import { Pagination, Stack } from "@mui/material";
 import { CommonNodataBox } from "../../styles/CommonStyle";
 import CommonRadioBtn from "../../components/common/CommonRadioBtn";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import MUIPagination from "../../components/common/MUIPagination";
 
 export default function MySellList() {
   const [userPostAll, setUserPostAll] = useState([]);
@@ -74,7 +74,7 @@ export default function MySellList() {
 
   return (
     <MypageLayout>
-      <div className="go_back">
+      <div className="mypage_title">
         <ArrowBackIosNewIcon
           className="back_icon"
           onClick={() => goPrevPage()}
@@ -143,23 +143,7 @@ export default function MySellList() {
                 );
               })}
             </CommonList>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                padding: "12px",
-              }}
-            >
-              <Stack spacing={2}>
-                <Pagination
-                  count={totalPage}
-                  variant="outlined"
-                  color="secondary"
-                  onChange={(_, changePage) => setPage(changePage)}
-                />
-              </Stack>
-            </div>
+            <MUIPagination totalPage={totalPage} setPage={setPage} />
           </>
         ) : (
           <CommonNodataBox>판매한 물품이 없습니다.</CommonNodataBox>

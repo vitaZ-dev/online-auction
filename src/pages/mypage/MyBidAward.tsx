@@ -6,8 +6,11 @@ import useAuthStore from "../../stores/useAuthStore";
 import CommonList from "../../components/UI/CommonList";
 import CommonListItem from "../../components/UI/CommonListItem";
 import { findCategory } from "../../modules/category";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Pagination, Stack } from "@mui/material";
+import MUIPagination from "../../components/common/MUIPagination";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import { CommonNodataBox } from "../../styles/CommonStyle";
 
 export default function MyBidAward() {
   const [awardList, setAwardList] = useState([]);
@@ -15,6 +18,7 @@ export default function MyBidAward() {
   const [totalPage, setTotalPage] = useState(1);
 
   const { userInfo } = useAuthStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     getUserPostList(page);
@@ -30,7 +34,13 @@ export default function MyBidAward() {
 
   return (
     <MypageLayout>
-      <CommonTitle type={1} title={`${userInfo?.nickname} 님의 낙찰 내역`} />
+      <div className="mypage_title">
+        <ArrowBackIosNewIcon
+          className="back_icon"
+          onClick={() => navigate("/mypage")}
+        />
+        <CommonTitle type={1} title={`${userInfo?.nickname} 님의 낙찰 내역`} />
+      </div>
 
       {awardList?.length ? (
         <>
@@ -49,27 +59,11 @@ export default function MyBidAward() {
               </div>
             ))}
           </CommonList>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              padding: "12px",
-            }}
-          >
-            <Stack spacing={2}>
-              <Pagination
-                count={totalPage}
-                variant="outlined"
-                color="secondary"
-                onChange={(_, changePage) => setPage(changePage)}
-              />
-            </Stack>
-          </div>
+          <MUIPagination totalPage={totalPage} setPage={setPage} />
         </>
       ) : (
         <>
-          <div>낙찰 내역이 없습니다</div>
+          <CommonNodataBox>낙찰 내역이 없습니다</CommonNodataBox>
         </>
       )}
     </MypageLayout>

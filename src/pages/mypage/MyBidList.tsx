@@ -10,7 +10,9 @@ import ShowListTable from "../../components/ShowListTable";
 import { useNavigate } from "react-router-dom";
 import CallMadeIcon from "@mui/icons-material/CallMade";
 import axios from "axios";
-import { Pagination, Stack } from "@mui/material";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import { CommonNodataBox } from "../../styles/CommonStyle";
+import MUIPagination from "../../components/common/MUIPagination";
 
 export default function MyBidList() {
   const { userInfo } = useAuthStore();
@@ -47,7 +49,16 @@ export default function MyBidList() {
 
   return (
     <MypageLayout>
-      <CommonTitle type={1} title={`${userInfo?.nickname} 님의 입찰 내역들`} />
+      <div className="mypage_title">
+        <ArrowBackIosNewIcon
+          className="back_icon"
+          onClick={() => navigate("/mypage")}
+        />
+        <CommonTitle
+          type={1}
+          title={`${userInfo?.nickname} 님의 입찰 내역들`}
+        />
+      </div>
 
       {bidListAll?.length ? (
         <>
@@ -69,26 +80,10 @@ export default function MyBidList() {
               </div>
             ))}
           </CommonList>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              padding: "12px",
-            }}
-          >
-            <Stack spacing={2}>
-              <Pagination
-                count={totalPage}
-                variant="outlined"
-                color="secondary"
-                onChange={(_, changePage) => setPage(changePage)}
-              />
-            </Stack>
-          </div>
+          <MUIPagination totalPage={totalPage} setPage={setPage} />
         </>
       ) : (
-        <div>나의 입찰 내역이 없습니다.</div>
+        <CommonNodataBox>나의 입찰 내역이 없습니다.</CommonNodataBox>
       )}
       {toggle && (
         <CommonModal modalTitle={detailTitle} setDisplay={setToggle}>

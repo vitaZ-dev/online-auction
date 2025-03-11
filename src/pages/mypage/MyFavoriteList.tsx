@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
 import { MypageLayout } from "../../styles/MypageStyle";
 import CommonList from "../../components/UI/CommonList";
@@ -7,10 +7,13 @@ import CommonListItem from "../../components/UI/CommonListItem";
 import { findCategory } from "../../modules/category";
 import CommonTitle from "../../components/UI/CommonTitle";
 import axios from "axios";
-import { Pagination, Stack } from "@mui/material";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import MUIPagination from "../../components/common/MUIPagination";
+import { CommonNodataBox } from "../../styles/CommonStyle";
 
 export default function MyFavoriteList() {
-  const { userInfo, favorite } = useAuthStore();
+  const { userInfo } = useAuthStore();
+  const navigate = useNavigate();
 
   const [userFavorite, setUserFavorite] = useState([]);
   const [page, setPage] = useState(1);
@@ -30,10 +33,16 @@ export default function MyFavoriteList() {
 
   return (
     <MypageLayout>
-      <CommonTitle
-        type={1}
-        title={`${userInfo?.nickname} 님의 좋아요 리스트`}
-      />
+      <div className="mypage_title">
+        <ArrowBackIosNewIcon
+          className="back_icon"
+          onClick={() => navigate("/mypage")}
+        />
+        <CommonTitle
+          type={1}
+          title={`${userInfo?.nickname} 님의 좋아요 리스트`}
+        />
+      </div>
 
       <section>
         {userFavorite?.length ? (
@@ -53,28 +62,11 @@ export default function MyFavoriteList() {
                 );
               })}
             </CommonList>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                padding: "12px",
-              }}
-            >
-              <Stack spacing={2}>
-                <Pagination
-                  count={totalPage}
-                  variant="outlined"
-                  color="secondary"
-                  onChange={(_, changePage) => setPage(changePage)}
-                />
-              </Stack>
-            </div>
+            <MUIPagination totalPage={totalPage} setPage={setPage} />
           </>
         ) : (
-          <p>내가 좋아요 한 물품이 없습니다</p>
+          <CommonNodataBox>내가 좋아요 한 물품이 없습니다</CommonNodataBox>
         )}
-        <Link to="/mypage">마이페이지로 돌아가기</Link>
       </section>
     </MypageLayout>
   );
