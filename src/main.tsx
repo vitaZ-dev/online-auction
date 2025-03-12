@@ -95,6 +95,10 @@ const router = createBrowserRouter([
         ],
       },
       {
+        path: "/guide",
+        element: <Guide />,
+      },
+      {
         path: "/sell",
         loader: requireAuth,
         children: [
@@ -111,10 +115,6 @@ const router = createBrowserRouter([
             element: <MyList />,
           },
         ],
-      },
-      {
-        path: "/guide",
-        element: <Guide />,
       },
       {
         path: "/mypage",

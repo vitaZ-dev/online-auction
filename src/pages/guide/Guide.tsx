@@ -1,7 +1,9 @@
+import CommonTitle from "../../components/UI/CommonTitle";
+
 export default function Guide() {
   return (
     <>
-      <h1>Guide</h1>
+      <CommonTitle type={1} title="가이드" />
     </>
   );
 }
