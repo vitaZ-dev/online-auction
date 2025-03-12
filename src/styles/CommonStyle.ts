@@ -162,6 +162,10 @@ export const CommonTitleStyle = styled.div`
   .link_text {
     display: flex;
     align-items: center;
+    font-size: 14px;
+    svg {
+      font-size: 20px;
+    }
     cursor: pointer;
   }
 `;

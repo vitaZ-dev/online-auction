@@ -10,7 +10,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 // import { Navigation } from "swiper/modules";
 import "swiper/swiper-bundle.css";
 import CommonTitle from "../components/UI/CommonTitle";
-import { CommonNodataBox, CommonPaddingBox } from "../styles/CommonStyle";
+import { CommonNodataBox } from "../styles/CommonStyle";
 
 export default function Home() {
   const [recent, setRecent] = useState([]);
@@ -65,7 +65,7 @@ export default function Home() {
                 >
                   <SwiperLayout>
                     <div className="category_img">
-                      <div className="img_wrap">f</div>
+                      <div className="img_wrap"></div>
                     </div>
                     <div className="category_title">{item.category_name}</div>
                   </SwiperLayout>
@@ -128,8 +128,22 @@ export default function Home() {
       <section className="auction_guide">
         <CommonTitle type={3} title="online-auction 가이드" />
         <div className="guide_wrap">
-          <div className="left">How to Buy</div>
-          <div className="right">How to Sell</div>
+          <div className="left">
+            <p className="title">How to Buy</p>
+            <p className="desc">
+              회원가입부터 응찰까지 누구나 <br />
+              쉽게 경매에 참여할 수 있습니다.
+            </p>
+            <Link to="/guide">알아보기</Link>
+          </div>
+          <div className="right">
+            <p className="title">How to Sell</p>
+            <p className="desc">
+              회원가입부터 응찰까지 누구나 <br />
+              쉽게 경매에 참여할 수 있습니다.
+            </p>
+            <Link to="/guide">알아보기</Link>
+          </div>
         </div>
       </section>
     </HomeLayout>
