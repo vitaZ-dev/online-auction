@@ -7,12 +7,15 @@ export const HomeLayout = styled.div`
 
     .guide_wrap {
       display: flex;
+      @media (max-width: 482px) {
+        flex-direction: column;
+      }
 
       & > div {
         flex-grow: 1;
         margin-top: 8px;
-        padding: 40px;
-        height: 160px;
+        padding: 16px;
+        min-height: 160px;
         background-color: lightgreen;
 
         display: flex;

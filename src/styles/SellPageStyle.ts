@@ -74,9 +74,11 @@ export const WritepageLayout = styled.div`
 
   label.img_btn {
     display: inline-block;
+    margin-top: 8px;
     padding: 4px 8px;
     border-radius: 5px;
     border: 1px solid magenta;
+    background-color: white;
     cursor: pointer;
   }
   .item_img {
