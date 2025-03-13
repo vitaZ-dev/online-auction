@@ -10,6 +10,7 @@ import CommonList from "../../components/UI/CommonList";
 import CommonListItem from "../../components/UI/CommonListItem";
 import { CommonNodataBox } from "../../styles/CommonStyle";
 import CommonTitle from "../../components/UI/CommonTitle";
+import CommonButton from "../../components/common/CommonButton";
 
 export default function Mypage() {
   const [userFavorite, setUserFavorite] = useState([]);
@@ -21,6 +22,7 @@ export default function Mypage() {
     updateBidList,
     bidAward,
     updateBidAward,
+    logout,
   } = useAuthStore();
 
   useEffect(() => {
@@ -82,18 +84,31 @@ export default function Mypage() {
     setUserFavorite(data);
   };
 
+  const handelLogout = () => {
+    logout();
+    alert("logout");
+    location.href = "/";
+  };
+
   return (
     <MypageLayout>
-      <h1>Mypage</h1>
-      <hr />
-      <img
-        src={defaultImg}
-        alt="default_image"
-        style={{ width: "200px", height: "200px" }}
-      />
-      <p>어서오세요, {userInfo?.nickname} 님</p>
+      <div className="mypage_user">
+        <img src={defaultImg} alt="default_image" />
+        <div>
+          <div className="user_info">
+            <p className="nickname">{userInfo?.nickname}</p>
+            <p className="email">{userInfo?.email}</p>
+          </div>
+          <div className="btns">
+            <CommonButton
+              text="로그아웃"
+              btnType="small"
+              onClick={handelLogout}
+            />
+          </div>
+        </div>
+      </div>
 
-      <br />
       <section>
         <CommonTitle
           type={3}
@@ -125,7 +140,7 @@ export default function Mypage() {
           </CommonNodataBox>
         )}
       </section>
-      <br />
+
       <section>
         <CommonTitle
           type={3}
@@ -153,7 +168,7 @@ export default function Mypage() {
           </CommonNodataBox>
         )}
       </section>
-      <br />
+
       <section>
         <CommonTitle
           type={3}
@@ -182,7 +197,7 @@ export default function Mypage() {
           </CommonNodataBox>
         )}
       </section>
-      <br />
+
       <section>
         <CommonTitle
           type={3}
