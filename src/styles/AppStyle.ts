@@ -37,7 +37,7 @@ const HeaderLayout = styled.header`
   max-width: var(--main-max-width);
   height: 72px;
   margin: 0 auto;
-  padding: 16px 32px;
+  padding: 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -67,6 +67,21 @@ const MainLayout = styled.main`
 
 export const FooterLayout = styled.footer`
   padding: 16px 32px 0;
+  .icons {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    a {
+      width: 32px;
+      height: 32px;
+      svg,
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
 `;
 
 export { light, BaseLayout, HeaderLayout, MainLayout };

@@ -132,15 +132,15 @@ function App() {
                         component={NavLink}
                         to="/auction"
                         onClick={toggleDrawer(false)}
-                        sx={{ pl: 4 }}
+                        sx={{ pl: 3 }}
                       >
                         경매 물품
                       </ListItemButton>
                       <ListItemButton
                         component={NavLink}
-                        to="/about"
+                        to="/guide"
                         onClick={toggleDrawer(false)}
-                        sx={{ pl: 4 }}
+                        sx={{ pl: 3 }}
                       >
                         경매 안내
                       </ListItemButton>
@@ -159,7 +159,7 @@ function App() {
                         component={NavLink}
                         to="/sell"
                         onClick={toggleDrawer(false)}
-                        sx={{ pl: 4 }}
+                        sx={{ pl: 3 }}
                       >
                         경매 출품
                       </ListItemButton>
@@ -167,7 +167,7 @@ function App() {
                         component={NavLink}
                         to="/mypage/list"
                         onClick={toggleDrawer(false)}
-                        sx={{ pl: 4 }}
+                        sx={{ pl: 3 }}
                       >
                         출품 목록
                       </ListItemButton>
@@ -186,7 +186,7 @@ function App() {
                         component={NavLink}
                         to="/about"
                         onClick={toggleDrawer(false)}
-                        sx={{ pl: 4 }}
+                        sx={{ pl: 3 }}
                       >
                         회사 소개
                       </ListItemButton>
@@ -194,7 +194,7 @@ function App() {
                         component={NavLink}
                         to="/about"
                         onClick={toggleDrawer(false)}
-                        sx={{ pl: 4 }}
+                        sx={{ pl: 3 }}
                       >
                         서비스 소개
                       </ListItemButton>
@@ -202,7 +202,7 @@ function App() {
                         component={NavLink}
                         to="/about"
                         onClick={toggleDrawer(false)}
-                        sx={{ pl: 4 }}
+                        sx={{ pl: 3 }}
                       >
                         공지사항
                       </ListItemButton>
@@ -218,7 +218,7 @@ function App() {
                         onClick={toggleDrawer(false)}
                         style={{ flex: "1 1 auto" }}
                       >
-                        <ListItemText primary="mypage →" />
+                        <ListItemText primary="mypage" />
                       </NavLink>
                       <CallMadeIcon />
                     </ListItemButton>
@@ -229,7 +229,7 @@ function App() {
                   <Divider />
                   <div
                     style={{
-                      padding: "8px 16px",
+                      padding: "12px 16px",
                       display: "flex",
                       alignItems: "center",
                       gap: "8px",
@@ -237,13 +237,20 @@ function App() {
                   >
                     <AccountCircleIcon />
                     {isLogin ? (
-                      <div style={{ display: "flex" }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          width: "100%",
+                        }}
+                      >
                         <div style={{ marginRight: "16px" }}>
                           어서오세요, {userInfo?.nickname} 님!
                         </div>
                         <div>
                           <CommonButton
-                            text="logout"
+                            text="로그아웃"
                             btnType="small"
                             onClick={handelLogout}
                           />
@@ -264,31 +271,6 @@ function App() {
                     )}
                   </div>
                 </div>
-                {/* <div style={{ padding: "12px" }}>
-                  {isLogin || (
-                    <div>
-                      <NavLink
-                        to="/login"
-                        className={({ isActive }) =>
-                          isActive ? "text-lime-500" : "text-white"
-                        }
-                        onClick={toggleDrawer(false)}
-                      >
-                        login
-                      </NavLink>
-                    </div>
-                  )}
-                  {isLogin && (
-                    <div>
-                      <button
-                        onClick={handelLogout}
-                        style={{ border: "2px solid red" }}
-                      >
-                        logout
-                      </button>
-                    </div>
-                  )}
-                </div> */}
               </Box>
             </SwipeableDrawer>
           </div>
@@ -297,25 +279,24 @@ function App() {
           <Outlet />
         </MainLayout>
         <FooterLayout>
-          <div
-          // style={{
-          //   display: "flex",
-          //   alignItems: "center",
-          //   justifyContent: "space-between",
-          // }}
-          >
-            <span>Copyrightⓒ 2025. XX. All rights reserved.</span>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                // justifyContent: "space-between",
-                gap: 8,
-              }}
-            >
-              <GitHubIcon />
-              <GitHubIcon />
-              <MailOutlineIcon />
+          <div>
+            <span>Copyrightⓒ 2025. vitaZ-dev. All rights reserved.</span>
+            <div className="icons">
+              <a
+                href="https://orchid-carpet-4d1.notion.site/e5ee79b802ef4edfbc3e0f50dd1c944c"
+                target="_blank"
+              >
+                <img
+                  src="https://noticon-static.tammolo.com/dgggcrkxq/image/upload/v1570106347/noticon/hx52ypkqqdzjdvd8iaid.svg"
+                  alt="notion"
+                />
+              </a>
+              <a href="https://github.com/vitaZ-dev" target="_blank">
+                <GitHubIcon />
+              </a>
+              <a href="mailto:@vitaminzdev@gmail.com">
+                <MailOutlineIcon />
+              </a>
             </div>
           </div>
         </FooterLayout>
