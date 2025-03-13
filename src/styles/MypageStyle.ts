@@ -1,10 +1,11 @@
 import styled from "@emotion/styled";
 
 export const MypageLayout = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
   padding-bottom: 24px;
+
+  section {
+    margin-top: 24px;
+  }
 
   .mypage_user {
     padding: 0 var(--padding-size);
@@ -54,11 +55,12 @@ export const MypageLayout = styled.div`
 
   .mypage_title {
     padding: 0 16px;
-    margin: 8px auto 16px;
+    margin: 0 auto 16px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
     .back_icon {
+      font-size: 18px;
       cursor: pointer;
     }
 
