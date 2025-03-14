@@ -182,11 +182,16 @@ export const CommonModalStyle = styled.div`
   background-color: #4b44449e;
   z-index: 999;
   overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+
+  &.show {
+    opacity: 1;
+    visibility: visible;
+  }
 
   .modal_wrap {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     margin: 0 auto;
     padding: 10px;
     width: 100%;
@@ -195,11 +200,36 @@ export const CommonModalStyle = styled.div`
   }
 
   .modal_box {
+    position: relative;
+    top: 50%;
+    left: 50%;
     width: 96%;
     max-width: 500px;
     padding: 16px;
     background: var(--white);
     border-radius: 10px;
+
+    transition: transform 0.3s ease;
+
+    &.hide {
+      transform: translate(-50%, 0%);
+    }
+    &.show {
+      transform: translate(-50%, -50%);
+    }
+
+    /* @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translate3d(0, 100%, 0);
+      }
+      100% {
+        opacity: 1;
+        transform: translateZ(0);
+      }
+    }
+    transition: opacity 0.15s linear;
+    animation: fadeInUp 0.5s ease-out; */
   }
 
   .modal_title {

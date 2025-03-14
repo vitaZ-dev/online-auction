@@ -2,6 +2,7 @@ import { CommonModalStyle } from "../../styles/CommonStyle";
 import CloseIcon from "@mui/icons-material/Close";
 
 export interface CommonModalProps {
+  isOpen: boolean;
   setDisplay: React.Dispatch<React.SetStateAction<boolean>>;
   modalTitle: string;
   children?: React.ReactNode;
@@ -11,6 +12,7 @@ export interface CommonModalProps {
 }
 
 export default function CommonModal({
+  isOpen,
   setDisplay,
   modalTitle = "Modal Title",
   children,
@@ -20,9 +22,15 @@ export default function CommonModal({
 }: CommonModalProps) {
   // tsx
   return (
-    <CommonModalStyle onClick={() => setDisplay(false)}>
+    <CommonModalStyle
+      className={`${isOpen ? "show" : ""}`}
+      onClick={() => setDisplay(false)}
+    >
       <div className="modal_wrap">
-        <div className="modal_box" onClick={(e) => e.stopPropagation()}>
+        <div
+          className={`modal_box hide ${isOpen ? "show" : ""}`}
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="modal_title">
             <span className="title">{modalTitle}</span>
             <button onClick={() => setDisplay(false)}>

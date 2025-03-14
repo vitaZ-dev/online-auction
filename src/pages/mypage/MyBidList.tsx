@@ -13,6 +13,7 @@ import axios from "axios";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { CommonNodataBox } from "../../styles/CommonStyle";
 import MUIPagination from "../../components/common/MUIPagination";
+import CommonButton from "../../components/common/CommonButton";
 
 export default function MyBidList() {
   const { userInfo } = useAuthStore();
@@ -85,26 +86,27 @@ export default function MyBidList() {
       ) : (
         <CommonNodataBox>나의 입찰 내역이 없습니다.</CommonNodataBox>
       )}
-      {toggle && (
-        <CommonModal modalTitle={detailTitle} setDisplay={setToggle}>
-          <ShowListTable
-            tableGrid={[2, 4]}
-            tableHeader={["amount", "time"]}
-            tableList={bidContents}
-          />
-          <div style={{ textAlign: "right" }}>
-            <button
-              onClick={() => navigate(`/auction/${detailID}`)}
-              style={{ border: "1px solid red" }}
-            >
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <span>사이트로</span>
-                <CallMadeIcon style={{ fontSize: 18 }} />
-              </div>
-            </button>
-          </div>
-        </CommonModal>
-      )}
+      <CommonModal
+        isOpen={toggle}
+        modalTitle={detailTitle}
+        setDisplay={setToggle}
+      >
+        <ShowListTable
+          tableGrid={[2, 4]}
+          tableHeader={["amount", "time"]}
+          tableList={bidContents}
+        />
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <CommonButton
+            btnType="small"
+            textColor="#181818"
+            onClick={() => navigate(`/auction/${detailID}`)}
+          >
+            <div style={{ fontSize: 14 }}>사이트로</div>
+            <CallMadeIcon style={{ fontSize: 18 }} />
+          </CommonButton>
+        </div>
+      </CommonModal>
     </MypageLayout>
   );
 }
