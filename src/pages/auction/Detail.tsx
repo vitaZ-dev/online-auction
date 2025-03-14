@@ -1,7 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ItemDetailBox, ItemDetailLayout } from "../../styles/AuctionStyle";
+import {
+  ItemDetailBidderBox,
+  ItemDetailBox,
+  ItemDetailLayout,
+} from "../../styles/AuctionStyle";
 import { findCategory } from "../../modules/category";
 import useAuthStore from "../../stores/useAuthStore";
 import FullSizeImage from "../../components/common/FullSizeImage";
@@ -9,7 +13,7 @@ import { useCookies } from "react-cookie";
 import { setDateTemp } from "../../modules";
 import CommonList from "../../components/UI/CommonList";
 import CommonListItem from "../../components/UI/CommonListItem";
-import { CommonPaddingBox } from "../../styles/CommonStyle";
+import { CommonNodataBox, CommonPaddingBox } from "../../styles/CommonStyle";
 import ShowListTable from "../../components/ShowListTable";
 import CommonTitle from "../../components/UI/CommonTitle";
 import CommonCategoryBadge from "../../components/UI/CommonCategoryBadge";
@@ -19,6 +23,10 @@ import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
+import CommonInput from "../../components/common/CommonInput";
+import CommonButton from "../../components/common/CommonButton";
 
 export default function Detail() {
   const [loading, setLoading] = useState(false);
@@ -38,17 +46,7 @@ export default function Detail() {
 
   const { pathname } = useLocation();
   const POST_ID = pathname.split("/")[2];
-  const {
-    isLogin,
-    userInfo,
-    favorite,
-    bidHistory,
-    bidList,
-    updateUserFavorite,
-    updateBidHistory,
-    updateBidList,
-    updateBidAward,
-  } = useAuthStore();
+  const { isLogin, userInfo } = useAuthStore();
   const [cookies, setCookie] = useCookies();
   const navigate = useNavigate();
 
@@ -82,7 +80,7 @@ export default function Detail() {
         setDetail(post);
         setFavoriteCnt(post.favorite_list.length);
         setFavoriteCheck(
-          post.favorite_list.some((item) => item.uuid === userInfo.uuid)
+          post.favorite_list.some((item) => item.uuid === userInfo?.uuid)
         );
         setPageLoading(false);
         return post.user_id;
@@ -222,6 +220,11 @@ export default function Detail() {
 */
 
   const updateFavorite = async (item: any) => {
+    if (!isLogin) {
+      alert("로그인 후 이용할 수 있습니다!");
+      return false;
+    }
+
     const cnt = favoriteCheck ? favoriteCnt - 1 : favoriteCnt + 1;
     let favorite_list;
     if (favoriteCheck) {
@@ -350,9 +353,11 @@ export default function Detail() {
   */
 
   const auctionBidding = async (item: any) => {
-    // console.log(item);
-    // console.log(item?.bid_history); // ~ 새로고침 해야 값이 갱신?
-    // console.log(bidHistoryDetail);
+    if (!isLogin) {
+      alert("로그인 후 이용할 수 있습니다!");
+      return false;
+    }
+
     if (bidAmount <= detail[0].now_price) {
       alert("입찰가는 현대최대가 보다 높은 값만 입력할 수 있습니다!");
       return false;
@@ -616,20 +621,15 @@ export default function Detail() {
           {show && <FullSizeImage src={detail?.src} setShow={setShow} />}
           {pageLoading || (
             <div className="user_info">
-              <h2>{detail.user_info}</h2>
+              <div className="user_prof">
+                <AccountCircleIcon />
+                <h2>{detail.user_info}</h2>
+              </div>
               {userCheck ? (
                 <div className="user_utils">
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                    }}
-                  >
+                  <div className="favorite">
                     <FavoriteTwoToneIcon color="secondary" />
-                    <span style={{ fontSize: 11 }}>
-                      {numberFormat(favoriteCnt)}
-                    </span>
+                    <span>{numberFormat(favoriteCnt)}</span>
                   </div>
                   <button
                     onClick={() => editPost(detail.is_open)}
@@ -646,26 +646,18 @@ export default function Detail() {
                 </div>
               ) : (
                 <div className="user_utils">
-                  {isLogin && (
-                    <button
-                      onClick={() => updateFavorite(detail)}
-                      style={{
-                        border: "none",
-                        display: "flex",
-                        flexDirection: "column",
-                      }}
-                      disabled={loading}
-                    >
-                      {favoriteCheck ? (
-                        <FavoriteTwoToneIcon color="secondary" />
-                      ) : (
-                        <FavoriteBorderIcon color="secondary" />
-                      )}
-                      <span style={{ fontSize: 11 }}>
-                        {numberFormat(favoriteCnt)}
-                      </span>
-                    </button>
-                  )}
+                  <button
+                    className="favorite"
+                    onClick={() => updateFavorite(detail)}
+                    disabled={loading}
+                  >
+                    {favoriteCheck ? (
+                      <FavoriteTwoToneIcon color="secondary" />
+                    ) : (
+                      <FavoriteBorderIcon color="secondary" />
+                    )}
+                    <span>{numberFormat(favoriteCnt)}</span>
+                  </button>
                 </div>
               )}
             </div>
@@ -673,7 +665,7 @@ export default function Detail() {
           <hr />
           <section>
             {/* <p>{findCategory(detail?.category_id)}</p> */}
-            <div style={{ padding: "8px 16px 0" }}>
+            <div className="contents_info" style={{ paddingTop: "8px" }}>
               <CommonCategoryBadge categoryID={detail?.category_id} />
             </div>
             <CommonTitle
@@ -681,20 +673,9 @@ export default function Detail() {
               title={detail.title}
               isOpen={Boolean(detail?.is_open)}
             />
-            <div
-              style={{
-                padding: "0 16px",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <p style={{ fontSize: "14px", color: "gray" }}>
-                작성일 | {detail.start_date}
-              </p>
-              <p style={{ fontSize: "14px", color: "gray" }}>
-                조회 | {numberFormat(detail?.cnt)}
-              </p>
+            <div className="contents_info">
+              <p>작성일 | {detail.start_date}</p>
+              <p>조회 | {numberFormat(detail?.cnt)}</p>
             </div>
           </section>
           <div className="item_info">
@@ -717,17 +698,45 @@ export default function Detail() {
             {/* <p>카테고리/시작가격/시작날짜/종료날짜</p> */}
             <CommonPaddingBox>
               <ItemDetailBox>
-                <p>
-                  카테고리 | {findCategory(detail?.category_id)} <br />
+                <div className="detail_table">
+                  <p>
+                    <span>카테고리</span>
+                    <span className="contents">
+                      {findCategory(detail?.category_id)}
+                    </span>
+                  </p>
+                  <p>
+                    <span>시작가</span>
+                    <span className="contents">
+                      {numberFormat(detail?.start_price)}원
+                    </span>
+                  </p>
+                  <p>
+                    <span>입찰횟수</span>
+                    <span className="contents">
+                      {numberFormat(detail?.bid_count)}
+                    </span>
+                  </p>
+                  <p>
+                    <span>현재최대가</span>
+                    <span className="contents">
+                      {numberFormat(detail?.now_price)}
+                    </span>
+                  </p>
+                  <p>
+                    <span>마감일</span>
+                    <span className="contents">{detail?.end_date}</span>
+                  </p>
+                  {/* 카테고리 | {findCategory(detail?.category_id)} <br />
                   시작가 | {numberFormat(detail?.start_price)}원 <br />
                   입찰횟수 | {numberFormat(detail?.bid_count)} <br />
                   현재최대가 | {numberFormat(detail?.now_price)} <br />
-                  마감일 | {detail?.end_date}
-                </p>
+                  마감일 | {detail?.end_date} */}
+                </div>
               </ItemDetailBox>
             </CommonPaddingBox>
           </section>
-          {userCheck && (
+          {userCheck && Boolean(detail.is_open) && (
             <CommonPaddingBox>
               <p className="notice">
                 *가장 높은 금액을 입력한 유저에게 자동으로 낙찰됩니다!
@@ -750,32 +759,30 @@ export default function Detail() {
             </CommonPaddingBox>
           )}
           {!userCheck && Boolean(detail.is_open) && (
-            <>
-              <button onClick={() => setOpenBidding(!openBidding)}>
-                {openBidding ? <>닫기</> : <>입찰하기</>}
-              </button>
-            </>
-          )}
-          {openBidding && (
             <section>
+              <CommonTitle type={3} title="입찰하기" />
+              {/* <CommonTitle type={5} title="가격을 입력해주세요!" /> */}
               <CommonPaddingBox>
-                가격을 입력해주세요! <br />* 한 번 입찰하면 취소할 수 없습니다!
-                <br />
-                <input
-                  type="number"
-                  min={detail?.start_price}
-                  value={bidAmount}
-                  onChange={(e) => setBidAmount(Number(e.target.value))}
-                />
-                <button
-                  onClick={() => auctionBidding(detail)}
-                  disabled={loading}
-                >
-                  입찰하기
-                </button>
+                <div className="bid_input">
+                  <CommonInput
+                    type="number"
+                    length="full"
+                    min={detail?.start_price}
+                    value={bidAmount}
+                    setValue={(e) => setBidAmount(Number(e.target.value))}
+                  />
+                  <CommonButton
+                    text="입찰하기"
+                    btnType="large"
+                    onClick={() => auctionBidding(detail)}
+                    disabled={loading}
+                  />
+                </div>
+                <p className="notice">* 한 번 입찰하면 취소할 수 없습니다!</p>
               </CommonPaddingBox>
             </section>
           )}
+
           <section>
             <CommonTitle type={4} title="상세내용" />
             <CommonPaddingBox>
@@ -788,9 +795,19 @@ export default function Detail() {
             <section>
               <CommonTitle type={3} title="최종 입찰자" />
               <CommonPaddingBox>
-                <button>
-                  {detail?.last_bidder?.bidder || "입찰자가 없습니다."}
-                </button>
+                <ItemDetailBidderBox>
+                  <MilitaryTechIcon className="icon" />
+                  <div className="bidder_wrap">
+                    <p>{detail?.last_bidder?.bidder || "입찰자가 없습니다."}</p>
+                    {detail?.last_bidder?.bidder && (
+                      <p className="price">
+                        낙찰 금액은
+                        <span>{numberFormat(detail.last_bidder.amount)}</span>원
+                        입니다.
+                      </p>
+                    )}
+                  </div>
+                </ItemDetailBidderBox>
               </CommonPaddingBox>
             </section>
           )}
@@ -801,10 +818,11 @@ export default function Detail() {
                 <ShowListTable
                   tableGrid={[1, 1, 2]}
                   tableHeader={["bidder", "amount", "time"]}
+                  tableHeaderText={["입찰자", "입찰가", "입찰 시간"]}
                   tableList={bidHistoryDetail}
                 />
               ) : (
-                <div>입찰자가 없습니다</div>
+                <CommonNodataBox>입찰자가 없습니다</CommonNodataBox>
               )}
             </CommonPaddingBox>
           </section>
