@@ -94,6 +94,7 @@ export default function MyBidList() {
         <ShowListTable
           tableGrid={[2, 4]}
           tableHeader={["amount", "time"]}
+          tableHeaderText={["입찰가", "입찰 시간"]}
           tableList={bidContents}
         />
         <div style={{ display: "flex", justifyContent: "flex-end" }}>

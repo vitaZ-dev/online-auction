@@ -1,12 +1,17 @@
 import { ShowListTableLayout } from "../styles/TempStyle";
 import { numberFormat } from "../utils";
 
-export default function ShowListTable({ tableGrid, tableHeader, tableList }) {
+export default function ShowListTable({
+  tableGrid,
+  tableHeader,
+  tableHeaderText,
+  tableList,
+}) {
   return (
     <ShowListTableLayout tableGrid={tableGrid}>
       <div className="table_header">
-        {tableHeader?.map((header, idx) => (
-          <span key={`table_header_${idx}`}>{header}</span>
+        {tableHeader?.map((_, idx) => (
+          <span key={`table_header_${idx}`}>{tableHeaderText[idx]}</span>
         ))}
       </div>
       <div className="table_contents">
