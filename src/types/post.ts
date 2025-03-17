@@ -6,7 +6,7 @@ export type postBidHistory = {
   user_id: string;
   uuid: string;
 };
-type postFavoriteList = {
+export type postFavoriteList = {
   id: string;
   uuid: string;
 };

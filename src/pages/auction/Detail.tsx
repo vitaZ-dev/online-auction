@@ -27,7 +27,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
 import CommonInput from "../../components/common/CommonInput";
 import CommonButton from "../../components/common/CommonButton";
-import { postBidHistory, postType } from "../../types/post";
+import { postBidHistory, postFavoriteList, postType } from "../../types/post";
 
 export default function Detail() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -82,7 +82,9 @@ export default function Detail() {
         setDetail(post);
         setFavoriteCnt(post.favorite_list.length);
         setFavoriteCheck(
-          post.favorite_list.some((item) => item.uuid === userInfo?.uuid)
+          post.favorite_list.some(
+            (item: postFavoriteList) => item.uuid === userInfo?.uuid
+          )
         );
         setPageLoading(false);
         return post.user_id;
@@ -128,7 +130,7 @@ export default function Detail() {
       `http://localhost:4000/posts?id_ne=${POST_ID}&user_id=${id}&_limit=4&_sort=-created_at`
     );
 
-    setSellList(data.filter((item) => item.id !== POST_ID));
+    setSellList(data.filter((item: postType) => item.id !== POST_ID));
     setSellListLoading(false);
   };
 
@@ -221,7 +223,7 @@ export default function Detail() {
   };
 */
 
-  const updateFavorite = async (item: any) => {
+  const updateFavorite = async (item: postType) => {
     if (!isLogin) {
       alert("로그인 후 이용할 수 있습니다!");
       return false;
@@ -231,14 +233,14 @@ export default function Detail() {
     let favorite_list;
     if (favoriteCheck) {
       favorite_list = item.favorite_list.filter(
-        (item) => item.uuid !== userInfo.uuid
+        (item) => item.uuid !== userInfo?.uuid
       );
     } else {
       favorite_list = [
         ...item.favorite_list,
         {
-          id: userInfo.id,
-          uuid: userInfo.uuid,
+          id: userInfo?.id,
+          uuid: userInfo?.uuid,
         },
       ];
     }
@@ -251,15 +253,15 @@ export default function Detail() {
       if (favoriteCheck) {
         // 좋아요 해제
         await axios.delete(
-          `http://localhost:4000/favorite/${userInfo.id + POST_ID}`
+          `http://localhost:4000/favorite/${userInfo?.id + POST_ID}`
         );
       } else {
         // 좋아요 등록
         await axios.post(`http://localhost:4000/favorite`, {
-          id: userInfo.id + POST_ID,
+          id: userInfo?.id + POST_ID,
           item_id: POST_ID,
-          user_id: userInfo.id,
-          uuid: userInfo.uuid,
+          user_id: userInfo?.id,
+          uuid: userInfo?.uuid,
           title: item.title,
           src: item.src,
           category_id: item.category_id,
@@ -315,7 +317,7 @@ export default function Detail() {
       bid_list = Array.from(
         new Map(bid_list.map((item) => [item.id, item])).values()
       );
-      await axios.patch(`http://localhost:4000/user/${userInfo.id}`, {
+      await axios.patch(`http://localhost:4000/user/${userInfo?.id}`, {
         bid_history,
         bid_list,
       });
@@ -354,7 +356,7 @@ export default function Detail() {
   };
   */
 
-  const auctionBidding = async (item: any, nowPrice: number) => {
+  const auctionBidding = async (item: postType, nowPrice: number) => {
     if (!isLogin) {
       alert("로그인 후 이용할 수 있습니다!");
       return false;
@@ -365,7 +367,7 @@ export default function Detail() {
       return false;
     }
 
-    const patch = bidHistoryDetail?.some((i) => i.uuid === userInfo.uuid);
+    const patch = bidHistoryDetail?.some((i) => i.uuid === userInfo?.uuid);
 
     setLoading(true);
     const nowTime = setDateTemp();
@@ -373,11 +375,11 @@ export default function Detail() {
       if (patch) {
         // patch
         const filterHistory = bidHistoryDetail
-          ? bidHistoryDetail.filter((i) => i.uuid === userInfo.uuid)
+          ? bidHistoryDetail.filter((i) => i.uuid === userInfo?.uuid)
           : [];
 
         await axios.patch(
-          `http://localhost:4000/bid_list/${userInfo.id + POST_ID}`,
+          `http://localhost:4000/bid_list/${userInfo?.id + POST_ID}`,
           {
             history: [
               {
@@ -395,10 +397,10 @@ export default function Detail() {
       } else {
         // post
         await axios.post(`http://localhost:4000/bid_list`, {
-          id: userInfo.id + POST_ID,
+          id: userInfo?.id + POST_ID,
           item_id: POST_ID,
-          user_id: userInfo.id,
-          uuid: userInfo.uuid,
+          user_id: userInfo?.id,
+          uuid: userInfo?.uuid,
           bidder: userInfo?.nickname || "USER",
           amount: bidAmount,
           time: nowTime,

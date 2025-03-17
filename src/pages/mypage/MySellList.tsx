@@ -23,7 +23,7 @@ export default function MySellList() {
 
   const [page, setPage] = useState<number>(1);
   const [totalPage, setTotalPage] = useState<number>(1);
-  const [isOpen, setIsOpen] = useState<"all" | "0" | "1">("all");
+  const [isOpen, setIsOpen] = useState<string>("all"); // "all" | "0" | "1"
 
   const { userInfo } = useAuthStore();
   const navigate = useNavigate();
@@ -49,11 +49,11 @@ export default function MySellList() {
     else navigate("/mypage");
   };
 
-  const searchIsOpen = async (e) => {
-    setIsOpen(e.target.value);
+  const searchIsOpen = async (value: string) => {
+    setIsOpen(value);
 
-    if (e.target.value === "all") query.delete("is_open");
-    else query.set("is_open", e.target.value);
+    if (value === "all") query.delete("is_open");
+    else query.set("is_open", value);
     setQuery(query);
 
     if (page !== 1) setPage(1);
@@ -94,7 +94,7 @@ export default function MySellList() {
           id="all"
           name="open_filter"
           value="all"
-          onChange={(e) => searchIsOpen(e)}
+          onChange={(e) => searchIsOpen(e.target.value)}
           checked={isOpen === "all"}
         />
         <CommonRadioBtn
@@ -102,7 +102,7 @@ export default function MySellList() {
           id="open"
           name="open_filter"
           value="1"
-          onChange={(e) => searchIsOpen(e)}
+          onChange={(e) => searchIsOpen(e.target.value)}
           checked={isOpen === "1"}
         />
         <CommonRadioBtn
@@ -110,7 +110,7 @@ export default function MySellList() {
           id="close"
           name="open_filter"
           value="0"
-          onChange={(e) => searchIsOpen(e)}
+          onChange={(e) => searchIsOpen(e.target.value)}
           checked={isOpen === "0"}
         />
       </div>

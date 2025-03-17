@@ -10,9 +10,9 @@ import CommonInput from "../../components/common/CommonInput";
 export default function Login() {
   const auth = useAuthStore();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [rememberID, setRememberID] = useState(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [rememberID, setRememberID] = useState<boolean>(false);
 
   const navigate = useNavigate();
 

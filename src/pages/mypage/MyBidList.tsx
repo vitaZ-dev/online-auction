@@ -38,7 +38,7 @@ export default function MyBidList() {
 
   const getUserPostList = async (page: number) => {
     const { data } = await axios.get(
-      `http://localhost:4000/bid_list?uuid=${userInfo.uuid}&_sort=-created_at&_page=${page}&_per_page=16`
+      `http://localhost:4000/bid_list?uuid=${userInfo?.uuid}&_sort=-created_at&_page=${page}&_per_page=16`
     );
     setBidListAll(data.data);
     setTotalPage(data.pages);

@@ -9,12 +9,12 @@ import CommonButton from "../../components/common/CommonButton";
 export default function Register() {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [checkEmail, setCheckEmail] = useState(false);
-  const [password, setPassword] = useState("");
-  const [checkPassword, setCheckPassword] = useState(false);
-  const [nickname, setNickname] = useState("");
-  const [checkNickname, setCheckNickname] = useState(false);
+  const [email, setEmail] = useState<string>("");
+  const [checkEmail, setCheckEmail] = useState<boolean>(false);
+  const [password, setPassword] = useState<string>("");
+  const [checkPassword, setCheckPassword] = useState<boolean>(false);
+  const [nickname, setNickname] = useState<string>("");
+  const [checkNickname, setCheckNickname] = useState<boolean>(false);
 
   const register = async () => {
     if (!email) {
