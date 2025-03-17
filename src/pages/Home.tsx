@@ -11,10 +11,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper-bundle.css";
 import CommonTitle from "../components/UI/CommonTitle";
 import { CommonNodataBox } from "../styles/CommonStyle";
+import { postType } from "../types/post";
 
 export default function Home() {
-  const [recent, setRecent] = useState([]);
-  const [favorite, setFavorite] = useState([]);
+  const [recent, setRecent] = useState<Array<postType> | []>([]);
+  const [favorite, setFavorite] = useState<Array<postType> | []>([]);
 
   useEffect(() => {
     getRecentList();
@@ -87,7 +88,7 @@ export default function Home() {
                     category={findCategory(r?.category_id)}
                     title={r?.title}
                     startPrice={r?.start_price}
-                    isOpen={r.is_open}
+                    isOpen={Boolean(r.is_open)}
                   />
                 </Link>
               ))}
@@ -114,7 +115,7 @@ export default function Home() {
                       category={findCategory(r?.category_id)}
                       title={r?.title}
                       startPrice={r?.start_price}
-                      isOpen={r.is_open}
+                      isOpen={Boolean(r.is_open)}
                     />
                   </Link>
                 );
