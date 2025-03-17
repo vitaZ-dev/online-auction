@@ -1,27 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-
-type ObjectType = {
-  [key: string]: unknown;
-};
-
-type AuthStoreType = {
-  isLogin: boolean;
-  userInfo: ObjectType | null;
-  token: string | null;
-  salesHistory: Array<ObjectType> | null;
-  favorite: Array<ObjectType> | null;
-  bidList: Array<ObjectType> | null;
-  bidAward: Array<ObjectType> | null;
-
-  login: (userInfo: ObjectType) => void;
-  logout: () => void;
-  updateUserInfo: (newUserInfo: ObjectType) => void;
-  updateSalesHistory: (salesHistory: Array<ObjectType>) => void;
-  updateUserFavorite: (favorite: Array<ObjectType>) => void;
-  updateBidList: (bidList: Array<ObjectType>) => void;
-  updateBidAward: (bidAward: Array<ObjectType>) => void;
-};
+import { AuthStoreType } from "../types/user";
 
 const useAuthStore = create(
   persist<AuthStoreType>(
