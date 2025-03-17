@@ -681,11 +681,11 @@ export default function Detail() {
           <div className="item_info">
             <div>
               <p>현재 입찰가</p>
-              <p>{detail.now_price || "no bid"}</p>
+              <p>{numberFormat(detail.now_price) || "no bid"}</p>
             </div>
             <div>
               <p>총 입찰</p>
-              <p>{detail.bid_count || 0}</p>
+              <p>{numberFormat(detail.bid_count) || 0}</p>
             </div>
             <div>
               <p>종료일</p>
