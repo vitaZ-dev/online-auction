@@ -75,9 +75,11 @@ export default function List() {
     setPageLoading(true);
 
     let url = `http://localhost:4000/posts?&_page=${page}&_per_page=10`;
-    query?.sort_by && query.sort_by === "favorite"
-      ? (url += "&_sort=-favorite,-created_at")
-      : (url += "&_sort=-created_at");
+    if (query?.sort_by && query.sort_by === "favorite") {
+      url += "&_sort=-favorite,-created_at";
+    } else {
+      url += "&_sort=-created_at";
+    }
 
     if (Object.keys(query).length !== 0) {
       Object.keys(query).forEach((key) => {
@@ -113,8 +115,11 @@ export default function List() {
   // const loadingNextPage = () => setPage(page + 1);
 
   const filterSearchPosts = async () => {
-    filterIsOpen ? query.set("is_open", "1") : query.delete("is_open");
+    if (filterIsOpen) query.set("is_open", "1");
+    else query.delete("is_open");
+
     if (filterCategory) query.set("category_id", filterCategory.toString());
+
     if (filterSort) {
       const sortText =
         filterSort === "1" ? "recent" : filterSort === "2" ? "favorite" : "";
