@@ -9,12 +9,13 @@ export default function CommonList({
 }: {
   grid?: number;
   loading?: boolean;
-  children;
+  children?: React.ReactNode;
 }) {
   const [height, setHeight] = useState(200);
 
   useEffect(() => {
-    grid === 2 ? setHeight(200) : setHeight(100);
+    const getHeight = grid === 2 ? 200 : 100;
+    setHeight(getHeight);
   }, [grid]);
 
   return (

@@ -7,7 +7,7 @@ interface CommonButtonProps {
   textColor?: string;
   onClick: VoidFunction;
   disabled?: boolean;
-  children?: any;
+  children?: React.ReactNode;
 }
 export default function CommonButton({
   text = "",
