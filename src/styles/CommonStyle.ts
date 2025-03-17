@@ -1,6 +1,11 @@
 import styled from "@emotion/styled";
+import {
+  CommonButtonType,
+  CommonInputType,
+  CommonListType,
+} from "../types/style";
 
-export const CommonListLayout = styled.div`
+export const CommonListLayout = styled.div<CommonListType>`
   display: grid;
   grid-template-columns: ${({ grid }) => `repeat(${grid || 2}, 1fr)`};
   column-gap: 15px;
@@ -261,7 +266,7 @@ export const CommonCategoryBadgeStyle = styled.div`
   }
 `;
 
-export const CommonInputStyle = styled.div`
+export const CommonInputStyle = styled.div<CommonInputType>`
   input.common-input {
     background: var(--white);
     border: 1px solid var(--main-gray-01-color);
@@ -347,7 +352,7 @@ export const CommonRadioBtnStyle = styled.div`
   }
 `;
 
-export const CommonButtonStyle = styled.button`
+export const CommonButtonStyle = styled.button<CommonButtonType>`
   display: flex;
   justify-content: center;
   align-items: center;

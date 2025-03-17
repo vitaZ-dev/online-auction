@@ -1,13 +1,14 @@
 import styled from "@emotion/styled";
+import { ShowListTableType } from "../types/style";
 
-export const ShowListTableLayout = styled.div`
+export const ShowListTableLayout = styled.div<ShowListTableType>`
   position: relative;
 
   .table_header,
   .table_contents > * {
     display: grid;
     grid-template-columns: ${({ tableGrid }) =>
-      tableGrid.map((grid) => `${grid}fr`).join(" ")};
+      tableGrid?.map((grid) => `${grid}fr`).join(" ")};
 
     line-height: 2;
   }
