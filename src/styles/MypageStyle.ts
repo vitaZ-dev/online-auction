@@ -43,7 +43,7 @@ export const MypageLayout = styled.div`
         .email {
           margin-top: 4px;
           font-size: 14px;
-          color: gray;
+          color: var(--main-gray-02-color);
           font-weight: 500;
         }
       }

@@ -10,7 +10,7 @@ export const AuctionListLayout = styled.div`
     padding: 0 8px;
     & > div {
       padding: 16px 0;
-      border-bottom: 1px solid gray;
+      border-bottom: 1px solid var(--main-gray-02-color);
     }
     p {
       margin-bottom: 8px;
@@ -51,7 +51,7 @@ export const ItemDetailLayout = styled.article`
 
   .notice {
     margin: 6px 0;
-    color: #ff3c5a;
+    color: var(--main-red-color);
     font-size: 14px;
     font-weight: 500;
   }
@@ -129,7 +129,7 @@ export const ItemDetailLayout = styled.article`
     align-items: center;
     p {
       font-size: 14px;
-      color: gray;
+      color: var(--main-gray-02-color);
     }
   }
 
@@ -142,7 +142,7 @@ export const ItemDetailLayout = styled.article`
     div {
       width: calc(100% / 3);
       padding: 0 6px;
-      border-left: 1px solid lightgray;
+      border-left: 1px solid var(--main-input-placeholder-color);
       text-align: center;
       &:first-of-type {
         border-left: transparent;
@@ -150,7 +150,7 @@ export const ItemDetailLayout = styled.article`
 
       p:first-of-type {
         margin-bottom: 8px;
-        color: gray;
+        color: var(--main-gray-02-color);
         font-size: 14px;
         font-weight: 700;
       }
@@ -168,7 +168,7 @@ export const ItemDetailLayout = styled.article`
       }
     }
     .contents {
-      color: #525252;
+      color: var(--main-gray-04-color);
     }
   }
 
@@ -197,8 +197,7 @@ export const ItemDetailLayout = styled.article`
   button {
     width: 100%;
     padding: 12px;
-    /* margin: 24px 0; */
-    border: 1px solid silver;
+    border: 1px solid var(--main-gray-01-color);
     border-radius: 5px;
   }
 `;
@@ -207,10 +206,10 @@ const itemDetailBoxStyle = `
   min-height: 100px;
   margin: 8px 0 16px;
   padding: 16px;
-  border: 1px solid gray;
+  border: 1px solid var(--main-gray-02-color);
   border-radius: 10px;
-  background-color: white;
-  color: #8b8b8b;
+  background-color: var(--white);
+  color: var(--main-gray-02-color);
   font-weight: 600;
   box-shadow: #0000000d 0px 2px 8px;
 `;
@@ -227,10 +226,10 @@ export const ItemDetailBidderBox = styled.div`
     width: 64px;
     height: 64px;
     padding: 6px;
-    border: 4px solid white;
+    border: 4px solid var(--white);
     border-radius: 50%;
-    background-color: #039855;
-    color: white;
+    background-color: var(--main-green-color);
+    color: var(--white);
   }
   .bidder_wrap {
     ${itemDetailBoxStyle};
@@ -238,22 +237,22 @@ export const ItemDetailBidderBox = styled.div`
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    border: 4px solid rgb(225, 248, 234);
+    border: 4px solid var(--main-green-light-color);
     margin-top: 32px;
     min-height: 144px;
 
     p {
-      color: #181818;
+      color: var(--black);
       font-size: 36px;
       text-align: center;
       &.price {
         margin-top: 12px;
-        color: #8b8b8b;
+        color: var(--main-gray-02-color);
         font-size: 18px;
       }
       span {
         margin: 0 4px;
-        color: #039855;
+        color: var(--main-green-color);
       }
     }
   }
@@ -265,7 +264,7 @@ export const FullImageLayout = styled.div`
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: black;
+  background-color: var(--black);
   overflow: hidden;
   z-index: 999;
 
@@ -290,7 +289,7 @@ export const FullImageLayout = styled.div`
     button {
       width: 48px;
       height: 48px;
-      color: white;
+      color: var(--white);
       position: absolute;
       top: 20px;
       right: 40px;

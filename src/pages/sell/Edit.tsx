@@ -250,12 +250,8 @@ export default function Edit() {
               </div>
 
               <button
+                className="page_btn"
                 onClick={() => editPost()}
-                style={{
-                  width: "100%",
-                  border: "1px solid silver",
-                  padding: "12px",
-                }}
                 disabled={!isBidOpen}
               >
                 수정하기

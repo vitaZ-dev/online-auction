@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 
 const light = css`
   :root {
+    /*
     --main-max-width: 640px;
     --header-height: 72px;
     --main-bg-color: #dff6ff;
@@ -22,8 +23,32 @@ const light = css`
     --white: #fff;
     --black: #181818;
     --button-bar-txt-color: #7e7e7e;
+     */
 
+    --main-max-width: 640px;
+    --header-height: 72px;
     --padding-size: 16px;
+
+    --main-bg-color: #f5f5f6;
+    --main-footer-color: #e9e9eb;
+    --main-modal-dim-color: #4b44449e;
+    --main-input-placeholder-color: #d3d3d3;
+    --main-input-bg-color: #e9e9ea;
+    --main-input-text-color: #85858f;
+
+    --main-violet-00-color: #9b27b0;
+    --main-violet-01-color: #d974eb99; // #d974eb
+    --main-violet-02-color: rgba(155, 39, 176, 0.5);
+    --main-violet-03-color: rgba(155, 39, 176, 0.25);
+    --main-red-color: #ff3c5a;
+    --main-green-color: #039855;
+    --main-green-light-color: #e1f8ea;
+    --main-gray-01-color: #c0c0c0; // silver
+    --main-gray-02-color: #808080; // gray
+    --main-gray-03-color: #868b94;
+    --main-gray-04-color: #525252;
+    --white: #fff;
+    --black: #181818;
   }
 `;
 
@@ -35,7 +60,7 @@ const BaseLayout = styled.div`
 const HeaderLayout = styled.header`
   width: 100%;
   max-width: var(--main-max-width);
-  height: 72px;
+  height: var(--header-height);
   margin: 0 auto;
   padding: 16px;
   display: flex;
@@ -44,6 +69,7 @@ const HeaderLayout = styled.header`
   position: fixed;
   top: 0;
   z-index: 10;
+  box-shadow: 0px 5px 16px 0px #0000000d;
 
   .header_utils {
     display: flex;
@@ -61,8 +87,7 @@ const HeaderLayout = styled.header`
 const MainLayout = styled.main`
   min-height: calc(100vh - 100px);
   height: 100%;
-  /* padding: 72px 32px 32px; */
-  padding-top: calc(72px + 8px);
+  padding-top: calc(var(--header-height) + 8px);
 `;
 
 export const FooterLayout = styled.footer`

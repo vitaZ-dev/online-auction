@@ -21,7 +21,7 @@ export const LoginPageLayout = styled.div`
       font-size: 12px;
       line-height: 1;
       padding-left: 6px;
-      color: #ff3c5a;
+      color: var(--main-red-color);
     }
 
     button {
@@ -41,7 +41,7 @@ export const LoginPageLayout = styled.div`
     li > * {
       position: relative;
       font-size: 14px;
-      color: #7a7575;
+      color: var(--main-gray-02-color);
       cursor: pointer;
     }
     li::before {
@@ -52,7 +52,7 @@ export const LoginPageLayout = styled.div`
       width: 1px;
       height: 12px;
       border-radius: 0.5px;
-      background-color: #dadada;
+      background-color: var(--main-gray-01-color);
     }
     li:first-of-type::before {
       background-color: transparent;
@@ -62,7 +62,7 @@ export const LoginPageLayout = styled.div`
     padding-top: 16px;
     text-align: center;
     & > a {
-      color: #7a7575;
+      color: var(--main-gray-02-color);
       font-size: 14px;
       text-decoration: underline;
     }

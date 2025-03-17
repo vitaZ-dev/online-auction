@@ -87,17 +87,6 @@ export default function MySellList() {
         />
       </div>
 
-      {/* <div style={{ display: "flex", gap: "12px" }}>
-        <button style={{ border: "1px solid gray", padding: "4px 8px" }}>
-          all
-        </button>
-        <button style={{ border: "1px solid gray", padding: "4px 8px" }}>
-          open
-        </button>
-        <button style={{ border: "1px solid gray", padding: "4px 8px" }}>
-          end
-        </button>
-      </div> */}
       <div className="sell_list_filter">
         <CommonRadioBtn
           text="all"

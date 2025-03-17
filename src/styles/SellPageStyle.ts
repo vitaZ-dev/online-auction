@@ -5,7 +5,7 @@ export const WritepageLayout = styled.div`
     font-size: 14px;
     font-weight: 600;
     margin-left: 2px;
-    color: #ff3c5a;
+    color: var(--main-red-color);
   }
   .write_area {
     display: flex;
@@ -28,13 +28,13 @@ export const WritepageLayout = styled.div`
       margin-top: 4px;
       font-size: 12px;
       font-weight: 500;
-      color: #ff3c5a;
+      color: var(--main-red-color);
     }
   }
 
   select {
     outline: none;
-    border: 1px solid silver;
+    border: 1px solid var(--main-gray-01-color);
     border-radius: 5px;
     padding: 5px 25px 5px 15px;
     height: 40px;
@@ -42,7 +42,7 @@ export const WritepageLayout = styled.div`
     font-weight: 400;
 
     appearance: none;
-    background-image: url("@/assets/svg/fold.svg");
+    background-color: var(--white);
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M11 1L6.19856 6L1 1' stroke='%231E1E1E' stroke-width='1.5' stroke-miterlimit='10' stroke-linecap='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 6px center;
@@ -52,8 +52,9 @@ export const WritepageLayout = styled.div`
 
     &:active,
     &:focus {
-      border: 1px solid #ff3c5a;
-      box-shadow: 0 0 0 0.5px #ff3c5a;
+      background-color: var(--white);
+      border: 1px solid var(--main-red-color);
+      box-shadow: 0 0 0 0.5px var(--main-red-color);
     }
   }
 
@@ -77,8 +78,8 @@ export const WritepageLayout = styled.div`
     margin-top: 8px;
     padding: 4px 8px;
     border-radius: 5px;
-    border: 1px solid magenta;
-    background-color: white;
+    border: 1px solid var(--main-red-color);
+    background-color: var(--white);
     cursor: pointer;
   }
   .item_img {
@@ -106,9 +107,17 @@ export const WritepageLayout = styled.div`
       align-items: center;
       width: 100%;
       height: 100%;
-      border: 1px solid silver;
+      border: 1px solid var(--main-gray-01-color);
       text-align: center;
       cursor: pointer;
     }
+  }
+
+  .page_btn {
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 5px;
+    border: 1px solid var(--main-gray-01-color);
   }
 `;

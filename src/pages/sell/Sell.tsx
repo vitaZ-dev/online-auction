@@ -217,18 +217,9 @@ export default function Sell() {
           </div>
         </div>
 
-        <div>
-          <button
-            onClick={() => registerPost()}
-            style={{
-              width: "100%",
-              border: "1px solid silver",
-              padding: "12px",
-            }}
-          >
-            등록하기
-          </button>
-        </div>
+        <button className="page_btn" onClick={() => registerPost()}>
+          등록하기
+        </button>
       </div>
     </WritepageLayout>
   );

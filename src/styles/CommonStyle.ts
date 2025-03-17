@@ -62,9 +62,9 @@ export const CommonListLayout = styled.div`
         align-items: center;
         padding: 1px 5px;
         border-radius: 2px;
-        background-color: #868b94;
+        background-color: var(--main-gray-03-color);
         font-size: 11px;
-        color: white;
+        color: var(--white);
         font-weight: 700;
         line-height: 1.5;
       }
@@ -77,7 +77,7 @@ export const CommonListLayout = styled.div`
         padding: 4px 8px;
         margin-bottom: 4px;
         border-radius: 12px;
-        background-color: lightblue;
+        background-color: var(--main-violet-01-color);
         font-size: 12px;
       }
       h5 {
@@ -154,7 +154,7 @@ export const CommonTitleStyle = styled.div`
     .title_tag {
     }
     .closed {
-      color: gray;
+      color: var(--main-gray-02-color);
       font-weight: 700;
       margin-right: 4px;
     }
@@ -179,7 +179,7 @@ export const CommonModalStyle = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #4b44449e;
+  background-color: var(--main-modal-dim-color);
   z-index: 999;
   overflow: hidden;
   opacity: 0;
@@ -256,35 +256,36 @@ export const CommonCategoryBadgeStyle = styled.div`
     padding: 4px 8px;
     margin-bottom: 4px;
     border-radius: 12px;
-    background-color: lightblue;
+    background-color: var(--main-violet-01-color);
     font-size: 12px;
   }
 `;
 
 export const CommonInputStyle = styled.div`
   input.common-input {
-    background: #fff;
-    border: 1px solid silver;
+    background: var(--white);
+    border: 1px solid var(--main-gray-01-color);
     border-radius: 6px;
     padding: 6px 12px;
     width: ${({ length }) => (length === "full" ? "100%" : "20px")};
+    min-width: 140px;
     height: 40px;
     font-size: 14px;
     outline: none;
 
     &::placeholder {
-      color: lightgray;
+      color: var(--main-input-placeholder-color);
     }
     &:focus:not(:disabled),
     &:active:not(:disabled) {
-      border: 1px solid #ff3c5a;
-      box-shadow: 0 0 0 0.5px #ff3c5a;
+      border: 1px solid var(--main-red-color);
+      box-shadow: 0 0 0 0.5px var(--main-red-color);
     }
 
     &:disabled {
-      border: 1px solid silver;
-      background-color: #eaeaf0;
-      color: #85858f;
+      border: 1px solid var(--main-gray-01-color);
+      background-color: var(--main-input-bg-color);
+      color: var(--main-input-text-color);
     }
   }
 `;
@@ -294,20 +295,26 @@ export const CommonTextareaStyle = styled.div`
     width: 100%;
     height: 200px;
     outline: none;
-    border: 1px solid silver;
+    border: 1px solid var(--main-gray-01-color);
     border-radius: 5px;
     padding: 8px 12px;
     font-weight: 400;
-    color: #181818;
+    color: var(--black);
     resize: none;
 
     &::placeholder {
-      color: lightgray;
+      color: var(--main-input-placeholder-color);
     }
-    &:focus,
-    &:active {
-      border: 1px solid #ff3c5a;
-      box-shadow: 0 0 0 0.5px #ff3c5a;
+    &:focus:not(:disabled),
+    &:active:not(:disabled) {
+      border: 1px solid var(--main-red-color);
+      box-shadow: 0 0 0 0.5px var(--main-red-color);
+    }
+
+    &:disabled {
+      border: 1px solid var(--main-gray-01-color);
+      background-color: var(--main-input-bg-color);
+      color: var(--main-input-text-color);
     }
   }
 `;
@@ -325,16 +332,16 @@ export const CommonRadioBtnStyle = styled.div`
       min-height: 30px;
       padding: 6px 10px;
       border-radius: 20px;
-      border: 1px solid silver;
+      border: 1px solid var(--main-gray-01-color);
       font-size: 14px;
       text-align: center;
       cursor: pointer;
 
       &:hover {
-        background-color: #6495ed80;
+        background-color: var(--main-violet-03-color);
       }
       &.checked {
-        background-color: cornflowerblue;
+        background-color: var(--main-violet-02-color);
       }
     }
   }
@@ -344,7 +351,7 @@ export const CommonButtonStyle = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid silver;
+  border: 1px solid var(--main-gray-01-color);
   border-radius: 5px;
   color: ${({ textColor }) => textColor};
   background-color: ${({ bgColor }) => bgColor};

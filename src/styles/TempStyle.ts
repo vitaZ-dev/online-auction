@@ -17,7 +17,7 @@ export const ShowListTableLayout = styled.div`
     top: 0;
     left: 0;
     width: 100%;
-    border-bottom: 1px solid red;
+    border-bottom: 1px solid var(--main-red-color);
     span {
       padding: 0 8px;
     }

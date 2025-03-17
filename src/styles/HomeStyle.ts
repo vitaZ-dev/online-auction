@@ -50,8 +50,8 @@ export const HomeLayout = styled.div`
           top: 4px;
           width: 5px;
           height: 5px;
-          border-top: 1.5px solid #181818;
-          border-right: 1.5px solid #181818;
+          border-top: 1.5px solid var(--black);
+          border-right: 1.5px solid var(--black);
           transform: rotate(45deg);
         }
       }
@@ -71,16 +71,11 @@ export const SwiperLayout = styled.div`
   align-items: center;
   gap: 8px;
 
-  /* .category_img {
-    width: 100%;
-    border-radius: 50%;
-    background-color: silver;
-  } */
   .category_img {
     width: 100%;
     position: relative;
     border-radius: 50%;
-    background-color: silver;
+    background-color: var(--main-gray-01-color);
     overflow: hidden;
     &::after {
       content: "";

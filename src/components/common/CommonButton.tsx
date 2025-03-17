@@ -13,7 +13,7 @@ export default function CommonButton({
   text = "",
   btnType = "large",
   bgColor = "white",
-  textColor = "pink",
+  textColor = "#d974eb",
   onClick,
   disabled,
   children,
