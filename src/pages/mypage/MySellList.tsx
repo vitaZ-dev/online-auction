@@ -16,12 +16,13 @@ import { CommonNodataBox } from "../../styles/CommonStyle";
 import CommonRadioBtn from "../../components/common/CommonRadioBtn";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import MUIPagination from "../../components/common/MUIPagination";
+import { postType } from "../../types/post";
 
 export default function MySellList() {
-  const [userPostAll, setUserPostAll] = useState([]);
+  const [userPostAll, setUserPostAll] = useState<Array<postType> | []>([]);
 
-  const [page, setPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(1);
+  const [page, setPage] = useState<number>(1);
+  const [totalPage, setTotalPage] = useState<number>(1);
   const [isOpen, setIsOpen] = useState<"all" | "0" | "1">("all");
 
   const { userInfo } = useAuthStore();
@@ -82,7 +83,7 @@ export default function MySellList() {
         <CommonTitle
           type={1}
           title={`${
-            state?.nickname ?? userInfo.nickname
+            state?.nickname ?? userInfo?.nickname
           } 님이 판매한 물품 목록`}
         />
       </div>
@@ -126,7 +127,7 @@ export default function MySellList() {
                       category={findCategory(post?.category_id)}
                       title={post?.title}
                       startPrice={post?.start_price}
-                      isOpen={post.is_open}
+                      isOpen={Boolean(post.is_open)}
                     />
                   </Link>
                 );

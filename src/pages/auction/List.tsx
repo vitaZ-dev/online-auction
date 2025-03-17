@@ -13,6 +13,7 @@ import CommonButton from "../../components/common/CommonButton";
 import CommonTitle from "../../components/UI/CommonTitle";
 import { AuctionListLayout } from "../../styles/AuctionStyle";
 import MUIPagination from "../../components/common/MUIPagination";
+import { postType } from "../../types/post";
 // import Pagination from "../../components/common/Pagination";
 
 type searchQueryType = {
@@ -27,15 +28,15 @@ export default function List() {
   const [filterIsOpen, setFilterIsOpen] = useState<boolean>(false);
   const [filterCheck, setFilterCheck] = useState<boolean>(false);
   const [filterCategory, setFilterCategory] = useState<number>(0);
-  const [filterSort, setFilterSort] = useState<"" | "1" | "2">("");
+  const [filterSort, setFilterSort] = useState<string>("");
   // const [filterStartPrice, setFilterStartPrice] = useState(0);
   // const [filterEndPrice, setFilterEndPrice] = useState(0);
 
-  const [page, setPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(1);
-  const [isData, setIsData] = useState(true);
-  const [posts, setPosts] = useState<Array<any>>([]);
-  const [pageLoading, setPageLoading] = useState(true);
+  const [page, setPage] = useState<number>(1);
+  const [totalPage, setTotalPage] = useState<number>(1);
+  const [isData, setIsData] = useState<boolean>(true);
+  const [posts, setPosts] = useState<Array<postType> | []>([]);
+  const [pageLoading, setPageLoading] = useState<boolean>(true);
   // const [showLoadBtn, setShowLoadBtn] = useState(true);
   // const [pagination, setPagination] = useState({});
 
@@ -239,7 +240,7 @@ export default function List() {
                     category={findCategory(post?.category_id)}
                     title={post.title}
                     startPrice={post.start_price}
-                    isOpen={post.is_open}
+                    isOpen={Boolean(post.is_open)}
                   />
                 </Link>
               );
