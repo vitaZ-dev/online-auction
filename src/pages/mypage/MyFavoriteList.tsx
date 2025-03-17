@@ -10,14 +10,17 @@ import axios from "axios";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import MUIPagination from "../../components/common/MUIPagination";
 import { CommonNodataBox } from "../../styles/CommonStyle";
+import { FavoriteType } from "../../types/user";
 
 export default function MyFavoriteList() {
   const { userInfo } = useAuthStore();
   const navigate = useNavigate();
 
-  const [userFavorite, setUserFavorite] = useState([]);
-  const [page, setPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(1);
+  const [userFavorite, setUserFavorite] = useState<Array<FavoriteType> | []>(
+    []
+  );
+  const [page, setPage] = useState<number>(1);
+  const [totalPage, setTotalPage] = useState<number>(1);
 
   useEffect(() => {
     getFavorite();
@@ -56,7 +59,6 @@ export default function MyFavoriteList() {
                       category={findCategory(post?.category_id)}
                       title={post?.title}
                       startPrice={post?.start_price}
-                      isOpen={post.is_open}
                     />
                   </Link>
                 );

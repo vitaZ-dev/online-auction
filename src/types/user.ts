@@ -21,7 +21,7 @@ export type FavoriteType = {
   start_price: number;
 };
 
-type BidListHistoryType = {
+export type BidListHistoryType = {
   item_id: string;
   user_id: string;
   uuid: string;

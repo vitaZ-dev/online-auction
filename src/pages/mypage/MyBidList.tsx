@@ -14,18 +14,21 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { CommonNodataBox } from "../../styles/CommonStyle";
 import MUIPagination from "../../components/common/MUIPagination";
 import CommonButton from "../../components/common/CommonButton";
+import { BidListHistoryType, BidListType } from "../../types/user";
 
 export default function MyBidList() {
   const { userInfo } = useAuthStore();
 
-  const [bidListAll, setBidListAll] = useState([]);
-  const [page, setPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(1);
+  const [bidListAll, setBidListAll] = useState<Array<BidListType> | []>([]);
+  const [page, setPage] = useState<number>(1);
+  const [totalPage, setTotalPage] = useState<number>(1);
 
-  const [toggle, setToggle] = useState(false);
-  const [detailID, setDetailId] = useState("");
-  const [detailTitle, setDetailTitle] = useState("");
-  const [bidContents, setBidContents] = useState([]);
+  const [toggle, setToggle] = useState<boolean>(false);
+  const [detailID, setDetailId] = useState<string>("");
+  const [detailTitle, setDetailTitle] = useState<string>("");
+  const [bidContents, setBidContents] = useState<
+    Array<BidListHistoryType> | []
+  >([]);
 
   const navigate = useNavigate();
 
@@ -75,7 +78,6 @@ export default function MyBidList() {
                   category={findCategory(item?.category_id)}
                   title={item?.title}
                   startPrice={item?.start_price}
-                  isOpen={item.is_open}
                 />
                 {/* </Link> */}
               </div>

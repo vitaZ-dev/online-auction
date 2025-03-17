@@ -11,9 +11,12 @@ import CommonListItem from "../../components/UI/CommonListItem";
 import { CommonNodataBox } from "../../styles/CommonStyle";
 import CommonTitle from "../../components/UI/CommonTitle";
 import CommonButton from "../../components/common/CommonButton";
+import { FavoriteType } from "../../types/user";
 
 export default function Mypage() {
-  const [userFavorite, setUserFavorite] = useState([]);
+  const [userFavorite, setUserFavorite] = useState<Array<FavoriteType> | []>(
+    []
+  );
   const {
     userInfo,
     salesHistory,
@@ -126,7 +129,7 @@ export default function Mypage() {
                       category={findCategory(post?.category_id)}
                       title={post?.title}
                       startPrice={post?.start_price}
-                      isOpen={post.is_open}
+                      isOpen={Boolean(post.is_open)}
                     />
                   </Link>
                 );
@@ -157,7 +160,6 @@ export default function Mypage() {
                   category={findCategory(item?.category_id)}
                   title={item?.title}
                   startPrice={item?.start_price}
-                  isOpen={item.is_open}
                 />
               ))}
             </CommonList>
@@ -185,7 +187,7 @@ export default function Mypage() {
                     category={findCategory(post?.category_id)}
                     title={post?.title}
                     startPrice={post?.amount}
-                    isOpen={post.is_open}
+                    isOpen={false}
                   />
                 </Link>
               ))}
@@ -214,7 +216,6 @@ export default function Mypage() {
                     category={findCategory(post?.category_id)}
                     title={post?.title}
                     startPrice={post?.start_price}
-                    isOpen={post.is_open}
                   />
                 </Link>
               ))}

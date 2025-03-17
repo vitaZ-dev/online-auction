@@ -7,15 +7,15 @@ import CommonList from "../../components/UI/CommonList";
 import CommonListItem from "../../components/UI/CommonListItem";
 import { findCategory } from "../../modules/category";
 import { Link, useNavigate } from "react-router-dom";
-import { Pagination, Stack } from "@mui/material";
 import MUIPagination from "../../components/common/MUIPagination";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { CommonNodataBox } from "../../styles/CommonStyle";
+import { BidAwardType } from "../../types/user";
 
 export default function MyBidAward() {
-  const [awardList, setAwardList] = useState([]);
-  const [page, setPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(1);
+  const [awardList, setAwardList] = useState<Array<BidAwardType> | []>([]);
+  const [page, setPage] = useState<number>(1);
+  const [totalPage, setTotalPage] = useState<number>(1);
 
   const { userInfo } = useAuthStore();
   const navigate = useNavigate();
