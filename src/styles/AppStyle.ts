@@ -90,7 +90,7 @@ const MainLayout = styled.main`
   padding-top: calc(var(--header-height) + 8px);
 `;
 
-export const FooterLayout = styled.footer`
+const FooterLayout = styled.footer`
   padding: 16px 32px 0;
   .icons {
     margin-top: 8px;
@@ -109,4 +109,19 @@ export const FooterLayout = styled.footer`
   }
 `;
 
-export { light, BaseLayout, HeaderLayout, MainLayout };
+export const NotFoundLayout = styled.div`
+  padding: 40px;
+  text-align: center;
+  p {
+    margin-bottom: 20px;
+    font-size: 36px;
+  }
+  button {
+    padding: 6px 10px;
+    border: 1px solid silver;
+    border-radius: 5px;
+    background-color: #fff;
+  }
+`;
+
+export { light, BaseLayout, HeaderLayout, MainLayout, FooterLayout };
