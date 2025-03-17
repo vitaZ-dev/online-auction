@@ -10,7 +10,7 @@ export default function CommonListItem({
   src: string;
   category: string;
   title: string;
-  startPrice: string;
+  startPrice: string | number;
   isOpen?: boolean;
 }) {
   // jsx
