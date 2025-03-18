@@ -19,8 +19,8 @@ export default function Sell() {
   const { userInfo } = useAuthStore();
   const navigate = useNavigate();
 
-  const onChangeFile = (e: Event) => {
-    const file = e.target?.files[0];
+  const onChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = ((e.target as HTMLInputElement)?.files as FileList)[0];
 
     if (
       !["image/png", "image/jpg", "image/jpeg", "image/webp"].includes(
