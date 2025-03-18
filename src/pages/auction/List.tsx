@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../apis/api";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { CATEGORY, findCategory } from "../../modules/category";
 import CommonList from "../../components/UI/CommonList";
@@ -77,7 +77,7 @@ export default function List() {
     setPageLoading(true);
 
     /* 검색 조건 하위 쿼리 값 처리 */
-    let url = `http://localhost:4000/posts?&_page=${page}&_per_page=10`;
+    let url = `posts?&_page=${page}&_per_page=10`;
     if (query?.sort_by && query.sort_by === "favorite") {
       url += "&_sort=-favorite,-created_at";
     } else {
@@ -90,7 +90,7 @@ export default function List() {
       });
     }
 
-    const { data } = await axios.get(url);
+    const { data } = await api.get(url);
     setPosts(data.data);
     // setPosts((prev: Array<any>) => [...prev, ...data.data]);
     setTotalPage(data.pages);

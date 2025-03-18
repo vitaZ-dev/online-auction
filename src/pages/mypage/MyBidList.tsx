@@ -9,7 +9,7 @@ import CommonModal from "../../components/common/CommonModal";
 import ShowListTable from "../../components/ShowListTable";
 import { useNavigate } from "react-router-dom";
 import CallMadeIcon from "@mui/icons-material/CallMade";
-import axios from "axios";
+import api from "../../apis/api";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { CommonNodataBox } from "../../styles/CommonStyle";
 import MUIPagination from "../../components/common/MUIPagination";
@@ -37,8 +37,8 @@ export default function MyBidList() {
   }, [page]);
 
   const getUserPostList = async (page: number) => {
-    const { data } = await axios.get(
-      `http://localhost:4000/bid_list?uuid=${userInfo?.uuid}&_sort=-created_at&_page=${page}&_per_page=16`
+    const { data } = await api.get(
+      `bid_list?uuid=${userInfo?.uuid}&_sort=-created_at&_page=${page}&_per_page=16`
     );
     setBidListAll(data.data);
     setTotalPage(data.pages);

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import useAuthStore from "../../stores/useAuthStore";
 import { MypageLayout } from "../../styles/MypageStyle";
 import defaultImg from "/images/profile_default.png";
-import axios from "axios";
+import api from "../../apis/api";
 import { Link } from "react-router-dom";
 import { findCategory } from "../../modules/category";
 import CommonList from "../../components/UI/CommonList";
@@ -60,29 +60,29 @@ export default function Mypage() {
   }, []);
 
   const getSalesHistory = async () => {
-    const { data } = await axios.get(
-      `http://localhost:4000/posts?user_id=${userInfo?.uuid}&_sort=-created_at&_limit=4`
+    const { data } = await api.get(
+      `posts?user_id=${userInfo?.uuid}&_sort=-created_at&_limit=4`
     );
     updateSalesHistory(data);
   };
 
   const getBidList = async () => {
-    const { data } = await axios.get(
-      `http://localhost:4000/bid_list?uuid=${userInfo?.uuid}&_sort=-created_at&_limit=4`
+    const { data } = await api.get(
+      `bid_list?uuid=${userInfo?.uuid}&_sort=-created_at&_limit=4`
     );
     updateBidList(data);
   };
 
   const getBidAward = async () => {
-    const { data } = await axios.get(
-      `http://localhost:4000/bid_award?uuid=${userInfo?.uuid}&_sort=-created_at&_limit=4`
+    const { data } = await api.get(
+      `bid_award?uuid=${userInfo?.uuid}&_sort=-created_at&_limit=4`
     );
     updateBidAward(data);
   };
 
   const getFavorite = async () => {
-    const { data } = await axios.get(
-      `http://localhost:4000/favorite?uuid=${userInfo?.uuid}&_sort=-created_at&_limit=4`
+    const { data } = await api.get(
+      `favorite?uuid=${userInfo?.uuid}&_sort=-created_at&_limit=4`
     );
     setUserFavorite(data);
   };

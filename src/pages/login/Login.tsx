@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../../apis/api";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
@@ -35,8 +35,8 @@ export default function Login() {
     }
 
     try {
-      const { data } = await axios.get(
-        `http://localhost:4000/user?email=${email}&password=${password}`
+      const { data } = await api.get(
+        `user?email=${email}&password=${password}`
       );
       if (data?.length) {
         auth.login(data[0]);

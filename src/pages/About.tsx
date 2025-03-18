@@ -1,6 +1,5 @@
 import useCounterStore from "../stores/useCounterStore";
 // import { useQuery } from "react-query";
-// import axios from "axios";
 
 export default function About() {
   const { count, increase, decrease } = useCounterStore();

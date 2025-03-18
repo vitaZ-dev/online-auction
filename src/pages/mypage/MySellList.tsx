@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import useAuthStore from "../../stores/useAuthStore";
 import { MypageLayout } from "../../styles/MypageStyle";
-import axios from "axios";
+import api from "../../apis/api";
 import { findCategory } from "../../modules/category";
 import {
   Link,
@@ -37,9 +37,9 @@ export default function MySellList() {
   }, [page, search]);
 
   const getUserPostList = async (page: number, search: string = "") => {
-    let url = `http://localhost:4000/posts?user_id=${USER_ID}&_sort=-created_at&_page=${page}&_per_page=16`;
-    if (search) url += `&is_open=${search}`;
-    const { data } = await axios.get(url);
+    let query = `user_id=${USER_ID}&_sort=-created_at&_page=${page}&_per_page=16`;
+    if (search) query += `&is_open=${search}`;
+    const { data } = await api.get("posts?" + query);
     setUserPostAll(data.data);
     setTotalPage(data.pages);
   };
@@ -58,20 +58,6 @@ export default function MySellList() {
 
     if (page !== 1) setPage(1);
   };
-
-  /*
-  const getUserPostOpenList = async () => {
-    const { data } = await axios.get(
-      `http://localhost:4000/posts?user_id=${USER_ID}&_sort=-created_at&is_open=1`
-    );
-  };
-
-  const getUserPostEndList = async () => {
-    const { data } = await axios.get(
-      `http://localhost:4000/posts?user_id=${USER_ID}&_sort=-created_at&is_open=0`
-    );
-  };
-  */
 
   return (
     <MypageLayout>

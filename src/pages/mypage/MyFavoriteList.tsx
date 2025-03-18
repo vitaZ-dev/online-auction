@@ -6,7 +6,7 @@ import CommonList from "../../components/UI/CommonList";
 import CommonListItem from "../../components/UI/CommonListItem";
 import { findCategory } from "../../modules/category";
 import CommonTitle from "../../components/UI/CommonTitle";
-import axios from "axios";
+import api from "../../apis/api";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import MUIPagination from "../../components/common/MUIPagination";
 import { CommonNodataBox } from "../../styles/CommonStyle";
@@ -27,8 +27,8 @@ export default function MyFavoriteList() {
   }, [page]);
 
   const getFavorite = async () => {
-    const { data } = await axios.get(
-      `http://localhost:4000/favorite?uuid=${userInfo?.uuid}&_sort=-created_at&_page=${page}&_per_page=16`
+    const { data } = await api.get(
+      `favorite?uuid=${userInfo?.uuid}&_sort=-created_at&_page=${page}&_per_page=16`
     );
     setUserFavorite(data.data);
     setTotalPage(data.pages);

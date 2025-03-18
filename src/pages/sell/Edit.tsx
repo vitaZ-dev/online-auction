@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../../apis/api";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
@@ -36,9 +36,7 @@ export default function Edit() {
   const fetchPosts = async () => {
     setLoading(true);
 
-    const { data } = await axios.get(
-      `http://localhost:4000/posts?id=${POST_ID}`
-    );
+    const { data } = await api.get(`posts?id=${POST_ID}`);
     setPageCheck(Boolean(data.length));
     setUserCheck(data[0]?.user_id === userInfo?.uuid);
     // 내용세팅
@@ -118,7 +116,7 @@ export default function Edit() {
     const start_price = Math.abs(Number(price));
 
     try {
-      await axios.patch(`http://localhost:4000/posts/${POST_ID}`, {
+      await api.patch(`posts/${POST_ID}`, {
         title,
         category_id: category,
         contents,

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { HomeLayout, SwiperLayout } from "../styles/HomeStyle";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../apis/api";
 import CommonList from "../components/UI/CommonList";
 import CommonListItem from "../components/UI/CommonListItem";
 import { CATEGORY, findCategory } from "../modules/category";
@@ -30,7 +30,7 @@ export default function Home() {
 
   const getRecentList = async () => {
     setRecentLoading(true);
-    const { data } = await axios.get(
+    const { data } = await api.get(
       `http://localhost:4000/posts?_sort=-created_at&_page=1&_per_page=4`
     );
     setRecent(data.data);
@@ -39,7 +39,7 @@ export default function Home() {
   };
   const getFavoriteList = async () => {
     setFavoriteLoading(true);
-    const { data } = await axios.get(
+    const { data } = await api.get(
       `http://localhost:4000/posts?_sort=-favorite&favorite_gte=1&_page=1&_per_page=4`
     );
     setFavoriteLoading(false);

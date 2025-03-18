@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import api from "../../apis/api";
 import { v4 as uuidv4 } from "uuid";
 import { Link, useNavigate } from "react-router-dom";
 import { LoginPageLayout } from "../../styles/LoginPageStyle";
@@ -30,9 +30,7 @@ export default function Register() {
       return false;
     }
 
-    const { data } = await axios.get(
-      `http://localhost:4000/user?email=${email}`
-    );
+    const { data } = await api.get(`user?email=${email}`);
     if (data.length) {
       alert("중복된 이메일이 있습니다!");
       setCheckEmail(true);
@@ -45,9 +43,7 @@ export default function Register() {
       return false;
     } else setCheckPassword(false);
 
-    const { data: nick } = await axios.get(
-      `http://localhost:4000/user?nickname=${nickname}`
-    );
+    const { data: nick } = await api.get(`user?nickname=${nickname}`);
     if (nick.length) {
       alert("중복된 닉네임이 있습니다!");
       setCheckNickname(true);
@@ -55,7 +51,7 @@ export default function Register() {
     } else setCheckNickname(false);
 
     try {
-      axios.post("http://localhost:4000/user", {
+      api.post("user", {
         uuid: uuidv4(),
         token: Math.random().toString(36).substring(2, 11),
         email,

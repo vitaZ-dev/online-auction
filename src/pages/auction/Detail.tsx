@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../../apis/api";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -97,7 +97,7 @@ export default function Detail() {
   }, [pathname]);
 
   const fetchPosts = async () => {
-    const { data } = await axios.get(`http://localhost:4000/posts/${POST_ID}`);
+    const { data } = await api.get(`posts/${POST_ID}`);
     // setDetail(data);
     setUserCheck(data.user_id === userInfo?.uuid);
 
@@ -114,7 +114,7 @@ export default function Detail() {
   };
   const updatePostCnt = async (cnt: number) => {
     try {
-      await axios.patch(`http://localhost:4000/posts/${POST_ID}`, {
+      await api.patch(`posts/${POST_ID}`, {
         cnt: cnt + 1,
       });
     } catch (error) {
@@ -124,8 +124,8 @@ export default function Detail() {
   };
 
   const getSellList = async (id: string) => {
-    const { data } = await axios.get(
-      `http://localhost:4000/posts?id_ne=${POST_ID}&user_id=${id}&_limit=4&_sort=-created_at`
+    const { data } = await api.get(
+      `posts?id_ne=${POST_ID}&user_id=${id}&_limit=4&_sort=-created_at`
     );
 
     setSellList(data.filter((item: postType) => item.id !== POST_ID));
@@ -150,7 +150,7 @@ export default function Detail() {
 
     try {
       setLoading(true);
-      await axios.delete(`http://localhost:4000/posts/${POST_ID}`);
+      await api.delete(`posts/${POST_ID}`);
       alert("게시글 삭제가 완료되었습니다!");
       setLoading(false);
       navigate("/auction");
@@ -250,12 +250,10 @@ export default function Detail() {
     try {
       if (favoriteCheck) {
         // 좋아요 해제
-        await axios.delete(
-          `http://localhost:4000/favorite/${userInfo?.id + POST_ID}`
-        );
+        await api.delete(`favorite/${userInfo?.id + POST_ID}`);
       } else {
         // 좋아요 등록
-        await axios.post(`http://localhost:4000/favorite`, {
+        await api.post(`favorite`, {
           id: userInfo?.id + POST_ID,
           item_id: POST_ID,
           user_id: userInfo?.id,
@@ -268,7 +266,7 @@ export default function Detail() {
       }
 
       // 해당 제품 db 내용 업데이트
-      await axios.patch(`http://localhost:4000/posts/${POST_ID}`, {
+      await api.patch(`posts/${POST_ID}`, {
         favorite: cnt,
         favorite_list,
       });
@@ -376,25 +374,22 @@ export default function Detail() {
           ? bidHistoryDetail.filter((i) => i.uuid === userInfo?.uuid)
           : [];
 
-        await axios.patch(
-          `http://localhost:4000/bid_list/${userInfo?.id + POST_ID}`,
-          {
-            history: [
-              {
-                item_id: POST_ID,
-                user_id: userInfo?.id,
-                uuid: userInfo?.uuid,
-                amount: bidAmount,
-                bidder: userInfo?.nickname || "USER",
-                time: nowTime,
-              },
-              ...filterHistory,
-            ],
-          }
-        );
+        await api.patch(`bid_list/${userInfo?.id + POST_ID}`, {
+          history: [
+            {
+              item_id: POST_ID,
+              user_id: userInfo?.id,
+              uuid: userInfo?.uuid,
+              amount: bidAmount,
+              bidder: userInfo?.nickname || "USER",
+              time: nowTime,
+            },
+            ...filterHistory,
+          ],
+        });
       } else {
         // post
-        await axios.post(`http://localhost:4000/bid_list`, {
+        await api.post(`bid_list`, {
           id: userInfo?.id + POST_ID,
           item_id: POST_ID,
           user_id: userInfo?.id,
@@ -419,7 +414,7 @@ export default function Detail() {
         });
       }
 
-      await axios.patch(`http://localhost:4000/posts/${POST_ID}`, {
+      await api.patch(`posts/${POST_ID}`, {
         now_price: bidAmount,
         bid_count: bidHistoryDetail.length + 1,
         bid_history: [
@@ -556,13 +551,13 @@ export default function Detail() {
     const nowDate = setDateTemp();
     try {
       setLoading(true);
-      await axios.patch(`http://localhost:4000/posts/${POST_ID}`, {
+      await api.patch(`posts/${POST_ID}`, {
         is_open: 0,
         end_date: nowDate,
         last_bidder,
       });
       if (last_bidder) {
-        await axios.post(`http://localhost:4000/bid_award`, {
+        await api.post(`bid_award`, {
           id: last_bidder.id + POST_ID,
           item_id: POST_ID,
           user_id: last_bidder.id,
@@ -582,7 +577,7 @@ export default function Detail() {
 
     // data 갱신
     try {
-      const post = await axios.get(`http://localhost:4000/posts/${POST_ID}`);
+      const post = await api.get(` posts/${POST_ID}`);
       setDetail(post?.data[0]);
       setLoading(false);
     } catch (error) {

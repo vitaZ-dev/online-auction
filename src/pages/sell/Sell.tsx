@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import api from "../../apis/api";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
 import { setDate14Temp, setDateTemp } from "../../modules";
@@ -99,7 +99,7 @@ export default function Sell() {
     const end_date = setDate14Temp(start_date);
 
     try {
-      axios.post("http://localhost:4000/posts", {
+      api.post("posts", {
         title,
         category_id: category,
         user_info: userInfo?.nickname || "USER",

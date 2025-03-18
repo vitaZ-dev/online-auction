@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../../apis/api";
 import { useEffect, useState } from "react";
 import { MypageLayout } from "../../styles/MypageStyle";
 import CommonTitle from "../../components/UI/CommonTitle";
@@ -25,8 +25,8 @@ export default function MyBidAward() {
   }, [page]);
 
   const getUserPostList = async (page: number) => {
-    const { data } = await axios.get(
-      `http://localhost:4000/bid_award?uuid=${userInfo?.uuid}&_sort=-created_at&_page=${page}&_per_page=16`
+    const { data } = await api.get(
+      `bid_award?uuid=${userInfo?.uuid}&_sort=-created_at&_page=${page}&_per_page=16`
     );
     setAwardList(data.data);
     setTotalPage(data.pages);

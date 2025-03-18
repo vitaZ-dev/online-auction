@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { api } from "../apis/api";
+import api from "../apis/api";
 
 export default function useFetch(url: string) {
   const [data, setData] = useState([]);
 
   const fetch = async () => {
-    const { data } = await api.get(`http://localhost:4000/${url}`);
+    const { data } = await api.get(url);
     setData(data);
   };
 
