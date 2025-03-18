@@ -1,16 +1,13 @@
 import { Skeleton } from "@mui/material";
 import { CommonListLayout } from "../../styles/CommonStyle";
 import { useEffect, useState } from "react";
+import { CommonListProps } from "../../types/component";
 
 export default function CommonList({
   grid = 2,
   loading = false,
   children,
-}: {
-  grid?: number;
-  loading?: boolean;
-  children?: React.ReactNode;
-}) {
+}: CommonListProps) {
   const [height, setHeight] = useState(200);
 
   useEffect(() => {

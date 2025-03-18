@@ -1,13 +1,10 @@
 import { Pagination, Stack } from "@mui/material";
+import { MUIPaginationProps } from "../../types/component";
 
-interface CommonPaginationProps {
-  totalPage: number;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
-}
 export default function MUIPagination({
   totalPage,
   setPage,
-}: CommonPaginationProps) {
+}: MUIPaginationProps) {
   return (
     <div
       style={{

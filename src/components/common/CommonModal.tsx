@@ -1,15 +1,6 @@
 import { CommonModalStyle } from "../../styles/CommonStyle";
 import CloseIcon from "@mui/icons-material/Close";
-
-export interface CommonModalProps {
-  isOpen: boolean;
-  setDisplay: React.Dispatch<React.SetStateAction<boolean>>;
-  modalTitle: string;
-  children?: React.ReactNode;
-  showFooter?: boolean;
-  handleModalOk?: () => void;
-  handleModalCancel?: () => void;
-}
+import { CommonModalProps } from "../../types/component";
 
 export default function CommonModal({
   isOpen,

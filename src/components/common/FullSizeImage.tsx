@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { FullImageLayout } from "../../styles/AuctionStyle";
+import { FullSizeImageProps } from "../../types/component";
 
-export default function FullSizeImage({ src, setShow }) {
+export default function FullSizeImage({ src, setShow }: FullSizeImageProps) {
   useEffect(() => {
     setShow(true);
-    console.log("src", src);
   }, [src]);
 
   const closeComponent = () => setShow(false);

@@ -1,16 +1,5 @@
 import { CommonInputStyle } from "../../styles/CommonStyle";
-
-interface CommonInputProps {
-  id?: string;
-  length?: string;
-  min?: number;
-  maxLength?: number;
-  disabled?: boolean;
-  type: string;
-  placeholder?: string;
-  value: string | number;
-  setValue: React.ChangeEventHandler<HTMLInputElement>;
-}
+import { CommonInputProps } from "../../types/component";
 
 export default function CommonInput({
   id,

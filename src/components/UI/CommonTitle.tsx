@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { CommonTitleStyle } from "../../styles/CommonStyle";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import { CommonTitleProps } from "../../types/component";
 
 export default function CommonTitle({
   type = 1,
@@ -9,17 +10,10 @@ export default function CommonTitle({
   link = "",
   linkProps = {},
   linkTitle = "더 보기",
-}: {
-  type: number;
-  title: string;
-  isOpen?: boolean;
-  link?: string | false;
-  linkProps?: object;
-  linkTitle?: string;
-}) {
+}: CommonTitleProps) {
   const navigate = useNavigate();
 
-  const titleTag = {
+  const titleTag: { [key: number]: React.ReactElement } = {
     1: <h1 className="title_tag">{title}</h1>,
     2: <h2 className="title_tag">{title}</h2>,
     3: <h3 className="title_tag">{title}</h3>,

@@ -1,3 +1,4 @@
+import { CommonListItemProps } from "../../types/component";
 import { numberFormat } from "../../utils";
 
 export default function CommonListItem({
@@ -6,13 +7,7 @@ export default function CommonListItem({
   title,
   startPrice,
   isOpen = true,
-}: {
-  src: string;
-  category: string;
-  title: string;
-  startPrice: string | number;
-  isOpen?: boolean;
-}) {
+}: CommonListItemProps) {
   // jsx
   return (
     <article>

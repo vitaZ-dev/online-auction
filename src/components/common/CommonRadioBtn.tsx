@@ -1,13 +1,6 @@
 import { CommonRadioBtnStyle } from "../../styles/CommonStyle";
+import { CommonRadioBtnProps } from "../../types/component";
 
-interface CommonRadioBtnProps {
-  id: string;
-  text: string;
-  name: string;
-  value: string | number;
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
-  checked: boolean;
-}
 export default function CommonRadioBtn({
   text,
   id,

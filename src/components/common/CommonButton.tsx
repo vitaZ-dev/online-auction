@@ -1,14 +1,6 @@
 import { CommonButtonStyle } from "../../styles/CommonStyle";
+import { CommonButtonProps } from "../../types/component";
 
-interface CommonButtonProps {
-  text?: string;
-  btnType: "small" | "medium" | "large";
-  bgColor?: string;
-  textColor?: string;
-  onClick: VoidFunction;
-  disabled?: boolean;
-  children?: React.ReactNode;
-}
 export default function CommonButton({
   text = "",
   btnType = "large",

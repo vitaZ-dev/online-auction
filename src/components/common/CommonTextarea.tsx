@@ -1,13 +1,5 @@
 import { CommonTextareaStyle } from "../../styles/CommonStyle";
-
-interface CommonTextareaProps {
-  id?: string;
-  maxLength?: number;
-  disabled?: boolean;
-  placeholder?: string;
-  value: string;
-  setValue: React.ChangeEventHandler<HTMLTextAreaElement>;
-}
+import { CommonTextareaProps } from "../../types/component";
 
 export default function CommonTextarea({
   id,

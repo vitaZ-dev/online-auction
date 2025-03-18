@@ -1,4 +1,5 @@
 import { ShowListTableLayout } from "../styles/TempStyle";
+import { ShowListTableProps } from "../types/component";
 import { numberFormat } from "../utils";
 
 export default function ShowListTable({
@@ -6,7 +7,7 @@ export default function ShowListTable({
   tableHeader,
   tableHeaderText,
   tableList,
-}) {
+}: ShowListTableProps) {
   return (
     <ShowListTableLayout tableGrid={tableGrid}>
       <div className="table_header">
