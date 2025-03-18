@@ -3,35 +3,31 @@ import {
   createBrowserRouter,
   LoaderFunction,
   RouterProvider,
-  // useNavigate,
 } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { Suspense } from "react";
-
-// import useAuthStore from "./stores/useAuthStore.ts";
+import { lazy, ReactNode, Suspense } from "react";
 
 import "./index.css";
 
 import App from "./App.tsx";
-// import Container from "./pages/Container.tsx";
 import Loading from "./components/Loading.tsx";
-import Home from "./pages/Home.tsx";
-import List from "./pages/auction/List.tsx";
-import Detail from "./pages/auction/Detail.tsx";
-import Result from "./pages/auction/Result.tsx";
-import Sell from "./pages/sell/Sell.tsx";
-import Edit from "./pages/sell/Edit.tsx";
-import MyList from "./pages/sell/MyList.tsx";
-import Guide from "./pages/guide/Guide.tsx";
-import Mypage from "./pages/mypage/Mypage.tsx";
-import MySellList from "./pages/mypage/MySellList.tsx";
-import MyFavoriteList from "./pages/mypage/MyFavoriteList.tsx";
-import MyBidList from "./pages/mypage/MyBidList.tsx";
-import MyBidAward from "./pages/mypage/MyBidAward.tsx";
-import Login from "./pages/login/Login.tsx";
-import Register from "./pages/login/Register.tsx";
-import About from "./pages/About.tsx";
-import NotFound from "./pages/NotFound.tsx";
+const Home = lazy(() => import("./pages/Home.tsx"));
+const List = lazy(() => import("./pages/auction/List.tsx"));
+const Detail = lazy(() => import("./pages/auction/Detail.tsx"));
+const Result = lazy(() => import("./pages/auction/Result.tsx"));
+const Sell = lazy(() => import("./pages/sell/Sell.tsx"));
+const Edit = lazy(() => import("./pages/sell/Edit.tsx"));
+const MyList = lazy(() => import("./pages/sell/MyList.tsx"));
+const Guide = lazy(() => import("./pages/guide/Guide.tsx"));
+const Mypage = lazy(() => import("./pages/mypage/Mypage.tsx"));
+const MySellList = lazy(() => import("./pages/mypage/MySellList.tsx"));
+const MyFavoriteList = lazy(() => import("./pages/mypage/MyFavoriteList.tsx"));
+const MyBidList = lazy(() => import("./pages/mypage/MyBidList.tsx"));
+const MyBidAward = lazy(() => import("./pages/mypage/MyBidAward.tsx"));
+const Login = lazy(() => import("./pages/login/Login.tsx"));
+const Register = lazy(() => import("./pages/login/Register.tsx"));
+const About = lazy(() => import("./pages/About.tsx"));
+const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 
 const requireAuth: LoaderFunction = () => {
   // const auth = useAuthStore((state) => state.isLogin);
@@ -56,41 +52,36 @@ const loginNoAccess: LoaderFunction = () => {
   return null;
 };
 
+function lazyComponent(element: ReactNode): ReactNode {
+  return <Suspense fallback={<Loading />}>{element}</Suspense>;
+}
+
+/**
+ * TODO lazy loading & Suspense & loading component
+ */
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: lazyComponent(<App />),
     children: [
       {
         path: "",
-        element: <Home />,
+        element: lazyComponent(<Home />),
       },
       {
         path: "/auction",
         children: [
           {
             path: "",
-            element: (
-              <Suspense fallback={<Loading />}>
-                <List />
-              </Suspense>
-            ),
+            element: lazyComponent(<List />),
           },
           {
             path: ":id",
-            element: (
-              <Suspense fallback={<Loading />}>
-                <Detail />
-              </Suspense>
-            ),
+            element: lazyComponent(<Detail />),
           },
           {
             path: "result",
-            element: (
-              <Suspense fallback={<Loading />}>
-                <Result />
-              </Suspense>
-            ),
+            element: lazyComponent(<Result />),
           },
         ],
       },
@@ -104,15 +95,15 @@ const router = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <Sell />,
+            element: lazyComponent(<Sell />),
           },
           {
             path: ":id",
-            element: <Edit />,
+            element: lazyComponent(<Edit />),
           },
           {
             path: "mylist",
-            element: <MyList />,
+            element: lazyComponent(<MyList />),
           },
         ],
       },
@@ -122,48 +113,44 @@ const router = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <Mypage />,
+            element: lazyComponent(<Mypage />),
           },
           {
             path: "list",
-            element: <MySellList />,
+            element: lazyComponent(<MySellList />),
           },
           {
             path: "favorite",
-            element: <MyFavoriteList />,
+            element: lazyComponent(<MyFavoriteList />),
           },
           {
             path: "bid",
-            element: <MyBidList />,
+            element: lazyComponent(<MyBidList />),
           },
           {
             path: "award",
-            element: <MyBidAward />,
+            element: lazyComponent(<MyBidAward />),
           },
         ],
       },
       {
         path: "/about",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <About />
-          </Suspense>
-        ),
+        element: lazyComponent(<About />),
       },
     ],
   },
   {
     path: "/login",
-    element: <App />,
+    element: lazyComponent(<App />),
     loader: loginNoAccess,
     children: [
       {
         path: "",
-        element: <Login />,
+        element: lazyComponent(<Login />),
       },
       {
         path: "register",
-        element: <Register />,
+        element: lazyComponent(<Register />),
       },
     ],
   },
