@@ -14,15 +14,14 @@ import CommonTitle from "../../components/UI/CommonTitle";
 import { AuctionListLayout } from "../../styles/AuctionStyle";
 import MUIPagination from "../../components/common/MUIPagination";
 import { postType } from "../../types/post";
-// import Pagination from "../../components/common/Pagination";
 
-type searchQueryType = {
-  is_open?: boolean;
-  category_id?: string;
-  sort_by?: "recent" | "favorite";
-  start_price_gte?: number;
-  start_price_lte?: number;
-};
+// type searchQueryType = {
+//   is_open?: "0" | "1";
+//   category_id?: string;
+//   sort_by?: "recent" | "favorite";
+//   start_price_gte?: number;
+//   start_price_lte?: number;
+// };
 
 export default function List() {
   const [filterIsOpen, setFilterIsOpen] = useState<boolean>(false);
@@ -62,7 +61,7 @@ export default function List() {
   }, []);
 
   useEffect(() => {
-    const query: { [key: string]: string } = {};
+    const query: { [key: string]: string | number } = {};
     search
       .slice(1)
       .split("&")
@@ -71,9 +70,13 @@ export default function List() {
     fetchPosts(page, query);
   }, [page, search]);
 
-  const fetchPosts = async (page: number, query: searchQueryType = {}) => {
+  const fetchPosts = async (
+    page: number,
+    query: { [key: string]: string | number } = {}
+  ) => {
     setPageLoading(true);
 
+    /* 검색 조건 하위 쿼리 값 처리 */
     let url = `http://localhost:4000/posts?&_page=${page}&_per_page=10`;
     if (query?.sort_by && query.sort_by === "favorite") {
       url += "&_sort=-favorite,-created_at";
