@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useNavigate } from "react-router-dom";
 
-export default function ShowBidList({ title, contents, setToggle }) {
+export default function ShowBidList({ title, contents, setToggle }: any) {
   const navigate = useNavigate();
 
   return (
@@ -35,7 +36,7 @@ export default function ShowBidList({ title, contents, setToggle }) {
         >
           <p style={{ marginBottom: "16px" }}>{title}</p>
           <div className="scroll">
-            {contents?.map((item, idx) => (
+            {contents?.map((item: any, idx: number) => (
               <div key={`${item.id}_${idx}`}>
                 <p>
                   {item.amount}원 / 시간={item.time}

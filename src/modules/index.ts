@@ -26,9 +26,9 @@ export const setDate14Temp = (date: string) => {
 /**
  * 날짜 형식 지정
  */
-const setDateFormat = (date: Date | string, format: string = "-") => {
-  return new Date(date);
-};
+// const setDateFormat = (date: Date | string, format: string = "-") => {
+//   return new Date(date);
+// };
 
 /**
  * 카테고리 목록

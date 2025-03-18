@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
 import { PaginationLayout } from "../../styles/CommonStyle";
 import { useSearchParams } from "react-router-dom";
 
-export default function Pagination({ pageInfo }) {
+export default function Pagination({ pageInfo }: any) {
   const [pageList, setPageList] = useState([1]);
 
   const [query, setQuery] = useSearchParams();
