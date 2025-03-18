@@ -17,20 +17,34 @@ export default function Home() {
   const [recent, setRecent] = useState<Array<postType> | []>([]);
   const [favorite, setFavorite] = useState<Array<postType> | []>([]);
 
+  const [recentLoading, setRecentLoading] = useState<boolean>(true);
+  const [favoriteLoading, setFavoriteLoading] = useState<boolean>(true);
+
+  const [isRecentData, setIsRecentData] = useState<boolean>(true);
+  const [isFavoriteData, setIsFavoriteData] = useState<boolean>(true);
+
   useEffect(() => {
     getRecentList();
+    getFavoriteList();
   }, []);
 
   const getRecentList = async () => {
+    setRecentLoading(true);
     const { data } = await axios.get(
       `http://localhost:4000/posts?_sort=-created_at&_page=1&_per_page=4`
     );
-    const favorite = await axios.get(
+    setRecent(data.data);
+    setIsRecentData(data.data.length !== 0);
+    setRecentLoading(false);
+  };
+  const getFavoriteList = async () => {
+    setFavoriteLoading(true);
+    const { data } = await axios.get(
       `http://localhost:4000/posts?_sort=-favorite&favorite_gte=1&_page=1&_per_page=4`
     );
-
-    setRecent(data.data);
-    setFavorite(favorite.data.data);
+    setFavoriteLoading(false);
+    setIsFavoriteData(data.data.length !== 0);
+    setFavorite(data.data);
   };
 
   return (
@@ -79,8 +93,8 @@ export default function Home() {
       <section className="recent_list">
         <CommonTitle type={3} title="최근 올라온 물품" link="/auction" />
         <div>
-          {recent?.length ? (
-            <CommonList grid={4}>
+          {isRecentData ? (
+            <CommonList grid={4} loading={recentLoading}>
               {recent?.map((r) => (
                 <Link to={`/auction/${r?.id}`} key={r?.id}>
                   <CommonListItem
@@ -105,8 +119,8 @@ export default function Home() {
           link="/auction?sort_by=favorite"
         />
         <div>
-          {favorite.length ? (
-            <CommonList grid={4}>
+          {isFavoriteData ? (
+            <CommonList grid={4} loading={favoriteLoading}>
               {favorite?.map((r) => {
                 return (
                   <Link to={`/auction/${r?.id}`} key={r?.id}>
