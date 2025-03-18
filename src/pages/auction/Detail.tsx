@@ -97,22 +97,20 @@ export default function Detail() {
   }, [pathname]);
 
   const fetchPosts = async () => {
-    const { data } = await axios.get(
-      `http://localhost:4000/posts?id=${POST_ID}`
-    );
+    const { data } = await axios.get(`http://localhost:4000/posts/${POST_ID}`);
     // setDetail(data);
-    setUserCheck(data[0].user_id === userInfo?.uuid);
+    setUserCheck(data.user_id === userInfo?.uuid);
 
-    setBidHistoryDetail(data[0]?.bid_history || []);
+    setBidHistoryDetail(data?.bid_history || []);
     // if (data[0]?.bid_history?.length) {
     //   const maxAmount = data[0].bid_history.reduce((max, current) =>
     //     current.amount > max.amount ? current : max
     //   );
     //   setBidAmount(maxAmount?.amount);
     // } else setBidAmount(data[0]?.start_price || 0);
-    setBidAmount(data[0]?.now_price || data[0]?.start_price || 0);
+    setBidAmount(data?.now_price || data?.start_price || 0);
 
-    return data[0];
+    return data;
   };
   const updatePostCnt = async (cnt: number) => {
     try {
@@ -584,7 +582,7 @@ export default function Detail() {
 
     // data 갱신
     try {
-      const post = await axios.get(`http://localhost:4000/posts?id=${POST_ID}`);
+      const post = await axios.get(`http://localhost:4000/posts/${POST_ID}`);
       setDetail(post?.data[0]);
       setLoading(false);
     } catch (error) {
