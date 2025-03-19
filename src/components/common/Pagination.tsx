@@ -2,15 +2,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
 import { PaginationLayout } from "../../styles/CommonStyle";
-import { useSearchParams } from "react-router-dom";
+// import { useSearchParams } from "react-router-dom";
 
 export default function Pagination({ pageInfo }: any) {
   const [pageList, setPageList] = useState([1]);
 
-  const [query, setQuery] = useSearchParams();
-  const currentPage = query.get("page")
-    ? parseInt(query.get("page") as string)
-    : 1;
+  // const [query, setQuery] = useSearchParams();
+  // const currentPage = query.get("page")
+  //   ? parseInt(query.get("page") as string)
+  //   : 1;
 
   useEffect(() => {
     console.log("pagi", pageInfo);
