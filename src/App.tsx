@@ -187,15 +187,7 @@ function App() {
                     <List component="div" disablePadding>
                       <ListItemButton
                         component={NavLink}
-                        to="/about"
-                        onClick={toggleDrawer(false)}
-                        sx={{ pl: 3 }}
-                      >
-                        회사 소개
-                      </ListItemButton>
-                      <ListItemButton
-                        component={NavLink}
-                        to="/about"
+                        to="/services"
                         onClick={toggleDrawer(false)}
                         sx={{ pl: 3 }}
                       >
@@ -203,7 +195,15 @@ function App() {
                       </ListItemButton>
                       <ListItemButton
                         component={NavLink}
-                        to="/about"
+                        to="/services/faq"
+                        onClick={toggleDrawer(false)}
+                        sx={{ pl: 3 }}
+                      >
+                        FAQ
+                      </ListItemButton>
+                      <ListItemButton
+                        component={NavLink}
+                        to="/services/notice"
                         onClick={toggleDrawer(false)}
                         sx={{ pl: 3 }}
                       >

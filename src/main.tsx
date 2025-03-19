@@ -27,6 +27,9 @@ const MyBidAward = lazy(() => import("./pages/mypage/MyBidAward.tsx"));
 const Login = lazy(() => import("./pages/login/Login.tsx"));
 const Register = lazy(() => import("./pages/login/Register.tsx"));
 const About = lazy(() => import("./pages/About.tsx"));
+const Services = lazy(() => import("./pages/services/Services.tsx"));
+const Faq = lazy(() => import("./pages/services/Faq.tsx"));
+const Notice = lazy(() => import("./pages/services/Notice.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 
 const requireAuth: LoaderFunction = () => {
@@ -104,6 +107,23 @@ const router = createBrowserRouter([
           {
             path: "mylist",
             element: lazyComponent(<MyList />),
+          },
+        ],
+      },
+      {
+        path: "/services",
+        children: [
+          {
+            path: "",
+            element: lazyComponent(<Services />),
+          },
+          {
+            path: "faq",
+            element: lazyComponent(<Faq />),
+          },
+          {
+            path: "notice",
+            element: lazyComponent(<Notice />),
           },
         ],
       },
