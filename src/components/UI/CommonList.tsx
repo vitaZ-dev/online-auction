@@ -22,18 +22,12 @@ export default function CommonList({
           Array(4)
             .fill(0)
             .map((_, idx) => (
-              <>
-                <div key={`commonlist_${idx}_${idx}`}>
-                  <Skeleton
-                    variant="rounded"
-                    height={height}
-                    animation="wave"
-                  />
-                  <Skeleton width={"30%"} height={20} animation="wave" />
-                  <Skeleton variant="text" height={16} animation="wave" />
-                  <Skeleton variant="text" height={16} animation="wave" />
-                </div>
-              </>
+              <div key={`commonlist_${idx}_${idx}`}>
+                <Skeleton variant="rounded" height={height} animation="wave" />
+                <Skeleton width={"30%"} height={20} animation="wave" />
+                <Skeleton variant="text" height={16} animation="wave" />
+                <Skeleton variant="text" height={16} animation="wave" />
+              </div>
             ))
         ) : (
           <>{children}</>
