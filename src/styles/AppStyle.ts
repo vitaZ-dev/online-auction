@@ -124,4 +124,30 @@ export const NotFoundLayout = styled.div`
   }
 `;
 
-export { light, BaseLayout, HeaderLayout, MainLayout, FooterLayout };
+const LogoLayout = styled.div`
+  a {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+  img {
+    height: 60px;
+    @media (max-width: 280px) {
+      display: none;
+    }
+  }
+  .logo_text {
+    font-size: 18px;
+    font-weight: 700;
+  }
+`;
+
+export {
+  light,
+  BaseLayout,
+  HeaderLayout,
+  MainLayout,
+  FooterLayout,
+  LogoLayout,
+};

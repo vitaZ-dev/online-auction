@@ -1,4 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+export interface LogoProps {
+  onClick?: () => void;
+}
+
 export interface CommonButtonProps {
   text?: string;
   btnType: "small" | "medium" | "large";
