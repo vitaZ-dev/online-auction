@@ -139,6 +139,8 @@ export const CommonTitleStyle = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
   padding: 4px var(--padding-size);
 
   .title_text {

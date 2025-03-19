@@ -203,7 +203,7 @@ export default function Mypage() {
       <section>
         <CommonTitle
           type={3}
-          title="좋아요/관심/즐겨찾기 리스트"
+          title="좋아요 리스트"
           link={Boolean(userFavorite?.length) && "favorite"}
         />
         {userFavorite.length ? (
