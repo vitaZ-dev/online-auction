@@ -31,20 +31,20 @@ export default function Home() {
   const getRecentList = async () => {
     setRecentLoading(true);
     const { data } = await api.get(
-      `posts?_sort=-created_at&_page=1&_per_page=4`
+      `posts?_sort=created_at&_order=desc&_page=1&_limit=4`
     );
-    setRecent(data.data);
-    setIsRecentData(data.data.length !== 0);
+    setRecent(data);
+    setIsRecentData(data?.length !== 0);
     setRecentLoading(false);
   };
   const getFavoriteList = async () => {
     setFavoriteLoading(true);
     const { data } = await api.get(
-      `posts?_sort=-favorite,-created_at&favorite_gte=1&_page=1&_per_page=4`
+      `posts?_sort=favorite,created_at&_order=desc,desc&favorite_gte=1&_page=1&_limit=4`
     );
     setFavoriteLoading(false);
-    setIsFavoriteData(data.data.length !== 0);
-    setFavorite(data.data);
+    setIsFavoriteData(data?.length !== 0);
+    setFavorite(data);
   };
 
   return (

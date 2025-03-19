@@ -27,11 +27,16 @@ export default function MyFavoriteList() {
   }, [page]);
 
   const getFavorite = async () => {
-    const { data } = await api.get(
-      `favorite?uuid=${userInfo?.uuid}&_sort=-created_at&_page=${page}&_per_page=16`
+    const { data, headers } = await api.get(
+      `favorite?uuid=${userInfo?.uuid}&_sort=created_at&_order=desc&_page=${page}&_per_page=16`
     );
-    setUserFavorite(data.data);
-    setTotalPage(data.pages);
+
+    setUserFavorite(data);
+    const totalPageCal =
+      +headers["x-total-count"] > 16
+        ? Math.ceil(+headers["x-total-count"] / 16)
+        : 1;
+    setTotalPage(totalPageCal);
   };
 
   return (

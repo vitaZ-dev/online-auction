@@ -61,28 +61,28 @@ export default function Mypage() {
 
   const getSalesHistory = async () => {
     const { data } = await api.get(
-      `posts?user_id=${userInfo?.uuid}&_sort=-created_at&_limit=4`
+      `posts?user_id=${userInfo?.uuid}&_sort=created_at&_order=desc&_limit=4`
     );
     updateSalesHistory(data);
   };
 
   const getBidList = async () => {
     const { data } = await api.get(
-      `bid_list?uuid=${userInfo?.uuid}&_sort=-created_at&_limit=4`
+      `bid_list?uuid=${userInfo?.uuid}&_sort=time&_order=desc&_limit=4`
     );
     updateBidList(data);
   };
 
   const getBidAward = async () => {
     const { data } = await api.get(
-      `bid_award?uuid=${userInfo?.uuid}&_sort=-award_date&_limit=4`
+      `bid_award?uuid=${userInfo?.uuid}&_sort=award_date&_order=desc&_limit=4`
     );
     updateBidAward(data);
   };
 
   const getFavorite = async () => {
     const { data } = await api.get(
-      `favorite?uuid=${userInfo?.uuid}&_sort=-created_at&_limit=4`
+      `favorite?uuid=${userInfo?.uuid}&_sort=created_at&_order=desc&_limit=4`
     );
     setUserFavorite(data);
   };

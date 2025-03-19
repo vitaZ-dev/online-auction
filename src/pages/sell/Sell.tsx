@@ -117,7 +117,7 @@ export default function Sell() {
         favorite_list: [],
         bid: 0,
         cnt: 0,
-        bid_count: 3,
+        bid_count: 0,
         bid_history: [],
       });
       updateSalesHistory(null);

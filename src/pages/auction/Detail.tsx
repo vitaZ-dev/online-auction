@@ -131,7 +131,7 @@ export default function Detail() {
 
   const getSellList = async (id: string) => {
     const { data } = await api.get(
-      `posts?id_ne=${POST_ID}&user_id=${id}&_limit=4&_sort=-created_at`
+      `posts?id_ne=${POST_ID}&user_id=${id}&_limit=4&_sort=created_at&_order=desc`
     );
 
     setSellList(data.filter((item: postType) => item.id !== POST_ID));
@@ -579,6 +579,7 @@ export default function Detail() {
         });
         updateBidAward(null);
       }
+      alert("처리되었습니다!");
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -586,8 +587,8 @@ export default function Detail() {
 
     // data 갱신
     try {
-      const post = await api.get(` posts/${POST_ID}`);
-      setDetail(post?.data[0]);
+      const { data: post } = await api.get(`posts/${POST_ID}`);
+      setDetail(post);
       setLoading(false);
     } catch (error) {
       console.log(error);

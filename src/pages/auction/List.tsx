@@ -77,11 +77,11 @@ export default function List() {
     setPageLoading(true);
 
     /* 검색 조건 하위 쿼리 값 처리 */
-    let url = `posts?&_page=${page}&_per_page=10`;
+    let url = `posts?&_page=${page}&_limit=10`;
     if (query?.sort_by && query.sort_by === "favorite") {
-      url += "&_sort=-favorite,-created_at";
+      url += "&_sort=favorite,created_at&_order=desc,desc";
     } else {
-      url += "&_sort=-created_at";
+      url += "&_sort=created_at&_order=desc";
     }
 
     if (Object.keys(query).length !== 0) {
@@ -90,20 +90,15 @@ export default function List() {
       });
     }
 
-    const { data } = await api.get(url);
-    setPosts(data.data);
+    const { data, headers } = await api.get(url);
     // setPosts((prev: Array<any>) => [...prev, ...data.data]);
-    setTotalPage(data.pages);
-    // setShowLoadBtn(Boolean(data.next));
+    setPosts(data);
+    const totalPageCal =
+      +headers["x-total-count"] > 10
+        ? Math.ceil(+headers["x-total-count"] / 10)
+        : 1;
+    setTotalPage(totalPageCal);
 
-    // setPagination({
-    //   now_page: data.first,
-    //   last_page: data.last,
-    //   prev_page: data.prev,
-    //   next_page: data.next,
-    //   total_count: data.items,
-    //   total_pages: data.pages,
-    // });
     setPageLoading(false);
 
     /**
@@ -112,7 +107,7 @@ export default function List() {
      * 2. 다른 카테고리 검색 시 결과가 있어도 '게시글 없음' 결과가 뜸
      * 3. 아래 영역에서 조건 처리
      */
-    setIsData(data.data.length !== 0);
+    setIsData(data?.length && data?.length !== 0);
   };
 
   // const loadingNextPage = () => setPage(page + 1);

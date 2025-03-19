@@ -37,11 +37,15 @@ export default function MyBidList() {
   }, [page]);
 
   const getUserPostList = async (page: number) => {
-    const { data } = await api.get(
-      `bid_list?uuid=${userInfo?.uuid}&_sort=-created_at&_page=${page}&_per_page=16`
+    const { data, headers } = await api.get(
+      `bid_list?uuid=${userInfo?.uuid}&_sort=time&_order=desc&_page=${page}&_per_page=16`
     );
-    setBidListAll(data.data);
-    setTotalPage(data.pages);
+    setBidListAll(data);
+    const totalPageCal =
+      +headers["x-total-count"] > 16
+        ? Math.ceil(+headers["x-total-count"] / 16)
+        : 1;
+    setTotalPage(totalPageCal);
   };
 
   const handleDetailBid = (idx: number, item_id: string, title: string) => {

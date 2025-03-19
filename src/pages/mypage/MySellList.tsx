@@ -37,11 +37,16 @@ export default function MySellList() {
   }, [page, search]);
 
   const getUserPostList = async (page: number, search: string = "") => {
-    let query = `user_id=${USER_ID}&_sort=-created_at&_page=${page}&_per_page=16`;
+    let query = `user_id=${USER_ID}&_sort=created_at&_order=desc&_page=${page}&_limit=16`;
     if (search) query += `&is_open=${search}`;
-    const { data } = await api.get("posts?" + query);
-    setUserPostAll(data.data);
-    setTotalPage(data.pages);
+    const { data, headers } = await api.get("posts?" + query);
+
+    setUserPostAll(data);
+    const totalPageCal =
+      +headers["x-total-count"] > 16
+        ? Math.ceil(+headers["x-total-count"] / 16)
+        : 1;
+    setTotalPage(totalPageCal);
   };
 
   const goPrevPage = () => {
@@ -102,7 +107,7 @@ export default function MySellList() {
       </div>
 
       <section>
-        {userPostAll.length ? (
+        {userPostAll?.length ? (
           <>
             <CommonList grid={4}>
               {userPostAll?.map((post) => {

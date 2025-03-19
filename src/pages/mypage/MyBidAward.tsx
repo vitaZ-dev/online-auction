@@ -25,11 +25,15 @@ export default function MyBidAward() {
   }, [page]);
 
   const getUserPostList = async (page: number) => {
-    const { data } = await api.get(
-      `bid_award?uuid=${userInfo?.uuid}&_sort=-award_date&_page=${page}&_per_page=16`
+    const { data, headers } = await api.get(
+      `bid_award?uuid=${userInfo?.uuid}&_sort=award_date&_order=desc&_page=${page}&_per_page=16`
     );
-    setAwardList(data.data);
-    setTotalPage(data.pages);
+    setAwardList(data);
+    const totalPageCal =
+      +headers["x-total-count"] > 16
+        ? Math.ceil(+headers["x-total-count"] / 16)
+        : 1;
+    setTotalPage(totalPageCal);
   };
 
   return (
