@@ -121,11 +121,11 @@ export const PaginationLayout = styled.div`
 
 // common UI
 export const CommonPaddingBox = styled.div`
-  padding: 0 16px;
+  padding: 0 var(--padding-size);
 `;
 
 export const CommonNodataBox = styled.div`
-  padding: 16px;
+  padding: var(--padding-size);
   height: 200px;
   display: flex;
   flex-direction: column;
@@ -213,7 +213,7 @@ export const CommonModalStyle = styled.div`
     left: 50%;
     width: 96%;
     max-width: 500px;
-    padding: 16px;
+    padding: var(--padding-size);
     background: var(--white);
     border-radius: 10px;
 
