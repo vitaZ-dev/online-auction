@@ -69,8 +69,8 @@ export type AuthStoreType = {
   login: (userInfo: UserInfoType) => void;
   logout: () => void;
   updateUserInfo: (newUserInfo: UserInfoType) => void;
-  updateSalesHistory: (salesHistory: Array<postType>) => void;
+  updateSalesHistory: (salesHistory: Array<postType> | null) => void;
   updateUserFavorite: (favorite: Array<FavoriteType>) => void;
-  updateBidList: (bidList: Array<BidListType>) => void;
-  updateBidAward: (bidAward: Array<BidAwardType>) => void;
+  updateBidList: (bidList: Array<BidListType> | null) => void;
+  updateBidAward: (bidAward: Array<BidAwardType> | null) => void;
 };

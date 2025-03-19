@@ -75,7 +75,7 @@ export default function Mypage() {
 
   const getBidAward = async () => {
     const { data } = await api.get(
-      `bid_award?uuid=${userInfo?.uuid}&_sort=-created_at&_limit=4`
+      `bid_award?uuid=${userInfo?.uuid}&_sort=-award_date&_limit=4`
     );
     updateBidAward(data);
   };

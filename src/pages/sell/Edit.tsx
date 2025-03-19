@@ -26,7 +26,7 @@ export default function Edit() {
 
   const { pathname } = useLocation();
   const POST_ID = pathname.split("/")[2];
-  const { userInfo } = useAuthStore();
+  const { userInfo, updateSalesHistory } = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -123,6 +123,7 @@ export default function Edit() {
         start_price,
         src: imgSrc,
       });
+      updateSalesHistory(null);
       alert("게시글이 수정되었습니다!");
       navigate(`/auction/${POST_ID}`);
     } catch (error) {

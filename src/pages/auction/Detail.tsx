@@ -48,7 +48,13 @@ export default function Detail() {
 
   const { pathname } = useLocation();
   const POST_ID = pathname.split("/")[2];
-  const { isLogin, userInfo } = useAuthStore();
+  const {
+    isLogin,
+    userInfo,
+    updateSalesHistory,
+    updateBidList,
+    updateBidAward,
+  } = useAuthStore();
   const [cookies, setCookie] = useCookies();
   const navigate = useNavigate();
 
@@ -151,6 +157,7 @@ export default function Detail() {
     try {
       setLoading(true);
       await api.delete(`posts/${POST_ID}`);
+      updateSalesHistory(null);
       alert("게시글 삭제가 완료되었습니다!");
       setLoading(false);
       navigate("/auction", { replace: true });
@@ -429,6 +436,7 @@ export default function Detail() {
           ...bidHistoryDetail,
         ],
       });
+      updateBidList(null);
       alert("입찰 완료!");
     } catch (error) {
       console.log(error);
@@ -569,6 +577,7 @@ export default function Detail() {
           category_id,
           src,
         });
+        updateBidAward(null);
       }
     } catch (error) {
       console.log(error);

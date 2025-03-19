@@ -16,7 +16,7 @@ export default function Sell() {
   const [price, setPrice] = useState(0); //start_price
   const [imgSrc, setImgSrc] = useState("");
 
-  const { userInfo } = useAuthStore();
+  const { userInfo, updateSalesHistory } = useAuthStore();
   const navigate = useNavigate();
 
   const onChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -120,6 +120,7 @@ export default function Sell() {
         bid_count: 3,
         bid_history: [],
       });
+      updateSalesHistory(null);
       alert("ok");
       navigate("/auction");
     } catch (err) {
