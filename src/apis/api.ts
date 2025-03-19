@@ -6,7 +6,7 @@ const api = axios.create({
   // headers: {
   //   Authorization: `Bearer ${getCookie('accessToken')}`,
   // },
-  // withCredentials: true,
+  withCredentials: true,
 });
 
 export default api;
