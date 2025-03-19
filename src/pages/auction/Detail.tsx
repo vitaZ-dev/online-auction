@@ -153,7 +153,7 @@ export default function Detail() {
       await api.delete(`posts/${POST_ID}`);
       alert("게시글 삭제가 완료되었습니다!");
       setLoading(false);
-      navigate("/auction");
+      navigate("/auction", { replace: true });
     } catch (error) {
       console.error(error);
       alert("게시글 삭제에 실패했습니다!");
