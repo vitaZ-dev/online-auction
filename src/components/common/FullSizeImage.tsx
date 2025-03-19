@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { FullImageLayout } from "../../styles/AuctionStyle";
+import { FullImageLayout } from "../../styles/CommonStyle";
 import { FullSizeImageProps } from "../../types/component";
 
 export default function FullSizeImage({ src, setShow }: FullSizeImageProps) {

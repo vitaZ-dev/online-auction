@@ -3,6 +3,7 @@ import {
   CommonButtonType,
   CommonInputType,
   CommonListType,
+  ShowListTableType,
 } from "../types/style";
 
 export const CommonListLayout = styled.div<CommonListType>`
@@ -387,5 +388,76 @@ export const CommonButtonStyle = styled.button<CommonButtonType>`
     padding: 0 12px;
     border-radius: 5px;
     font-size: 16px;
+  }
+`;
+
+export const FullImageLayout = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--black);
+  overflow: hidden;
+  z-index: 999;
+
+  .wrap_box {
+    width: 100vw;
+    max-width: 1050px;
+    height: 100vh;
+    margin: 0 auto;
+
+    .image_wrap {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      img {
+        width: 100%;
+        height: auto;
+      }
+    }
+
+    button {
+      width: 48px;
+      height: 48px;
+      color: var(--white);
+      position: absolute;
+      top: 20px;
+      right: 40px;
+    }
+  }
+`;
+
+export const ShowListTableLayout = styled.div<ShowListTableType>`
+  position: relative;
+
+  .table_header,
+  .table_contents > * {
+    display: grid;
+    grid-template-columns: ${({ tableGrid }) =>
+      tableGrid?.map((grid) => `${grid}fr`).join(" ")};
+
+    line-height: 2;
+  }
+
+  .table_header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    border-bottom: 1px solid var(--main-red-color);
+    span {
+      padding: 0 8px;
+    }
+  }
+
+  .table_contents {
+    max-height: 70vh;
+    overflow-y: auto;
+    span {
+      padding: 0 8px;
+    }
   }
 `;

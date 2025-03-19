@@ -1,4 +1,4 @@
-import { ShowListTableLayout } from "../../styles/TempStyle";
+import { ShowListTableLayout } from "../../styles/CommonStyle";
 import { ShowListTableProps } from "../../types/component";
 import { numberFormat } from "../../utils";
 
