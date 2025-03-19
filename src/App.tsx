@@ -31,6 +31,7 @@ import MailOutlineIcon from "@mui/icons-material/MailOutline";
 
 // import { ReactQueryDevtools } from "react-query/devtools";
 import CommonButton from "./components/common/CommonButton";
+import Logo from "./components/Logo";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -73,14 +74,12 @@ function App() {
       <BaseLayout>
         <HeaderLayout>
           <h1>
-            <NavLink to="/" onClick={toggleDrawer(false)}>
-              <img src="/images/logo.svg" alt="logo" />
-            </NavLink>
+            <Logo onClick={() => toggleDrawer(false)} />
           </h1>
           <div className="header_utils">
-            <button onClick={() => console.log("search")}>
+            {/* <button onClick={() => console.log("search")}>
               <img src="/images/search.svg" alt="search" />
-            </button>
+            </button> */}
             <button onClick={toggleDrawer(true)}>
               <img src="/images/nav.svg" alt="nav" />
             </button>
@@ -91,7 +90,7 @@ function App() {
               onOpen={toggleDrawer(true)}
               sx={{
                 "& .MuiDrawer-paper": {
-                  maxWidth: "640px", // 원하는 최대 너비 설정
+                  maxWidth: "640px",
                   margin: "0 auto",
                   overflowY: "visible",
                 },
@@ -102,17 +101,21 @@ function App() {
                 <div>
                   <div
                     style={{
-                      padding: "12px 16px",
+                      padding: "16px",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
                       gap: "8px",
+                      height: "72px",
                     }}
                   >
-                    <NavLink to="/" onClick={toggleDrawer(false)}>
-                      <img src="/images/logo.svg" alt="logo" />
-                    </NavLink>
                     <div onClick={toggleDrawer(false)}>
+                      <Logo />
+                    </div>
+                    <div
+                      onClick={toggleDrawer(false)}
+                      style={{ cursor: "pointer" }}
+                    >
                       <CloseIcon />
                     </div>
                   </div>
@@ -122,7 +125,7 @@ function App() {
                 <List component="nav">
                   <ListItem disablePadding>
                     <ListItemButton onClick={handleToggleMenu}>
-                      <ListItemText primary="경매" />
+                      <ListItemText primary="Auctions" />
                       {toggleMenu ? <ExpandLess /> : <ExpandMore />}
                     </ListItemButton>
                   </ListItem>
@@ -149,7 +152,7 @@ function App() {
 
                   <ListItem disablePadding>
                     <ListItemButton onClick={handleToggleMenu2}>
-                      <ListItemText primary="판매" />
+                      <ListItemText primary="Sell" />
                       {toggleMenu2 ? <ExpandLess /> : <ExpandMore />}
                     </ListItemButton>
                   </ListItem>
@@ -176,7 +179,7 @@ function App() {
 
                   <ListItem disablePadding>
                     <ListItemButton onClick={handleToggleMenu3}>
-                      <ListItemText primary="about/service" />
+                      <ListItemText primary="Services" />
                       {toggleMenu3 ? <ExpandLess /> : <ExpandMore />}
                     </ListItemButton>
                   </ListItem>
@@ -218,7 +221,7 @@ function App() {
                         onClick={toggleDrawer(false)}
                         style={{ flex: "1 1 auto" }}
                       >
-                        <ListItemText primary="mypage" />
+                        <ListItemText primary="Mypage" />
                       </NavLink>
                       <CallMadeIcon />
                     </ListItemButton>
@@ -243,6 +246,8 @@ function App() {
                           alignItems: "center",
                           justifyContent: "space-between",
                           width: "100%",
+                          flexWrap: "wrap",
+                          gap: 8,
                         }}
                       >
                         <div style={{ marginRight: "16px" }}>
