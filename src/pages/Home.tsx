@@ -31,7 +31,7 @@ export default function Home() {
   const getRecentList = async () => {
     setRecentLoading(true);
     const { data } = await api.get(
-      `http://localhost:4000/posts?_sort=-created_at&_page=1&_per_page=4`
+      `posts?_sort=-created_at&_page=1&_per_page=4`
     );
     setRecent(data.data);
     setIsRecentData(data.data.length !== 0);
@@ -40,7 +40,7 @@ export default function Home() {
   const getFavoriteList = async () => {
     setFavoriteLoading(true);
     const { data } = await api.get(
-      `http://localhost:4000/posts?_sort=-favorite&favorite_gte=1&_page=1&_per_page=4`
+      `posts?_sort=-favorite,-created_at&favorite_gte=1&_page=1&_per_page=4`
     );
     setFavoriteLoading(false);
     setIsFavoriteData(data.data.length !== 0);
@@ -115,7 +115,7 @@ export default function Home() {
       <section className="ranking_list">
         <CommonTitle
           type={3}
-          title="즐겨찾기 랭킹"
+          title="좋아요 랭킹"
           link="/auction?sort_by=favorite"
         />
         <div>
@@ -136,7 +136,9 @@ export default function Home() {
               })}
             </CommonList>
           ) : (
-            <CommonNodataBox>즐겨찾기된 게시글이 없습니다.</CommonNodataBox>
+            <CommonNodataBox>
+              좋아요가 클릭된 게시글이 없습니다.
+            </CommonNodataBox>
           )}
         </div>
       </section>
