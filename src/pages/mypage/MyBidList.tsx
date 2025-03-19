@@ -6,7 +6,7 @@ import CommonListItem from "../../components/UI/CommonListItem";
 import { findCategory } from "../../modules/category";
 import CommonTitle from "../../components/UI/CommonTitle";
 import CommonModal from "../../components/common/CommonModal";
-import ShowListTable from "../../components/ShowListTable";
+import ShowListTable from "../../components/UI/ShowListTable";
 import { useNavigate } from "react-router-dom";
 import CallMadeIcon from "@mui/icons-material/CallMade";
 import api from "../../apis/api";

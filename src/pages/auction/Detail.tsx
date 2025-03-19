@@ -14,7 +14,7 @@ import { setDateTemp } from "../../modules";
 import CommonList from "../../components/UI/CommonList";
 import CommonListItem from "../../components/UI/CommonListItem";
 import { CommonNodataBox, CommonPaddingBox } from "../../styles/CommonStyle";
-import ShowListTable from "../../components/ShowListTable";
+import ShowListTable from "../../components/UI/ShowListTable";
 import CommonTitle from "../../components/UI/CommonTitle";
 import CommonCategoryBadge from "../../components/UI/CommonCategoryBadge";
 import { numberFormat } from "../../utils";

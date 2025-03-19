@@ -1,6 +1,6 @@
-import { ShowListTableLayout } from "../styles/TempStyle";
-import { ShowListTableProps } from "../types/component";
-import { numberFormat } from "../utils";
+import { ShowListTableLayout } from "../../styles/TempStyle";
+import { ShowListTableProps } from "../../types/component";
+import { numberFormat } from "../../utils";
 
 export default function ShowListTable({
   tableGrid,
