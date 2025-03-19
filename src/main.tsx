@@ -4,7 +4,7 @@ import {
   LoaderFunction,
   RouterProvider,
 } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "react-query";
+// import { QueryClient, QueryClientProvider } from "react-query";
 import { lazy, ReactNode, Suspense } from "react";
 
 import "./index.css";
@@ -160,10 +160,10 @@ const router = createBrowserRouter([
   },
 ]);
 
-const queryClient = new QueryClient();
+// const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
-  <QueryClientProvider client={queryClient}>
-    <RouterProvider router={router} />
-  </QueryClientProvider>
+  // <QueryClientProvider client={queryClient}>
+  <RouterProvider router={router} />
+  // </QueryClientProvider>
 );

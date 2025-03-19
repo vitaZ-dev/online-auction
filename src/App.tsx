@@ -29,7 +29,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 
-import { ReactQueryDevtools } from "react-query/devtools";
+// import { ReactQueryDevtools } from "react-query/devtools";
 import CommonButton from "./components/common/CommonButton";
 
 function App() {
@@ -301,7 +301,7 @@ function App() {
           </div>
         </FooterLayout>
       </BaseLayout>
-      <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
+      {/* <ReactQueryDevtools initialIsOpen={false} position="bottom-right" /> */}
     </>
   );
 }
