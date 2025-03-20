@@ -215,6 +215,9 @@ const itemDetailBoxStyle = `
 `;
 export const ItemDetailBox = styled.div`
   ${itemDetailBoxStyle};
+  .textarea {
+    white-space: pre-wrap;
+  }
 `;
 export const ItemDetailBidderBox = styled.div`
   position: relative;

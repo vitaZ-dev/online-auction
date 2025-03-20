@@ -786,7 +786,7 @@ export default function Detail() {
               <CommonTitle type={4} title="상세내용" />
               <CommonPaddingBox>
                 <ItemDetailBox>
-                  <p>{detail?.contents}</p>
+                  <p className="textarea">{detail?.contents}</p>
                 </ItemDetailBox>
               </CommonPaddingBox>
             </section>
