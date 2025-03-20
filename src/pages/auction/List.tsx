@@ -14,6 +14,7 @@ import CommonTitle from "../../components/UI/CommonTitle";
 import { AuctionListLayout } from "../../styles/AuctionStyle";
 import MUIPagination from "../../components/common/MUIPagination";
 import { postType } from "../../types/post";
+import CommonCheckbox from "../../components/common/CommonCheckbox";
 
 // type searchQueryType = {
 //   is_open?: "0" | "1";
@@ -150,15 +151,13 @@ export default function List() {
         </CommonButton>
         {filterCheck && (
           <div className="filter_area">
-            <div>
-              <input
-                type="checkbox"
-                id="able"
-                checked={filterIsOpen}
-                onChange={(e) => setFilterIsOpen(e.target.checked)}
-              />
-              <label htmlFor="able">거래 가능만 보기</label>
-            </div>
+            <CommonCheckbox
+              id="able"
+              name="able"
+              checked={filterIsOpen}
+              onChange={(e) => setFilterIsOpen(e.target.checked)}
+              text="거래 가능만 보기"
+            />
 
             <div>
               <p>카테고리</p>

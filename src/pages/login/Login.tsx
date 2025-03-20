@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { LoginPageLayout } from "../../styles/LoginPageStyle";
 import CommonButton from "../../components/common/CommonButton";
 import CommonInput from "../../components/common/CommonInput";
+import CommonCheckbox from "../../components/common/CommonCheckbox";
 
 export default function Login() {
   const auth = useAuthStore();
@@ -82,15 +83,13 @@ export default function Login() {
           placeholder="비밀번호"
         />
 
-        <div>
-          <input
-            type="checkbox"
-            id="rememberID"
-            checked={rememberID}
-            onChange={(e) => setRememberID(e.target.checked)}
-          />
-          <label htmlFor="rememberID">아이디 기억</label>
-        </div>
+        <CommonCheckbox
+          id="rememberID"
+          name="rememberID"
+          checked={rememberID}
+          onChange={(e) => setRememberID(e.target.checked)}
+          text="아이디 기억"
+        />
 
         <CommonButton text="로그인" btnType="large" onClick={() => login()} />
       </div>
