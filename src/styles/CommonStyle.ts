@@ -419,13 +419,20 @@ export const FullImageLayout = styled.div`
       }
     }
 
-    button {
+    button.close_btn {
       width: 48px;
       height: 48px;
       color: var(--white);
       position: absolute;
       top: 20px;
       right: 40px;
+      border: 3px solid var(--white);
+      border-radius: 50%;
+      padding: 0;
+      background-color: var(--black);
+      svg {
+        font-size: 44px;
+      }
     }
   }
 `;
