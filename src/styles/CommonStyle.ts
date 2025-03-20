@@ -391,6 +391,45 @@ export const CommonButtonStyle = styled.button<CommonButtonType>`
   }
 `;
 
+export const CommonCheckboxStyle = styled.div`
+  display: flex;
+  align-items: center;
+
+  input[type="checkbox"].common-input-check {
+    cursor: pointer;
+    -webkit-appearance: none; // 웹킷 브라우저에서 기본 스타일 제거
+    -moz-appearance: none; // 모질라 브라우저에서 기본 스타일 제거
+    appearance: none; // 기본 브라우저에서 기본 스타일 제거
+
+    width: 16px;
+    height: 16px;
+    background-color: var(--white);
+    border: 1px solid rgba(133, 133, 143, 0.5);
+    border-radius: 3px;
+    flex-shrink: 0;
+    &:checked {
+      border-color: var(--main-violet-00-color);
+      background-repeat: no-repeat;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' width='100' height='100' viewBox='0,0,256,256'%0Astyle='fill:%23FFFFFF;'%3E%3Cg fill='%23ffffff' fill-rule='nonzero' stroke='none' stroke-width='1' stroke-linecap='butt' stroke-linejoin='miter' stroke-miterlimit='10' stroke-dasharray='' stroke-dashoffset='0' font-family='none' font-weight='none' font-size='none' text-anchor='none' style='mix-blend-mode: normal'%3E%3Cg transform='scale(9.84615,9.84615)'%3E%3Cpath d='M22.56641,4.73047l-1.79297,-1.21875c-0.49609,-0.33594 -1.17578,-0.20703 -1.50781,0.28516l-8.78906,12.96094l-4.03906,-4.03906c-0.42187,-0.42187 -1.10937,-0.42187 -1.53125,0l-1.53516,1.53516c-0.42187,0.42188 -0.42187,1.10938 0,1.53516l6.21094,6.21094c0.34766,0.34766 0.89453,0.61328 1.38672,0.61328c0.49219,0 0.98828,-0.30859 1.30859,-0.77344l10.57813,-15.60547c0.33594,-0.49219 0.20703,-1.16797 -0.28906,-1.50391z'%3E%3C/path%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      background-size: 80%;
+      background-position: center;
+      background-color: var(--main-violet-00-color);
+    }
+    &:focus,
+    &:active {
+      border-color: var(--main-violet-02-color);
+    }
+    &:active {
+      background-color: var(--main-violet-02-color);
+    }
+    & + label.common-input-check {
+      cursor: pointer;
+      padding-left: 4px;
+      font-weight: 500;
+    }
+  }
+`;
+
 export const FullImageLayout = styled.div`
   position: fixed;
   top: 0;

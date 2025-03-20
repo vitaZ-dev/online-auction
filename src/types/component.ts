@@ -13,6 +13,15 @@ export interface CommonButtonProps {
   children?: React.ReactNode;
 }
 
+export interface CommonCheckboxProps {
+  id: string;
+  name: string;
+  checked: boolean;
+  text: string;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  disabled?: boolean;
+}
+
 export interface CommonInputProps {
   id?: string;
   length?: string;
