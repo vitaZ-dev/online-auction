@@ -8,13 +8,15 @@ import CommonTitle from "../../components/UI/CommonTitle";
 import { WritepageLayout } from "../../styles/SellPageStyle";
 import CommonInput from "../../components/common/CommonInput";
 import CommonTextarea from "../../components/common/CommonTextarea";
+import { addDoc, collection } from "firebase/firestore";
+import firebaseDB from "../../../firebase";
 
 export default function Sell() {
-  const [title, setTitle] = useState("");
-  const [category, setCategory] = useState(-1);
-  const [contents, setContents] = useState("");
-  const [price, setPrice] = useState(0); //start_price
-  const [imgSrc, setImgSrc] = useState("");
+  const [title, setTitle] = useState<string>("");
+  const [category, setCategory] = useState<number>(-1);
+  const [contents, setContents] = useState<string>("");
+  const [price, setPrice] = useState<number>(0); //start_price
+  const [imgSrc, setImgSrc] = useState<string>("");
 
   const { userInfo, updateSalesHistory } = useAuthStore();
   const navigate = useNavigate();
@@ -76,7 +78,7 @@ export default function Sell() {
     }
   };
 
-  const registerPost = () => {
+  const registerPost = async () => {
     if (!title) {
       alert("제목을 입력하세요!");
       return false;
@@ -99,7 +101,7 @@ export default function Sell() {
     const end_date = setDate14Temp(start_date);
 
     try {
-      api.post("posts", {
+      await api.post("posts", {
         title,
         category_id: category,
         user_info: userInfo?.nickname || "USER",
@@ -126,6 +128,57 @@ export default function Sell() {
     } catch (err) {
       console.log(err);
       alert("error 발생-등록 실패");
+    }
+  };
+
+  const registerPostFirebase = async () => {
+    if (!title) {
+      alert("제목을 입력하세요!");
+      return false;
+    }
+    if (!contents) {
+      alert("내용을 입력하세요!");
+      return false;
+    }
+    if (category === -1) {
+      alert("카테고리를 선택하세요!");
+      return false;
+    }
+    if (!imgSrc) {
+      alert("이미지를 선택하세요!");
+      return false;
+    }
+
+    const start_price = Math.abs(Number(price));
+    const start_date = setDateTemp();
+    const end_date = setDate14Temp(start_date);
+
+    try {
+      // 미사용 param 제거
+      await addDoc(collection(firebaseDB, "posts"), {
+        title,
+        category_id: category,
+        user_info: userInfo?.nickname || "USER",
+        user_id: userInfo?.uuid,
+        start_date,
+        end_date,
+        start_price,
+        now_price: 0,
+        is_open: 1,
+        src: "https://placehold.co/100x100",
+        contents,
+        created_at: start_date,
+        favorite: 0,
+        favorite_list: [],
+        cnt: 0,
+        bid_count: 0,
+        bid_history: [],
+      });
+      updateSalesHistory(null);
+      alert("ok-firebase");
+    } catch (err) {
+      console.log(err);
+      alert("error 발생-firebase 등록 실패");
     }
   };
 
@@ -220,6 +273,9 @@ export default function Sell() {
 
         <button className="page_btn" onClick={() => registerPost()}>
           등록하기
+        </button>
+        <button className="page_btn" onClick={() => registerPostFirebase()}>
+          등록하기(firebase)
         </button>
       </div>
     </WritepageLayout>
