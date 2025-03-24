@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { HomeLayout, SwiperLayout } from "../styles/HomeStyle";
+import { HomeLayout, SwiperItem, SwiperLayout } from "../styles/HomeStyle";
 import { useEffect, useState } from "react";
 import api from "../apis/api";
 import CommonList from "../components/UI/CommonList";
@@ -7,11 +7,13 @@ import CommonListItem from "../components/UI/CommonListItem";
 import { CATEGORY, findCategory } from "../modules/category";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-// import { Navigation } from "swiper/modules";
+import { Navigation } from "swiper/modules";
 import "swiper/swiper-bundle.css";
 import CommonTitle from "../components/UI/CommonTitle";
 import { CommonNodataBox } from "../styles/CommonStyle";
 import { postType } from "../types/post";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 
 export default function Home() {
   const [recent, setRecent] = useState<Array<postType> | []>([]);
@@ -51,23 +53,36 @@ export default function Home() {
     <HomeLayout>
       <section className="category_list">
         <CommonTitle type={3} title="인기 카테고리" />
-        <div style={{ padding: 16 }}>
+        <SwiperLayout>
+          <button className="swiper-btn prev">
+            <NavigateBeforeIcon />
+          </button>
+          <button className="swiper-btn next">
+            <NavigateNextIcon />
+          </button>
           <Swiper
-            // modules={[Navigation]}
-            // navigation={true}
+            modules={[Navigation]}
+            navigation={{
+              nextEl: ".swiper-btn.next",
+              prevEl: ".swiper-btn.prev",
+            }}
             spaceBetween={16}
             slidesPerView={1}
+            slidesPerGroup={1}
             breakpoints={{
               280: {
                 slidesPerView: 2,
+                slidesPerGroup: 2,
                 spaceBetween: 20,
               },
               475: {
                 slidesPerView: 3,
+                slidesPerGroup: 3,
                 spaceBetween: 20,
               },
               640: {
                 slidesPerView: 4,
+                slidesPerGroup: 4,
                 spaceBetween: 20,
               },
             }}
@@ -78,17 +93,17 @@ export default function Home() {
                   to={`/auction?category_id=${item.category_id}`}
                   key={`cate_${item.category_id}`}
                 >
-                  <SwiperLayout>
+                  <SwiperItem>
                     <div className="category_img">
                       <div className="img_wrap"></div>
                     </div>
                     <div className="category_title">{item.category_name}</div>
-                  </SwiperLayout>
+                  </SwiperItem>
                 </Link>
               </SwiperSlide>
             ))}
           </Swiper>
-        </div>
+        </SwiperLayout>
       </section>
       <section className="recent_list">
         <CommonTitle type={3} title="최근 올라온 물품" link="/auction" />

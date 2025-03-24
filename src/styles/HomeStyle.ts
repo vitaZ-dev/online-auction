@@ -65,6 +65,60 @@ export const HomeLayout = styled.div`
 `;
 
 export const SwiperLayout = styled.div`
+  position: relative;
+  padding: 16px;
+  button.swiper-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(calc(-50% - 11px));
+    @media (max-width: 280px) {
+      width: 30px;
+      height: 30px;
+    }
+    width: 40px;
+    height: 40px;
+    background-color: var(--white);
+    border: 1px solid var(--main-gray-04-color);
+    border-radius: 50%;
+    opacity: 0.35;
+    z-index: 50;
+    svg {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      padding: 4px;
+    }
+
+    &:disabled {
+      opacity: 0.2;
+      cursor: default;
+    }
+
+    &.prev {
+      left: calc(var(--padding-size) / 2);
+      svg {
+        left: -2px;
+      }
+    }
+    &.next {
+      left: calc(100% - 50px + calc(var(--padding-size) / 2));
+      svg {
+        right: -2px;
+      }
+    }
+
+    @media (max-width: 280px) {
+      &.prev {
+        left: calc(var(--padding-size) / 2 - 4px);
+      }
+      &.next {
+        left: calc(100% - 50px + calc(var(--padding-size) / 2) + 4px);
+      }
+    }
+  }
+`;
+
+export const SwiperItem = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
