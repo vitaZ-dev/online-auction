@@ -28,3 +28,10 @@ export const moneyFormatLocaleString = (
     }) + "원"
   );
 };
+
+/**
+ * 페이지네이션 최대 페이지 계산
+ */
+export const calTotalPage = (total_cnt: number, contents_cnt: number) => {
+  return total_cnt > contents_cnt ? Math.ceil(total_cnt / contents_cnt) : 1;
+};
