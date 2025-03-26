@@ -33,6 +33,10 @@ export const AuctionListLayout = styled.div`
       border-bottom: 1px solid transparent;
     }
   }
+
+  .data_btn {
+    padding: var(--padding-size);
+  }
 `;
 
 export const ItemDetailLayout = styled.article`
