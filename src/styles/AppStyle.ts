@@ -145,6 +145,7 @@ const LogoLayout = styled.div`
 
 const DataLoadingLayout = styled.div`
   padding: 16px;
+  margin-top: 32px;
 
   .data_loader {
     margin: 0 auto;

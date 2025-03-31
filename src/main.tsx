@@ -4,13 +4,15 @@ import {
   LoaderFunction,
   RouterProvider,
 } from "react-router-dom";
-// import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { lazy, ReactNode, Suspense } from "react";
 
 import "./index.css";
 
 import App from "./App.tsx";
 import Loading from "./components/Loading.tsx";
+// import FireList from "./pages/auction/FireList.tsx";
+import Infinite from "./pages/auction/Infinite.tsx";
 const Home = lazy(() => import("./pages/Home.tsx"));
 const List = lazy(() => import("./pages/auction/List.tsx"));
 const Detail = lazy(() => import("./pages/auction/Detail.tsx"));
@@ -157,6 +159,14 @@ const router = createBrowserRouter([
         path: "/about",
         element: lazyComponent(<About />),
       },
+      // {
+      //   path: "/lists",
+      //   element: lazyComponent(<FireList />),
+      // },
+      {
+        path: "/infinite",
+        element: lazyComponent(<Infinite />),
+      },
     ],
   },
   {
@@ -180,10 +190,17 @@ const router = createBrowserRouter([
   },
 ]);
 
-// const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false, // 화면 전환 시 쿼리 재실행 방지
+      refetchOnReconnect: false, // 재연결 시 쿼리 재실행 방지
+    },
+  },
+});
 
 createRoot(document.getElementById("root")!).render(
-  // <QueryClientProvider client={queryClient}>
-  <RouterProvider router={router} />
-  // </QueryClientProvider>
+  <QueryClientProvider client={queryClient}>
+    <RouterProvider router={router} />
+  </QueryClientProvider>
 );
