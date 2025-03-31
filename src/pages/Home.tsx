@@ -1,53 +1,53 @@
 import { Link } from "react-router-dom";
-import { HomeLayout, SwiperItem, SwiperLayout } from "../styles/HomeStyle";
-import { useEffect, useState } from "react";
-import api from "../apis/api";
+import { useQueries } from "react-query";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
+import CommonTitle from "../components/UI/CommonTitle";
 import CommonList from "../components/UI/CommonList";
 import CommonListItem from "../components/UI/CommonListItem";
 import { CATEGORY, findCategory } from "../modules/category";
-
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
+import { HomeLayout, SwiperItem, SwiperLayout } from "../styles/HomeStyle";
 import "swiper/swiper-bundle.css";
-import CommonTitle from "../components/UI/CommonTitle";
 import { CommonNodataBox } from "../styles/CommonStyle";
-import { postType } from "../types/post";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
+import { getFavoriteList, getRecentList } from "../apis/libs";
 
 export default function Home() {
-  const [recent, setRecent] = useState<Array<postType> | []>([]);
-  const [favorite, setFavorite] = useState<Array<postType> | []>([]);
-
-  const [recentLoading, setRecentLoading] = useState<boolean>(true);
-  const [favoriteLoading, setFavoriteLoading] = useState<boolean>(true);
-
-  const [isRecentData, setIsRecentData] = useState<boolean>(true);
-  const [isFavoriteData, setIsFavoriteData] = useState<boolean>(true);
-
-  useEffect(() => {
-    getRecentList();
-    getFavoriteList();
-  }, []);
-
-  const getRecentList = async () => {
-    setRecentLoading(true);
-    const { data } = await api.get(
-      `posts?_sort=created_at&_order=desc&_page=1&_limit=4`
-    );
-    setRecent(data);
-    setIsRecentData(data?.length !== 0);
-    setRecentLoading(false);
+  const getRecentListWait = async () => {
+    try {
+      const res = await getRecentList();
+      return res;
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
   };
-  const getFavoriteList = async () => {
-    setFavoriteLoading(true);
-    const { data } = await api.get(
-      `posts?_sort=favorite,created_at&_order=desc,desc&favorite_gte=1&_page=1&_limit=4`
-    );
-    setFavoriteLoading(false);
-    setIsFavoriteData(data?.length !== 0);
-    setFavorite(data);
+
+  const getFavoriteListWait = async () => {
+    try {
+      const res = await getFavoriteList();
+      return res;
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
   };
+
+  const [recentQuery, favoriteQuery] = useQueries([
+    {
+      queryKey: ["home", "recent"],
+      queryFn: () => getRecentListWait(),
+      staleTime: 5 * 60 * 1000,
+      cacheTime: 30 * 60 * 1000,
+    },
+    {
+      queryKey: ["home", "favorite"],
+      queryFn: () => getFavoriteListWait(),
+      staleTime: 5 * 60 * 1000,
+      cacheTime: 30 * 60 * 1000,
+    },
+  ]);
 
   return (
     <HomeLayout>
@@ -108,10 +108,13 @@ export default function Home() {
       <section className="recent_list">
         <CommonTitle type={3} title="최근 올라온 물품" link="/auction" />
         <div>
-          {isRecentData ? (
-            <CommonList grid={4} loading={recentLoading}>
-              {recent?.map((r) => (
-                <Link to={`/auction/${r?.id}`} key={r?.id}>
+          {!recentQuery.isLoading &&
+          (!recentQuery.data || recentQuery.data?.length === 0) ? (
+            <CommonNodataBox>게시글이 없습니다.</CommonNodataBox>
+          ) : (
+            <CommonList grid={4} loading={recentQuery.isLoading}>
+              {recentQuery?.data?.map((r, idx) => (
+                <Link to={`/auction/${r?.id}`} key={idx}>
                   <CommonListItem
                     src={r?.src}
                     category={findCategory(r?.category_id)}
@@ -122,8 +125,6 @@ export default function Home() {
                 </Link>
               ))}
             </CommonList>
-          ) : (
-            <CommonNodataBox>게시글이 없습니다.</CommonNodataBox>
           )}
         </div>
       </section>
@@ -134,26 +135,25 @@ export default function Home() {
           link="/auction?sort_by=favorite"
         />
         <div>
-          {isFavoriteData ? (
-            <CommonList grid={4} loading={favoriteLoading}>
-              {favorite?.map((r) => {
-                return (
-                  <Link to={`/auction/${r?.id}`} key={r?.id}>
-                    <CommonListItem
-                      src={r?.src}
-                      category={findCategory(r?.category_id)}
-                      title={r?.title}
-                      startPrice={r?.start_price}
-                      isOpen={Boolean(r.is_open)}
-                    />
-                  </Link>
-                );
-              })}
-            </CommonList>
-          ) : (
+          {!favoriteQuery.isLoading &&
+          (!favoriteQuery.data || favoriteQuery.data?.length === 0) ? (
             <CommonNodataBox>
               좋아요가 클릭된 게시글이 없습니다.
             </CommonNodataBox>
+          ) : (
+            <CommonList grid={4} loading={favoriteQuery.isLoading}>
+              {favoriteQuery?.data?.map((r, idx) => (
+                <Link to={`/auction/${r?.id}`} key={idx}>
+                  <CommonListItem
+                    src={r?.src}
+                    category={findCategory(r?.category_id)}
+                    title={r?.title}
+                    startPrice={r?.start_price}
+                    isOpen={Boolean(r.is_open)}
+                  />
+                </Link>
+              ))}
+            </CommonList>
           )}
         </div>
       </section>
