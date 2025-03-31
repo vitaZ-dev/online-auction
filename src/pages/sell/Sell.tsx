@@ -8,7 +8,7 @@ import CommonTitle from "../../components/UI/CommonTitle";
 import { WritepageLayout } from "../../styles/SellPageStyle";
 import CommonInput from "../../components/common/CommonInput";
 import CommonTextarea from "../../components/common/CommonTextarea";
-import { addDoc, collection } from "firebase/firestore";
+import { collection, doc, setDoc } from "firebase/firestore";
 import firebaseDB from "../../../firebase";
 
 export default function Sell() {
@@ -154,26 +154,32 @@ export default function Sell() {
     const end_date = setDate14Temp(start_date);
 
     try {
-      // 미사용 param 제거
-      await addDoc(collection(firebaseDB, "posts"), {
-        title,
-        category_id: category,
-        user_info: userInfo?.nickname || "USER",
-        user_id: userInfo?.uuid,
-        start_date,
-        end_date,
-        start_price,
-        now_price: 0,
-        is_open: 1,
-        src: "https://placehold.co/100x100",
-        contents,
-        created_at: start_date,
-        favorite: 0,
-        favorite_list: [],
-        cnt: 0,
-        bid_count: 0,
-        bid_history: [],
-      });
+      const docRef = doc(collection(firebaseDB, "posts"));
+      await setDoc(
+        docRef,
+        {
+          // await addDoc(collection(firebaseDB, "posts"), {
+          id: docRef.id,
+          title,
+          category_id: category,
+          user_info: userInfo?.nickname || "USER",
+          user_id: userInfo?.uuid,
+          start_date,
+          end_date,
+          start_price,
+          now_price: 0,
+          is_open: 1,
+          src: "https://placehold.co/100x100",
+          contents,
+          created_at: start_date,
+          favorite: 0,
+          favorite_list: [],
+          cnt: 0,
+          bid_count: 0,
+          bid_history: [],
+        },
+        { merge: true }
+      );
       updateSalesHistory(null);
       alert("ok-firebase");
     } catch (err) {
