@@ -1,6 +1,6 @@
 import api from "../../apis/api";
-import { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   ItemDetailBidderBox,
   ItemDetailBox,
@@ -27,12 +27,12 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
 import CommonInput from "../../components/common/CommonInput";
 import CommonButton from "../../components/common/CommonButton";
-import { postBidHistory, postFavoriteList, postType } from "../../types/post";
+import { postBidHistory, postType } from "../../types/post";
+import { getDetailPost, getOtherPosts } from "../../apis/libs";
+import { useQuery } from "react-query";
 
 export default function Detail() {
   const [loading, setLoading] = useState<boolean>(false);
-  const [pageLoading, setPageLoading] = useState<boolean>(true);
-  const [sellListLoading, setSellListLoading] = useState<boolean>(true);
 
   const [detail, setDetail] = useState<postType | null>(null);
   const [userCheck, setUserCheck] = useState<boolean>(false);
@@ -44,10 +44,11 @@ export default function Detail() {
     Array<postBidHistory> | []
   >([]);
 
-  const [sellList, setSellList] = useState<Array<postType> | []>([]);
+  const { id: POST_ID } = useParams<{ id: string }>();
 
-  const { pathname } = useLocation();
-  const POST_ID = pathname.split("/")[2];
+  // const path = useLocation();
+  // const POST_ID = path.pathname.split("/")[2];
+
   const {
     isLogin,
     userInfo,
@@ -58,84 +59,54 @@ export default function Detail() {
   const [cookies, setCookie] = useCookies();
   const navigate = useNavigate();
 
+  const cntUpdate = useMemo(() => {
+    const cookieName = `view_${isLogin ? userInfo?.id : "non"}`;
+    return !cookies[cookieName]?.includes(POST_ID);
+  }, [POST_ID]);
+
+  // const {data: detail, isLoading: detailLoading} = useQuery({
+  const all = useQuery({
+    queryKey: ["detail", POST_ID],
+    queryFn: () => getDetailPost(POST_ID as string, cntUpdate),
+    staleTime: 5 * 60 * 1000,
+    cacheTime: 30 * 60 * 1000,
+    enabled: !!POST_ID,
+  });
+
+  const { data: otherList, isLoading: otherLoading } = useQuery({
+    queryKey: ["other-list", all?.data?.nickname],
+    queryFn: () => getOtherPosts(all?.data?.user_id as string),
+    staleTime: 5 * 60 * 1000,
+    cacheTime: 30 * 60 * 1000,
+    enabled: !!all?.data?.user_id, // postId가 있을 때만 실행
+  });
+
   useEffect(() => {
-    window.scrollTo(0, 0);
-    setLoading(true);
-    fetchPosts()
-      .then((post) => {
-        // 게시글 중복 카운트 방지용 쿠키
-        const cookieName = `view_${isLogin ? userInfo?.id : "non"}`;
-        const cookieContents = [
-          ...new Set([...(cookies[cookieName] || []), POST_ID]),
-        ];
-        // 쿠키 만기
-        const expires = new Date();
-        expires.setHours(0, 0, 0, 0);
-        expires.setDate(expires.getDate() + 1);
-        setCookie(cookieName, cookieContents, {
-          path: "/",
-          expires,
-        });
-
-        if (!cookies[cookieName]?.includes(POST_ID)) {
-          // 카운트하는 함수 생성 - 나 자신의 조회는 카운트X
-          if (post.user_id !== userInfo?.uuid) {
-            updatePostCnt(post.cnt);
-            post.cnt += 1;
-          }
-        }
-
-        setDetail(post);
-        setFavoriteCnt(post.favorite_list.length);
-        setFavoriteCheck(
-          post.favorite_list.some(
-            (item: postFavoriteList) => item.uuid === userInfo?.uuid
-          )
-        );
-        setPageLoading(false);
-        return post.user_id;
-      })
-      .then((id) => {
-        getSellList(id);
-        setLoading(false);
+    // 데이터 로딩 완료 후 게시글 조회수 관련 쿠키
+    if (!all.isLoading && cntUpdate) {
+      // 게시글 중복 카운트 방지용 쿠키
+      const cookieName = `view_${isLogin ? userInfo?.id : "non"}`;
+      const cookieContents = [
+        ...new Set([...(cookies[cookieName] || []), POST_ID]),
+      ];
+      // 쿠키 만기
+      const expires = new Date();
+      expires.setHours(0, 0, 0, 0);
+      expires.setDate(expires.getDate() + 1);
+      setCookie(cookieName, cookieContents, {
+        path: "/",
+        expires,
       });
-    setLoading(false);
-  }, [pathname]);
+    }
+  }, [all.isLoading]);
 
   const fetchPosts = async () => {
     const { data } = await api.get(`posts/${POST_ID}`);
-    // setDetail(data);
     setUserCheck(data.user_id === userInfo?.uuid);
-
     setBidHistoryDetail(data?.bid_history || []);
-    // if (data[0]?.bid_history?.length) {
-    //   const maxAmount = data[0].bid_history.reduce((max, current) =>
-    //     current.amount > max.amount ? current : max
-    //   );
-    //   setBidAmount(maxAmount?.amount);
-    // } else setBidAmount(data[0]?.start_price || 0);
     setBidAmount(data?.now_price || data?.start_price || 0);
 
     return data;
-  };
-  const updatePostCnt = async (cnt: number) => {
-    try {
-      await api.patch(`posts/${POST_ID}`, {
-        cnt: cnt + 1,
-      });
-    } catch (error) {
-      console.log(error);
-      console.log("조회수 갱신에 실패했습니다");
-    }
-  };
-
-  const getSellList = async (id: string) => {
-    const { data } = await api.get(
-      `posts?id_ne=${POST_ID}&user_id=${id}&_limit=4&_sort=created_at&_order=desc`
-    );
-
-    setSellList(data.filter((item: postType) => item.id !== POST_ID));
-    setSellListLoading(false);
   };
 
   const openComponent = () => setShow(true);
@@ -166,67 +137,6 @@ export default function Detail() {
       alert("게시글 삭제에 실패했습니다!");
     }
   };
-
-  /*
-  const updateFavorite = async (item: any) => {
-    const cnt = favoriteCheck ? favoriteCnt - 1 : favoriteCnt + 1;
-    let favorite_list;
-    if (favoriteCheck) {
-      favorite_list = item.favorite_list.filter(
-        (item) => item.uuid !== userInfo.uuid
-      );
-    } else {
-      favorite_list = [
-        ...item.favorite_list,
-        {
-          id: userInfo.id,
-          uuid: userInfo.uuid,
-        },
-      ];
-    }
-    favorite_list = Array.from(
-      new Map(favorite_list.map((item) => [item.id, item])).values()
-    );
-
-    setLoading(true);
-    try {
-      if (!favoriteCheck) {
-        const favoriteList = [
-          {
-            id: item.id,
-            category_id: item.category_id,
-            src: item.src,
-            start_price: item.start_price,
-            title: item.title,
-          },
-          ...favorite,
-        ];
-        await axios.patch(`http://localhost:4000/user/${userInfo.id}`, {
-          favorite,
-        });
-        updateUserFavorite(favoriteList);
-      } else {
-        const favoriteList = favorite.filter((item) => item.id !== POST_ID);
-        await axios.patch(`http://localhost:4000/user/${userInfo.id}`, {
-          favorite,
-        });
-        updateUserFavorite(favoriteList);
-      }
-
-      await axios.patch(`http://localhost:4000/posts/${POST_ID}`, {
-        favorite: cnt,
-        favorite_list,
-      });
-      alert("성공");
-      setFavoriteCnt(cnt);
-      setFavoriteCheck(!favoriteCheck);
-    } catch (error) {
-      console.log(error);
-      console.log("실패했습니다");
-    }
-    setLoading(false);
-  };
-*/
 
   const updateFavorite = async (item: postType) => {
     if (!isLogin) {
@@ -286,78 +196,6 @@ export default function Detail() {
     }
     setLoading(false);
   };
-
-  /*
-  const auctionBiddingPrev = async (item: any) => {
-    if (bidAmount <= detail[0].now_price) {
-      alert("입찰가는 현대최대가 보다 높은 값만 입력할 수 있습니다!");
-      return false;
-    }
-
-    setLoading(true);
-    try {
-      const bid_history = [
-        {
-          id: POST_ID,
-          amount: bidAmount,
-          bidder: userInfo?.nickname || "USER",
-          time: setDateTemp(),
-          user_id: userInfo?.id,
-          uuid: userInfo?.uuid,
-        },
-        ...bidHistory,
-      ];
-      let bid_list = [
-        {
-          id: item.id,
-          category_id: item.category_id,
-          src: item.src,
-          start_price: item.start_price,
-          title: item.title,
-        },
-        ...bidList,
-      ];
-      bid_list = Array.from(
-        new Map(bid_list.map((item) => [item.id, item])).values()
-      );
-      await axios.patch(`http://localhost:4000/user/${userInfo?.id}`, {
-        bid_history,
-        bid_list,
-      });
-      updateBidHistory(bid_history);
-      updateBidList(bid_list);
-
-      await axios.patch(`http://localhost:4000/posts/${POST_ID}`, {
-        now_price: bidAmount,
-        bid_count: bidHistoryDetail.length + 1,
-        bid_history: [
-          {
-            id: POST_ID,
-            amount: bidAmount,
-            bidder: userInfo?.nickname || "USER",
-            time: setDateTemp(),
-            user_id: userInfo?.id,
-            uuid: userInfo?.uuid,
-          },
-          ...bidHistoryDetail,
-        ],
-      });
-      alert("입찰 완료!");
-      setOpenBidding(false);
-    } catch (error) {
-      console.log(error);
-      alert("입찰에 실패했습니다!");
-    }
-    try {
-      await fetchPosts();
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-    }
-    setLoading(false);
-  };
-  */
 
   const auctionBidding = async (item: postType, nowPrice: number) => {
     if (!isLogin) {
@@ -453,85 +291,6 @@ export default function Detail() {
     setLoading(false);
   };
 
-  /*
-  const closeAuctionPrev = async (
-    isOpen: boolean,
-    endDate: string,
-    history: any,
-    title: string,
-    src: string,
-    category_id: number
-  ) => {
-    // 입찰 마감 처리는 최소 14일 이후에 가능+
-    if (!isOpen) return false;
-
-    if (new Date() < new Date(endDate)) {
-      alert("최소 마감일 이후에 마감할 수 있습니다.");
-      return false;
-    }
-
-    const last_bidder = [];
-    if (history?.length) {
-      const bidder = history.reduce(
-        (acc, curr) => (curr.amount > acc.amount ? curr : acc),
-        history[0]
-      );
-      last_bidder.push(bidder);
-    }
-
-    try {
-      await axios.patch(`http://localhost:4000/posts/${POST_ID}`, {
-        is_open: 0,
-        end_date: setDateTemp(),
-        last_bidder,
-      });
-      if (last_bidder.length) {
-        setLoading(true);
-        const { data } = await axios.get(
-          `http://localhost:4000/user/${last_bidder[0].user_id}`
-        );
-        const award = data?.bid_award;
-
-        let bid_award = [
-          {
-            award_date: setDateTemp(),
-            amount: last_bidder[0].amount,
-            id: last_bidder[0].id,
-            time: last_bidder[0].time,
-            title,
-            src,
-            category_id,
-          },
-        ];
-        if (award) {
-          bid_award = [...bid_award, ...award];
-        }
-        await axios.patch(
-          `http://localhost:4000/user/${last_bidder[0].user_id}`,
-          {
-            bid_award,
-          }
-        );
-        updateBidAward(bid_award);
-      }
-      alert("마감 처리되었습니다!");
-    } catch (error) {
-      console.log(error);
-      alert("실패했습니다!");
-      setLoading(false);
-    }
-
-    try {
-      const post = await axios.get(`http://localhost:4000/posts?id=${POST_ID}`);
-      setDetail(post?.data);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-    }
-  };
-  */
-
   const closeAuction = async (
     isOpen: boolean,
     endDate: string,
@@ -599,7 +358,7 @@ export default function Detail() {
   return (
     <ItemDetailLayout>
       {/* 제품 */}
-      {pageLoading ? (
+      {all.isLoading ? (
         <section>
           <div className="item_img">
             <div className="img_wrap">
@@ -612,225 +371,224 @@ export default function Detail() {
                   alignItems: "center",
                 }}
               >
-                <CircularProgress sx={{}} />
+                <CircularProgress color="secondary" />
               </div>
             </div>
           </div>
         </section>
       ) : (
-        detail && (
-          <section>
-            <div className="item_img" onClick={openComponent}>
-              <div className="img_wrap">
-                <img src={detail.src} alt="image" />
-              </div>
+        <section>
+          <div className="item_img" onClick={openComponent}>
+            <div className="img_wrap">
+              <img src={all.data?.src} alt="image" />
             </div>
-            {show && <FullSizeImage src={detail.src} setShow={setShow} />}
-            {pageLoading || (
-              <div className="user_info">
-                <div className="user_prof">
-                  <AccountCircleIcon />
-                  <h2>{detail.user_info}</h2>
-                </div>
-                {userCheck ? (
-                  <div className="user_utils">
-                    <div className="favorite">
-                      <FavoriteTwoToneIcon color="secondary" />
-                      <span>{numberFormat(favoriteCnt)}</span>
-                    </div>
-                    <button
-                      onClick={() => editPost(Boolean(detail.is_open))}
-                      disabled={!detail.is_open}
-                    >
-                      <EditIcon color="secondary" />
-                    </button>
-                    <button
-                      onClick={() => deletePost(Boolean(detail.is_open))}
-                      disabled={loading || !detail.is_open}
-                    >
-                      <DeleteIcon color="secondary" />
-                    </button>
+          </div>
+          {show && <FullSizeImage src={all.data?.src} setShow={setShow} />}
+          <div className="user_info">
+            <div className="user_prof">
+              <AccountCircleIcon />
+              <h2>{all.data?.user_info}</h2>
+            </div>
+            <div className="user_utils">
+              {userCheck ? (
+                <>
+                  <div className="favorite">
+                    <FavoriteTwoToneIcon color="secondary" />
+                    <span>{numberFormat(favoriteCnt)}</span>
                   </div>
-                ) : (
-                  <div className="user_utils">
-                    <button
-                      className="favorite"
-                      onClick={() => updateFavorite(detail)}
-                      disabled={loading}
-                    >
-                      {favoriteCheck ? (
-                        <FavoriteTwoToneIcon color="secondary" />
-                      ) : (
-                        <FavoriteBorderIcon color="secondary" />
-                      )}
-                      <span>{numberFormat(favoriteCnt)}</span>
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
-            <hr />
-            <section>
-              <div className="contents_info" style={{ paddingTop: "8px" }}>
-                <CommonCategoryBadge categoryID={detail.category_id} />
-              </div>
-              <CommonTitle
-                type={1}
-                title={detail.title}
-                isOpen={Boolean(detail.is_open)}
-              />
-              <div className="contents_info">
-                <p>작성일 | {detail.start_date}</p>
-                <p>조회 | {numberFormat(detail?.cnt)}</p>
-              </div>
-            </section>
+                  <button
+                    onClick={() => editPost(Boolean(all.data?.is_open))}
+                    disabled={!all.data?.is_open}
+                  >
+                    <EditIcon color="secondary" />
+                  </button>
+                  <button
+                    onClick={() => deletePost(Boolean(all.data?.is_open))}
+                    disabled={loading || !all.data?.is_open}
+                  >
+                    <DeleteIcon color="secondary" />
+                  </button>
+                </>
+              ) : (
+                <button
+                  className="favorite"
+                  onClick={() => updateFavorite(all.data)}
+                  disabled={loading}
+                >
+                  {favoriteCheck ? (
+                    <FavoriteTwoToneIcon color="secondary" />
+                  ) : (
+                    <FavoriteBorderIcon color="secondary" />
+                  )}
+                  <span>{numberFormat(favoriteCnt)}</span>
+                </button>
+              )}
+            </div>
+          </div>
+          <hr />
+          <section>
+            <div className="contents_info" style={{ paddingTop: "8px" }}>
+              <CommonCategoryBadge categoryID={all.data?.category_id} />
+            </div>
+            <CommonTitle
+              type={1}
+              title={all.data?.title}
+              isOpen={Boolean(all.data?.is_open)}
+            />
+            <div className="contents_info">
+              <p>작성일 | {all.data?.start_date}</p>
+              <p>조회 | {numberFormat(all.data?.cnt)}</p>
+            </div>
+
             <div className="item_info">
               <div>
                 <p>현재 입찰가</p>
-                <p>{numberFormat(detail?.now_price) || "no bid"}</p>
+                <p>{numberFormat(all.data?.now_price) || "no bid"}</p>
               </div>
               <div>
                 <p>총 입찰</p>
-                <p>{numberFormat(detail?.bid_count) || 0}</p>
+                <p>{numberFormat(all.data?.bid_count) || 0}</p>
               </div>
               <div>
                 <p>종료일</p>
-                <p>{detail.end_date.split(" ")[0]}</p>
+                <p>{all.data?.end_date.split(" ")[0]}</p>
               </div>
             </div>
-
-            <section>
-              <CommonTitle type={3} title="품목 세부 정보" />
-              <CommonPaddingBox>
-                <ItemDetailBox>
-                  <div className="detail_table">
-                    <p>
-                      <span>카테고리</span>
-                      <span className="contents">
-                        {findCategory(detail.category_id)}
-                      </span>
-                    </p>
-                    <p>
-                      <span>시작가</span>
-                      <span className="contents">
-                        {numberFormat(detail?.start_price)}원
-                      </span>
-                    </p>
-                    <p>
-                      <span>입찰횟수</span>
-                      <span className="contents">
-                        {numberFormat(detail?.bid_count)}
-                      </span>
-                    </p>
-                    <p>
-                      <span>현재최대가</span>
-                      <span className="contents">
-                        {numberFormat(detail?.now_price)}
-                      </span>
-                    </p>
-                    <p>
-                      <span>마감일</span>
-                      <span className="contents">{detail.end_date}</span>
-                    </p>
-                  </div>
-                </ItemDetailBox>
-              </CommonPaddingBox>
-            </section>
-            {userCheck && Boolean(detail.is_open) && (
-              <CommonPaddingBox>
-                <p className="notice">
-                  *가장 높은 금액을 입력한 유저에게 자동으로 낙찰됩니다!
-                </p>
-                <button
-                  onClick={() =>
-                    closeAuction(
-                      Boolean(detail?.is_open),
-                      detail?.end_date,
-                      detail?.bid_history,
-                      detail?.title,
-                      detail?.src,
-                      detail?.category_id
-                    )
-                  }
-                  disabled={!detail.is_open}
-                >
-                  입찰 마감 처리
-                </button>
-              </CommonPaddingBox>
-            )}
-            {!userCheck && Boolean(detail.is_open) && (
-              <section>
-                <CommonTitle type={3} title="입찰하기" />
-                <CommonPaddingBox>
-                  <div className="bid_input">
-                    <CommonInput
-                      type="number"
-                      length="full"
-                      min={detail.start_price}
-                      value={bidAmount}
-                      setValue={(e) => setBidAmount(Number(e.target.value))}
-                    />
-                    <CommonButton
-                      text="입찰하기"
-                      btnType="large"
-                      onClick={() => auctionBidding(detail, detail.now_price)}
-                      disabled={loading}
-                    />
-                  </div>
-                  <p className="notice">* 한 번 입찰하면 취소할 수 없습니다!</p>
-                </CommonPaddingBox>
-              </section>
-            )}
-
-            <section>
-              <CommonTitle type={4} title="상세내용" />
-              <CommonPaddingBox>
-                <ItemDetailBox>
-                  <p className="textarea">{detail?.contents}</p>
-                </ItemDetailBox>
-              </CommonPaddingBox>
-            </section>
-            {!detail?.is_open && (
-              <section>
-                <CommonTitle type={3} title="최종 입찰자" />
-                <CommonPaddingBox>
-                  <ItemDetailBidderBox>
-                    <MilitaryTechIcon className="icon" />
-                    <div className="bidder_wrap">
-                      <p>
-                        {detail?.last_bidder?.bidder || "입찰자가 없습니다."}
-                      </p>
-                      {detail?.last_bidder?.bidder && (
-                        <p className="price">
-                          낙찰 금액은
-                          <span>
-                            {numberFormat(detail?.last_bidder?.amount)}
-                          </span>
-                          원 입니다.
-                        </p>
-                      )}
-                    </div>
-                  </ItemDetailBidderBox>
-                </CommonPaddingBox>
-              </section>
-            )}
-            <section>
-              <CommonTitle type={3} title="입찰내역" />
-              <CommonPaddingBox>
-                {bidHistoryDetail?.length ? (
-                  <ShowListTable
-                    tableGrid={[1, 1, 2]}
-                    tableHeader={["bidder", "amount", "time"]}
-                    tableHeaderText={["입찰자", "입찰가", "입찰 시간"]}
-                    tableList={bidHistoryDetail}
-                  />
-                ) : (
-                  <CommonNodataBox>입찰자가 없습니다</CommonNodataBox>
-                )}
-              </CommonPaddingBox>
-            </section>
           </section>
-        )
+
+          <section>
+            <CommonTitle type={3} title="품목 세부 정보" />
+            <CommonPaddingBox>
+              <ItemDetailBox>
+                <div className="detail_table">
+                  <p>
+                    <span>카테고리</span>
+                    <span className="contents">
+                      {findCategory(all.data?.category_id)}
+                    </span>
+                  </p>
+                  <p>
+                    <span>시작가</span>
+                    <span className="contents">
+                      {numberFormat(all.data?.start_price)}원
+                    </span>
+                  </p>
+                  <p>
+                    <span>입찰횟수</span>
+                    <span className="contents">
+                      {numberFormat(all.data?.bid_count)}
+                    </span>
+                  </p>
+                  <p>
+                    <span>현재최대가</span>
+                    <span className="contents">
+                      {numberFormat(all.data?.now_price)}
+                    </span>
+                  </p>
+                  <p>
+                    <span>마감일</span>
+                    <span className="contents">{all.data?.end_date}</span>
+                  </p>
+                </div>
+              </ItemDetailBox>
+            </CommonPaddingBox>
+          </section>
+          {userCheck && Boolean(all.data?.is_open) && (
+            <CommonPaddingBox>
+              <p className="notice">
+                *가장 높은 금액을 입력한 유저에게 자동으로 낙찰됩니다!
+              </p>
+              <button
+                onClick={() =>
+                  closeAuction(
+                    Boolean(all.data?.is_open),
+                    all.data?.end_date,
+                    all.data?.bid_history,
+                    all.data?.title,
+                    all.data?.src,
+                    all.data?.category_id
+                  )
+                }
+                disabled={!all.data?.is_open}
+              >
+                입찰 마감 처리
+              </button>
+            </CommonPaddingBox>
+          )}
+          {!userCheck && Boolean(all.data?.is_open) && (
+            <section>
+              <CommonTitle type={3} title="입찰하기" />
+              <CommonPaddingBox>
+                <div className="bid_input">
+                  <CommonInput
+                    type="number"
+                    length="full"
+                    min={all.data?.start_price}
+                    value={bidAmount}
+                    setValue={(e) => setBidAmount(Number(e.target.value))}
+                  />
+                  <CommonButton
+                    text="입찰하기"
+                    btnType="large"
+                    onClick={() =>
+                      auctionBidding(all.data, all.data?.now_price)
+                    }
+                    disabled={loading}
+                  />
+                </div>
+                <p className="notice">* 한 번 입찰하면 취소할 수 없습니다!</p>
+              </CommonPaddingBox>
+            </section>
+          )}
+
+          <section>
+            <CommonTitle type={4} title="상세내용" />
+            <CommonPaddingBox>
+              <ItemDetailBox>
+                <p className="textarea">{all.data?.contents}</p>
+              </ItemDetailBox>
+            </CommonPaddingBox>
+          </section>
+          {!all.data?.is_open && (
+            <section>
+              <CommonTitle type={3} title="최종 입찰자" />
+              <CommonPaddingBox>
+                <ItemDetailBidderBox>
+                  <MilitaryTechIcon className="icon" />
+                  <div className="bidder_wrap">
+                    <p>
+                      {all.data?.last_bidder?.bidder || "입찰자가 없습니다."}
+                    </p>
+                    {all.data?.last_bidder?.bidder && (
+                      <p className="price">
+                        낙찰 금액은
+                        <span>
+                          {numberFormat(all.data?.last_bidder?.amount)}
+                        </span>
+                        원 입니다.
+                      </p>
+                    )}
+                  </div>
+                </ItemDetailBidderBox>
+              </CommonPaddingBox>
+            </section>
+          )}
+          <section>
+            <CommonTitle type={3} title="입찰내역" />
+            <CommonPaddingBox>
+              {all.data?.bid_history?.length ? (
+                <ShowListTable
+                  tableGrid={[1, 1, 2]}
+                  tableHeader={["bidder", "amount", "time"]}
+                  tableHeaderText={["입찰자", "입찰가", "입찰 시간"]}
+                  tableList={all.data?.bid_history}
+                />
+              ) : (
+                <CommonNodataBox>입찰자가 없습니다</CommonNodataBox>
+              )}
+            </CommonPaddingBox>
+          </section>
+        </section>
       )}
       {/* 다른내용 */}
       <section>
@@ -840,13 +598,13 @@ export default function Detail() {
           link="/mypage/list"
           linkProps={{
             state: {
-              uuid: sellList[0]?.user_id,
-              nickname: sellList[0]?.user_info,
+              uuid: all.data?.user_id,
+              nickname: all.data?.user_info,
             },
           }}
         />
-        <CommonList grid={4} loading={sellListLoading}>
-          {sellList?.map((sell) => (
+        <CommonList grid={4} loading={all.isLoading || otherLoading}>
+          {otherList?.map((sell) => (
             <Link to={`/auction/${sell.id}`} key={`item_${sell.id}`}>
               <CommonListItem
                 key={`item_${sell.id}`}
@@ -863,165 +621,3 @@ export default function Detail() {
     </ItemDetailLayout>
   );
 }
-
-// {detail?.map((detail) => {
-//   return (
-//     <section key={detail.id}>
-//       <div className="item_img" onClick={openComponent}>
-//         <div className="img_wrap">
-//           <img src={detail.src} alt="image" />
-//         </div>
-//       </div>
-//       {show && <FullSizeImage src={detail?.src} setShow={setShow} />}
-//       <div className="user_info">
-//         <h2>{detail.user_info}</h2>
-//         {userCheck ? (
-//           <div className="user_utils">
-//             <button
-//               onClick={() => editPost(detail.is_open)}
-//               disabled={!detail.is_open}
-//             >
-//               수정
-//             </button>
-//             <button
-//               onClick={() => deletePost(detail.is_open)}
-//               disabled={loading || !detail.is_open}
-//             >
-//               삭제
-//             </button>
-//           </div>
-//         ) : (
-//           <div className="user_utils">
-//             {isLogin && (
-//               <button
-//                 onClick={() => updateFavorite(detail)}
-//                 disabled={loading}
-//               >
-//                 {favoriteCheck ? "★" : "☆"}
-//               </button>
-//             )}
-//           </div>
-//         )}
-//       </div>
-//       <hr />
-//       {/* <p>{findCategory(detail?.category_id)}</p> */}
-//       <CommonCategoryBadge categoryID={detail?.category_id} />
-//       <CommonTitle
-//         type={1}
-//         title={detail.title}
-//         isOpen={Boolean(detail?.is_open)}
-//       />
-//       <CommonPaddingBox>
-//         <p>{detail.start_date}</p>
-//         <p>조회수 | {numberFormat(detail?.cnt)}</p>
-//         <p>관심 | {numberFormat(favoriteCnt)}</p>
-//       </CommonPaddingBox>
-//       {/* <div className="item_info">
-//         <div>
-//           <p>현재 입찰가</p>
-//           <p>{detail.now_price || "no bid"}</p>
-//         </div>
-//         <div>
-//           <p>총 입찰</p>
-//           <p>{detail.bid}</p>
-//         </div>
-//         <div>
-//           <p>종료일</p>
-//           <p>{detail.end_date}</p>
-//         </div>
-//       </div> */}
-
-//       <section>
-//         <CommonTitle type={3} title="품목 세부 정보" />
-//         {/* <p>카테고리/시작가격/시작날짜/종료날짜</p> */}
-//         <CommonPaddingBox>
-//           <p>
-//             카테고리 | {findCategory(detail?.category_id)} <br />
-//             시작가 | {numberFormat(detail?.start_price)}원 <br />
-//             입찰횟수 | {numberFormat(detail?.bid_count)} <br />
-//             현재최대가 | {numberFormat(detail?.now_price)} <br />
-//             마감일 | {detail?.end_date}
-//           </p>
-//         </CommonPaddingBox>
-//       </section>
-//       {userCheck && (
-//         <CommonPaddingBox>
-//           <p>*가장 높은 금액을 입력한 유저에게 자동으로 낙찰됩니다!</p>
-//           <button
-//             onClick={() =>
-//               closeAuction(
-//                 detail?.is_open,
-//                 detail?.end_date,
-//                 detail.bid_history,
-//                 detail?.title,
-//                 detail?.src,
-//                 detail?.category_id
-//               )
-//             }
-//             disabled={!detail?.is_open}
-//           >
-//             입찰 마감 처리
-//           </button>
-//         </CommonPaddingBox>
-//       )}
-//       {!userCheck && Boolean(detail.is_open) && (
-//         <>
-//           <button onClick={() => setOpenBidding(!openBidding)}>
-//             {openBidding ? <>닫기</> : <>입찰하기</>}
-//           </button>
-//         </>
-//       )}
-//       {openBidding && (
-//         <section>
-//           <CommonPaddingBox>
-//             가격을 입력해주세요! <br />* 한 번 입찰하면 취소할 수
-//             없습니다!
-//             <br />
-//             <input
-//               type="number"
-//               min={detail?.start_price}
-//               value={bidAmount}
-//               onChange={(e) => setBidAmount(Number(e.target.value))}
-//             />
-//             <button
-//               onClick={() => auctionBidding(detail)}
-//               disabled={loading}
-//             >
-//               입찰하기
-//             </button>
-//           </CommonPaddingBox>
-//         </section>
-//       )}
-//       <section>
-//         <CommonTitle type={4} title="상세내용" />
-//         <CommonPaddingBox>
-//           <p>{detail.contents}</p>
-//         </CommonPaddingBox>
-//       </section>
-//       {!detail.is_open && (
-//         <section>
-//           <CommonTitle type={3} title="최종 입찰자" />
-//           <CommonPaddingBox>
-//             <button>
-//               {detail?.last_bidder?.bidder || "입찰자가 없습니다."}
-//             </button>
-//           </CommonPaddingBox>
-//         </section>
-//       )}
-//       <section>
-//         <CommonTitle type={3} title="입찰내역" />
-//         <CommonPaddingBox>
-//           {bidHistoryDetail.length ? (
-//             <ShowListTable
-//               tableGrid={[1, 1, 2]}
-//               tableHeader={["bidder", "amount", "time"]}
-//               tableList={bidHistoryDetail}
-//             />
-//           ) : (
-//             <div>입찰자가 없습니다</div>
-//           )}
-//         </CommonPaddingBox>
-//       </section>
-//     </section>
-//   );
-// })}
