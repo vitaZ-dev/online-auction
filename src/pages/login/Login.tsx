@@ -7,10 +7,17 @@ import { LoginPageLayout } from "../../styles/LoginPageStyle";
 import CommonButton from "../../components/common/CommonButton";
 import CommonInput from "../../components/common/CommonInput";
 import CommonCheckbox from "../../components/common/CommonCheckbox";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../../firebase";
+import Loading from "../../components/Loading";
+import { UserInfoType } from "../../types/user";
+import { USER_DB } from "../../modules/firebase";
+import { getDocs, query, where } from "firebase/firestore";
 
 export default function Login() {
-  const auth = useAuthStore();
+  const authStore = useAuthStore();
 
+  const [loading, setLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [rememberID, setRememberID] = useState<boolean>(false);
@@ -40,7 +47,7 @@ export default function Login() {
         `user?email=${email}&password=${password}`
       );
       if (data?.length) {
-        auth.login(data[0]);
+        authStore.login(data[0]);
 
         if (rememberID) {
           localStorage.setItem("remember_id", email);
@@ -57,6 +64,79 @@ export default function Login() {
       console.log(error);
       alert("에러가 발생했습니다.");
     }
+  };
+
+  const signIn = async () => {
+    if (!email) {
+      alert("이메일을 입력하십시오");
+      return false;
+    }
+    if (!password) {
+      alert("비밀번호를 입력하십시오");
+      return false;
+    }
+
+    setLoading(true);
+    try {
+      let uuid: string = "";
+      await signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Login
+          const user = userCredential.user;
+          uuid = user.uid;
+        })
+        .catch((error) => {
+          switch (error.code) {
+            case "auth/invalid-email":
+              alert("이메일 형식이 올바르지 않습니다.");
+              break;
+            case "auth/user-disabled":
+              alert("이 계정은 비활성화되어 있습니다.");
+              break;
+            case "auth/user-not-found":
+              alert("존재하지 않는 계정입니다.");
+              break;
+            case "auth/wrong-password":
+              alert("비밀번호가 올바르지 않습니다.");
+              break;
+            case "auth/too-many-requests":
+              alert("로그인 시도가 너무 많습니다. 나중에 다시 시도해주세요.");
+              break;
+            case "auth/network-request-failed":
+              alert("네트워크 오류가 발생했습니다. 연결을 확인해주세요.");
+              break;
+            default:
+              alert("로그인 중 알 수 없는 오류가 발생했습니다.");
+              console.error(error);
+          }
+          setLoading(false);
+          return false;
+        });
+
+      if (rememberID) {
+        localStorage.setItem("remember_id", email);
+      } else {
+        localStorage.removeItem("remember_id");
+      }
+
+      const loginUserInfo = await findUserInfo(uuid);
+      authStore.login(loginUserInfo);
+
+      setLoading(false);
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+      alert("로그인에 실패했습니다.");
+      setLoading(false);
+      return false;
+    }
+  };
+
+  // userInfo 찾기
+  const findUserInfo = async (uuid: string): Promise<UserInfoType> => {
+    const q = query(USER_DB, where("uuid", "==", uuid));
+    const snapshot = await getDocs(q);
+    return snapshot.docs[0].data() as UserInfoType;
   };
 
   const preparing = () => alert("준비중인 서비스 입니다!");
@@ -83,15 +163,22 @@ export default function Login() {
           placeholder="비밀번호"
         />
 
-        <CommonCheckbox
-          id="rememberID"
-          name="rememberID"
-          checked={rememberID}
-          onChange={(e) => setRememberID(e.target.checked)}
-          text="아이디 기억"
-        />
+        <div style={{ marginTop: 4 }}>
+          <CommonCheckbox
+            id="rememberID"
+            name="rememberID"
+            checked={rememberID}
+            onChange={(e) => setRememberID(e.target.checked)}
+            text="아이디 기억"
+          />
+        </div>
 
         <CommonButton text="로그인" btnType="large" onClick={() => login()} />
+        <CommonButton
+          text="로그인fb"
+          btnType="large"
+          onClick={() => signIn()}
+        />
       </div>
 
       <ul className="find_area">
@@ -101,6 +188,8 @@ export default function Login() {
           <Link to="register">회원가입</Link>
         </li>
       </ul>
+
+      {loading && <Loading />}
     </LoginPageLayout>
   );
 }

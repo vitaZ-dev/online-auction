@@ -3,7 +3,7 @@ import { postType } from "./post";
 export type UserInfoType = {
   id: string;
   uuid: string;
-  token: string;
+  token?: string;
   email: string;
   password: string;
   nickname: string;

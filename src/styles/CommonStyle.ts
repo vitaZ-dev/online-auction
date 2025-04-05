@@ -286,8 +286,8 @@ export const CommonInputStyle = styled.div<CommonInputType>`
     }
     &:focus:not(:disabled),
     &:active:not(:disabled) {
-      border: 1px solid var(--main-red-color);
-      box-shadow: 0 0 0 0.5px var(--main-red-color);
+      border: 1px solid var(--main-violet-00-color);
+      box-shadow: 0 0 0 0.5px var(--main-violet-00-color);
     }
 
     &:disabled {

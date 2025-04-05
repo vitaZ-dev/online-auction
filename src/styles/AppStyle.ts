@@ -68,7 +68,7 @@ const HeaderLayout = styled.header`
   align-items: center;
   position: fixed;
   top: 0;
-  z-index: 10;
+  z-index: 99999;
   box-shadow: 0px 5px 16px 0px #0000000d;
 
   .header_utils {

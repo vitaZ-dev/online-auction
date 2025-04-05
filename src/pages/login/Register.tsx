@@ -129,9 +129,15 @@ export default function Register() {
               alert("6자리 이상의 비밀번호를 입력해주세요.");
               setCheckPassword(true);
               break;
-            default:
-              alert("유효하지 않은 형식입니다.");
+            case "auth/operation-not-allowed":
+              alert("이메일/비밀번호 가입이 비활성화되어 있습니다.");
               break;
+            case "auth/network-request-failed":
+              alert("네트워크 오류가 발생했습니다.");
+              break;
+            default:
+              alert("회원가입 중 오류가 발생했습니다.");
+              console.error(error);
           }
           setLoading(false);
           return false;
