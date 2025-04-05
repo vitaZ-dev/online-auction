@@ -27,8 +27,8 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
 import CommonInput from "../../components/common/CommonInput";
 import CommonButton from "../../components/common/CommonButton";
-import { postBidHistory, postFavoriteList, postType } from "../../types/post";
-import { getDetailPost, getOtherPosts } from "../../apis/libs";
+import { postBidHistory, postType } from "../../types/post";
+import { getDetailPost, getOtherPosts, updateFavorite } from "../../apis/libs";
 import { useQuery } from "react-query";
 
 export default function Detail() {
@@ -121,11 +121,9 @@ export default function Detail() {
   useEffect(() => {
     setUserCheck(all.data?.user_id === userInfo?.uuid);
     setBidAmount(all.data?.now_price || all.data?.start_price || 0);
-    setFavoriteCnt(all.data?.favorite_list.length);
+    setFavoriteCnt(all.data?.favorite);
     setFavoriteCheck(
-      all.data?.favorite_list.some(
-        (item: postFavoriteList) => item.uuid === userInfo?.uuid
-      )
+      all.data?.favorite_list.some((item: string) => item === userInfo?.uuid)
     );
     setBidHistoryDetail(all.data?.bid_history || []);
   }, [all.data]);
@@ -168,7 +166,57 @@ export default function Detail() {
     }
   };
 
-  const updateFavorite = async (item: postType) => {
+  const updateFavoriteWait = async (
+    title: string,
+    src: string,
+    category_id: number,
+    start_price: number
+  ) => {
+    if (!isLogin) {
+      alert("로그인 후 이용할 수 있습니다!");
+      return false;
+    }
+
+    setLoading(true);
+
+    try {
+      const addItem = {
+        id: userInfo?.id + POST_ID!,
+        item_id: POST_ID!,
+        user_id: userInfo?.id,
+        uuid: userInfo?.uuid,
+        title,
+        src,
+        category_id,
+        start_price,
+      };
+      const {
+        success,
+        res: [isFavorite, cnt],
+      } = await updateFavorite(
+        POST_ID!,
+        userInfo?.uuid as string,
+        favoriteCheck,
+        addItem
+      );
+
+      if (success) {
+        setFavoriteCheck(isFavorite);
+        setFavoriteCnt(cnt);
+        alert("ok");
+      } else {
+        alert("실패했습니다");
+      }
+    } catch (error) {
+      console.log(error);
+      alert("실패했습니다");
+    }
+
+    setLoading(false);
+  };
+
+  /*
+  const updateFavoritePrev = async (item: postType) => {
     if (!isLogin) {
       alert("로그인 후 이용할 수 있습니다!");
       return false;
@@ -226,6 +274,7 @@ export default function Detail() {
     }
     setLoading(false);
   };
+  */
 
   const auctionBidding = async (item: postType, nowPrice: number) => {
     if (!isLogin) {
@@ -432,7 +481,14 @@ export default function Detail() {
               ) : (
                 <button
                   className="favorite"
-                  onClick={() => updateFavorite(all.data)}
+                  onClick={() =>
+                    updateFavoriteWait(
+                      all.data?.title,
+                      all.data?.src,
+                      all.data?.category_id,
+                      all.data?.start_price
+                    )
+                  }
                   disabled={loading}
                 >
                   {favoriteCheck ? (

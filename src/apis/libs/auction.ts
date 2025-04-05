@@ -1,4 +1,6 @@
 import {
+  arrayRemove,
+  arrayUnion,
   doc,
   getDocs,
   limit,
@@ -10,8 +12,8 @@ import {
 import firebaseDB from "../../../firebase";
 import { POSTS_DB } from "../../modules/firebase";
 
+// 게시글 상세 내용 호출
 export const getDetailPost = async (post_id: string, cnt_update: boolean) => {
-  const detailRef = doc(firebaseDB, "posts", post_id);
   // try {
   //   const detailRef = doc(firebaseDB, "posts", post_id);
   //   const detailSnap = await getDoc(detailRef);
@@ -22,6 +24,8 @@ export const getDetailPost = async (post_id: string, cnt_update: boolean) => {
   // }
 
   try {
+    const detailRef = doc(firebaseDB, "posts", post_id);
+
     const detailRes = await runTransaction(firebaseDB, async (transaction) => {
       const detailDoc = await transaction.get(detailRef);
       // 해당 게시글 없을 때 추가 표시 필?
@@ -46,6 +50,7 @@ export const getDetailPost = async (post_id: string, cnt_update: boolean) => {
   }
 };
 
+// 게시글 작성자의 다른 게시글 호출
 export const getOtherPosts = async (author_id: string) => {
   try {
     const otherQuery = query(
@@ -59,5 +64,62 @@ export const getOtherPosts = async (author_id: string) => {
   } catch (error) {
     console.log(error);
     return [];
+  }
+};
+
+interface addItemPropsType {
+  id: string;
+  item_id: string;
+  user_id: string;
+  uuid: string;
+  title: string;
+  src: string;
+  category_id: number;
+  start_price: number;
+}
+// 게시글 좋아요 이벤트
+export const updateFavorite = async (
+  post_id: string,
+  uuid: string,
+  is_favorite: boolean,
+  add_item: addItemPropsType
+) => {
+  try {
+    const detailRef = doc(firebaseDB, "posts", post_id);
+    const favoriteRef = doc(firebaseDB, "favorite", uuid);
+
+    const res = await runTransaction(firebaseDB, async (transaction) => {
+      const detailDoc = await transaction.get(detailRef);
+      if (!detailDoc.exists()) {
+        return { success: false, res: [] };
+      }
+      const newPop = detailDoc.data().favorite + (is_favorite ? -1 : 1);
+
+      if (is_favorite) {
+        // 좋아요 해제
+        transaction.update(detailRef, {
+          favorite: newPop,
+          favorite_list: arrayRemove(uuid),
+        });
+        transaction.update(favoriteRef, {
+          data: arrayRemove(add_item),
+        });
+      } else {
+        // 좋아요 클릭
+        transaction.update(detailRef, {
+          favorite: newPop,
+          favorite_list: arrayUnion(uuid),
+        });
+        transaction.update(favoriteRef, {
+          data: arrayUnion(add_item),
+        });
+      }
+      return { success: true, res: [!is_favorite, newPop] };
+    });
+
+    return res;
+  } catch (error) {
+    console.error(error);
+    return { success: false, res: [] };
   }
 };
