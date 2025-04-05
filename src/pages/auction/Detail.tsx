@@ -1,6 +1,6 @@
 import api from "../../apis/api";
 import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   ItemDetailBidderBox,
   ItemDetailBox,
@@ -27,14 +27,14 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
 import CommonInput from "../../components/common/CommonInput";
 import CommonButton from "../../components/common/CommonButton";
-import { postBidHistory, postType } from "../../types/post";
+import { postBidHistory, postFavoriteList, postType } from "../../types/post";
 import { getDetailPost, getOtherPosts } from "../../apis/libs";
 import { useQuery } from "react-query";
 
 export default function Detail() {
   const [loading, setLoading] = useState<boolean>(false);
 
-  const [detail, setDetail] = useState<postType | null>(null);
+  // const [detail, setDetail] = useState<postType | null>(null);
   const [userCheck, setUserCheck] = useState<boolean>(false);
   const [show, setShow] = useState<boolean>(false);
   const [favoriteCnt, setFavoriteCnt] = useState<number>(0);
@@ -45,9 +45,7 @@ export default function Detail() {
   >([]);
 
   const { id: POST_ID } = useParams<{ id: string }>();
-
-  // const path = useLocation();
-  // const POST_ID = path.pathname.split("/")[2];
+  const { pathname } = useLocation();
 
   const {
     isLogin,
@@ -62,12 +60,32 @@ export default function Detail() {
   const cntUpdate = useMemo(() => {
     const cookieName = `view_${isLogin ? userInfo?.id : "non"}`;
     return !cookies[cookieName]?.includes(POST_ID);
-  }, [POST_ID]);
+  }, [pathname]);
+
+  const getDetailPostWait = async (POST_ID: string, cntUpdate: boolean) => {
+    try {
+      const res = await getDetailPost(POST_ID, cntUpdate);
+      return res;
+    } catch (error) {
+      console.log(error);
+      return {};
+    }
+  };
+
+  const getOtherPostsWait = async (userID: string) => {
+    try {
+      const res = await getOtherPosts(userID);
+      return res;
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
+  };
 
   // const {data: detail, isLoading: detailLoading} = useQuery({
   const all = useQuery({
     queryKey: ["detail", POST_ID],
-    queryFn: () => getDetailPost(POST_ID as string, cntUpdate),
+    queryFn: () => getDetailPostWait(POST_ID as string, cntUpdate),
     staleTime: 5 * 60 * 1000,
     cacheTime: 30 * 60 * 1000,
     enabled: !!POST_ID,
@@ -75,10 +93,10 @@ export default function Detail() {
 
   const { data: otherList, isLoading: otherLoading } = useQuery({
     queryKey: ["other-list", all?.data?.nickname],
-    queryFn: () => getOtherPosts(all?.data?.user_id as string),
+    queryFn: () => getOtherPostsWait(all?.data?.user_id as string),
     staleTime: 5 * 60 * 1000,
     cacheTime: 30 * 60 * 1000,
-    enabled: !!all?.data?.user_id, // postId가 있을 때만 실행
+    enabled: !!all?.data,
   });
 
   useEffect(() => {
@@ -99,6 +117,18 @@ export default function Detail() {
       });
     }
   }, [all.isLoading]);
+
+  useEffect(() => {
+    setUserCheck(all.data?.user_id === userInfo?.uuid);
+    setBidAmount(all.data?.now_price || all.data?.start_price || 0);
+    setFavoriteCnt(all.data?.favorite_list.length);
+    setFavoriteCheck(
+      all.data?.favorite_list.some(
+        (item: postFavoriteList) => item.uuid === userInfo?.uuid
+      )
+    );
+    setBidHistoryDetail(all.data?.bid_history || []);
+  }, [all.data]);
 
   const fetchPosts = async () => {
     const { data } = await api.get(`posts/${POST_ID}`);
@@ -167,11 +197,11 @@ export default function Detail() {
     try {
       if (favoriteCheck) {
         // 좋아요 해제
-        await api.delete(`favorite/${userInfo?.id + POST_ID}`);
+        await api.delete(`favorite/${userInfo?.id + POST_ID!}`);
       } else {
         // 좋아요 등록
         await api.post(`favorite`, {
-          id: userInfo?.id + POST_ID,
+          id: userInfo?.id + POST_ID!,
           item_id: POST_ID,
           user_id: userInfo?.id,
           uuid: userInfo?.uuid,
@@ -339,16 +369,6 @@ export default function Detail() {
         updateBidAward(null);
       }
       alert("처리되었습니다!");
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-    }
-
-    // data 갱신
-    try {
-      const { data: post } = await api.get(`posts/${POST_ID}`);
-      setDetail(post);
-      setLoading(false);
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -604,8 +624,8 @@ export default function Detail() {
           }}
         />
         <CommonList grid={4} loading={all.isLoading || otherLoading}>
-          {otherList?.map((sell) => (
-            <Link to={`/auction/${sell.id}`} key={`item_${sell.id}`}>
+          {otherList?.map((sell, idx) => (
+            <Link to={`/auction/${sell.id}`} key={`item_${sell.id}_${idx}`}>
               <CommonListItem
                 key={`item_${sell.id}`}
                 src={sell.src}

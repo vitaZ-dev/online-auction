@@ -27,7 +27,7 @@ export const getDetailPost = async (post_id: string, cnt_update: boolean) => {
       // 해당 게시글 없을 때 추가 표시 필?
       if (!detailDoc.exists()) {
         // throw "Document does not exist!";
-        return [];
+        return {};
       }
 
       const newPop = detailDoc.data().cnt + +cnt_update;
@@ -42,6 +42,7 @@ export const getDetailPost = async (post_id: string, cnt_update: boolean) => {
   } catch (error) {
     // This will be a "population is too big" error.
     console.error(error);
+    return {};
   }
 };
 
