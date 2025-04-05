@@ -3,6 +3,8 @@ import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
+import { getAuth } from "firebase/auth";
+
 // firestore를 불러오는 모듈
 import { getFirestore } from "firebase/firestore";
 
@@ -17,7 +19,9 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
+// auth
+export const auth = getAuth(app);
 // firestore 객체 생성
 const firebaseDB = getFirestore(app);
 // firestore export

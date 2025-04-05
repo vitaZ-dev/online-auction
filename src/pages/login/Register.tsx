@@ -5,9 +5,16 @@ import { Link, useNavigate } from "react-router-dom";
 import { LoginPageLayout } from "../../styles/LoginPageStyle";
 import CommonInput from "../../components/common/CommonInput";
 import CommonButton from "../../components/common/CommonButton";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import firebaseDB, { auth } from "../../../firebase";
+import { doc, getDocs, query, setDoc, where } from "firebase/firestore";
+import { USER_DB } from "../../modules/firebase";
+import Loading from "../../components/Loading";
 
 export default function Register() {
   const navigate = useNavigate();
+
+  const [loading, setLoading] = useState<boolean>(false);
 
   const [email, setEmail] = useState<string>("");
   const [checkEmail, setCheckEmail] = useState<boolean>(false);
@@ -67,6 +74,98 @@ export default function Register() {
     }
   };
 
+  const createUser = async () => {
+    setLoading(true);
+    setCheckEmail(false);
+    setCheckPassword(false);
+    setCheckNickname(false);
+
+    if (!email) {
+      alert("이메일을 입력해 주세요!");
+      setLoading(false);
+      return false;
+    }
+    if (!password) {
+      alert("비밀번호를 입력해 주세요!");
+      setLoading(false);
+      return false;
+    }
+    if (!nickname) {
+      alert("닉네임을 입력해 주세요!");
+      setLoading(false);
+      return false;
+    }
+
+    const check = await isNicknameExist(nickname);
+    if (check) {
+      alert("중복된 닉네임이 있습니다!");
+      setCheckNickname(true);
+      setLoading(false);
+      return false;
+    }
+
+    try {
+      let uuid: string = "";
+      await createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Signed up
+          const user = userCredential.user;
+          uuid = user.uid;
+          // displayName 설정
+          return updateProfile(user, {
+            displayName: nickname,
+          });
+        })
+        .catch((error) => {
+          switch (error.code) {
+            case "auth/invalid-email":
+              alert("유효하지 않은 이메일 형식입니다.");
+              break;
+            case "auth/email-already-in-use":
+              alert("이미 사용 중인 이메일 입니다.");
+              setCheckEmail(true);
+              break;
+            case "auth/weak-password":
+              alert("6자리 이상의 비밀번호를 입력해주세요.");
+              setCheckPassword(true);
+              break;
+            default:
+              alert("유효하지 않은 형식입니다.");
+              break;
+          }
+          setLoading(false);
+          return false;
+        });
+
+      await setDoc(
+        doc(firebaseDB, "user", uuid),
+        {
+          id: uuid,
+          uuid,
+          email,
+          password,
+          nickname,
+          role: "USER",
+        },
+        { merge: true }
+      );
+      alert("회원가입이 완료되었습니다!");
+      setLoading(false);
+      navigate("/login");
+    } catch (error) {
+      console.log(error);
+      alert("회원가입에 실패했습니다!");
+      setLoading(false);
+    }
+  };
+
+  // 닉네임 중복 체크
+  const isNicknameExist = async (nickname: string): Promise<boolean> => {
+    const q = query(USER_DB, where("nickname", "==", nickname));
+    const snapshot = await getDocs(q);
+    return !snapshot.empty;
+  };
+
   return (
     <LoginPageLayout>
       <h1>회원가입</h1>
@@ -93,7 +192,7 @@ export default function Register() {
             length="full"
             placeholder="비밀번호"
           />
-          <span>{checkPassword && "6자리 이상 비밀번호를 입력해주세요!"}</span>
+          <span>{checkPassword && "유효하지 않은 비밀번호입니다."}</span>
         </div>
 
         <div>
@@ -105,7 +204,7 @@ export default function Register() {
             length="full"
             placeholder="닉네임"
           />
-          <span>{checkNickname && "중복된 닉네임이 있습니다!"}</span>
+          <span>{checkNickname && "중복된 닉네임이 있습니다."}</span>
         </div>
 
         {/* <div>
@@ -134,11 +233,18 @@ export default function Register() {
           btnType="large"
           onClick={() => register()}
         />
+        <CommonButton
+          text="회원가입FB"
+          btnType="large"
+          onClick={() => createUser()}
+        />
 
         <div className="go_login_page">
           <Link to="/login">로그인 페이지로</Link>
         </div>
       </div>
+
+      {loading && <Loading />}
     </LoginPageLayout>
   );
 }
