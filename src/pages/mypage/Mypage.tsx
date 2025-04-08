@@ -12,6 +12,8 @@ import { CommonNodataBox } from "../../styles/CommonStyle";
 import CommonTitle from "../../components/UI/CommonTitle";
 import CommonButton from "../../components/common/CommonButton";
 import { FavoriteType } from "../../types/user";
+import { useQuery } from "react-query";
+import { mypageRecentList } from "../../apis/libs";
 
 export default function Mypage() {
   const [userFavorite, setUserFavorite] = useState<Array<FavoriteType> | []>(
@@ -40,23 +42,6 @@ export default function Mypage() {
 
     // 좋아요 리스트
     getFavorite();
-    /*
-    // 낙찰 내역
-    const awardFilter = bidAward?.reduce((acc: any[], item: any) => {
-      if (acc.length < 4) acc.push(item);
-      return acc;
-    }, []);
-    setUserBidAward(awardFilter);
-
-    // 좋아요 리스트
-    const favoriteFilter = favorite?.reduce((acc: any[], item: any) => {
-      if (acc.length < 4) acc.push(item);
-      return acc;
-    }, []);
-    setUserFavorite(favoriteFilter);
-
-    fetchPosts();
-    */
   }, []);
 
   const getSalesHistory = async () => {
@@ -93,6 +78,14 @@ export default function Mypage() {
     location.href = "/";
   };
 
+  const { data: recentList, isLoading: recentLoading } = useQuery({
+    queryKey: ["mypage", "recent", userInfo?.uuid],
+    queryFn: () => mypageRecentList(userInfo?.uuid as string),
+    staleTime: 5 * 60 * 1000,
+    cacheTime: 30 * 60 * 1000,
+    // enabled: !!all?.data,
+  });
+
   return (
     <MypageLayout>
       <div className="mypage_user">
@@ -116,12 +109,12 @@ export default function Mypage() {
         <CommonTitle
           type={3}
           title="최근 판매 물품 목록"
-          link={Boolean(salesHistory?.length) && "list"}
+          link={Boolean(recentList?.length) && "list"}
         />
-        {salesHistory?.length ? (
+        {recentList?.length || recentLoading ? (
           <>
-            <CommonList grid={4}>
-              {salesHistory?.map((post) => {
+            <CommonList grid={4} loading={recentLoading}>
+              {recentList?.map((post) => {
                 return (
                   <Link to={`/auction/${post?.id}`} key={post?.id}>
                     <CommonListItem
