@@ -101,18 +101,26 @@ export const updateFavorite = async (
           favorite: newPop,
           favorite_list: arrayRemove(uuid),
         });
-        transaction.update(favoriteRef, {
-          data: arrayRemove(add_item),
-        });
+        transaction.set(
+          favoriteRef,
+          {
+            data: arrayRemove(add_item),
+          },
+          { merge: true }
+        );
       } else {
         // 좋아요 클릭
         transaction.update(detailRef, {
           favorite: newPop,
           favorite_list: arrayUnion(uuid),
         });
-        transaction.update(favoriteRef, {
-          data: arrayUnion(add_item),
-        });
+        transaction.set(
+          favoriteRef,
+          {
+            data: arrayUnion(add_item),
+          },
+          { merge: true }
+        );
       }
       return { success: true, res: [!is_favorite, newPop] };
     });
