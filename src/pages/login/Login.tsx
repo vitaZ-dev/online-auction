@@ -7,7 +7,11 @@ import { LoginPageLayout } from "../../styles/LoginPageStyle";
 import CommonButton from "../../components/common/CommonButton";
 import CommonInput from "../../components/common/CommonInput";
 import CommonCheckbox from "../../components/common/CommonCheckbox";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  browserSessionPersistence,
+  setPersistence,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { auth } from "../../../firebase";
 import Loading from "../../components/Loading";
 import { UserInfoType } from "../../types/user";
@@ -78,40 +82,9 @@ export default function Login() {
 
     setLoading(true);
     try {
-      let uuid: string = "";
-      await signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          // Login
-          const user = userCredential.user;
-          uuid = user.uid;
-        })
-        .catch((error) => {
-          switch (error.code) {
-            case "auth/invalid-email":
-              alert("이메일 형식이 올바르지 않습니다.");
-              break;
-            case "auth/user-disabled":
-              alert("이 계정은 비활성화되어 있습니다.");
-              break;
-            case "auth/user-not-found":
-              alert("존재하지 않는 계정입니다.");
-              break;
-            case "auth/wrong-password":
-              alert("비밀번호가 올바르지 않습니다.");
-              break;
-            case "auth/too-many-requests":
-              alert("로그인 시도가 너무 많습니다. 나중에 다시 시도해주세요.");
-              break;
-            case "auth/network-request-failed":
-              alert("네트워크 오류가 발생했습니다. 연결을 확인해주세요.");
-              break;
-            default:
-              alert("로그인 중 알 수 없는 오류가 발생했습니다.");
-              console.error(error);
-          }
-          setLoading(false);
-          return false;
-        });
+      await setPersistence(auth, browserSessionPersistence);
+
+      const { user } = await signInWithEmailAndPassword(auth, email, password);
 
       if (rememberID) {
         localStorage.setItem("remember_id", email);
@@ -119,14 +92,42 @@ export default function Login() {
         localStorage.removeItem("remember_id");
       }
 
-      const loginUserInfo = await findUserInfo(uuid);
-      authStore.login(loginUserInfo);
+      const loginUserInfo = await findUserInfo(user.uid);
+      authStore.login({
+        email: loginUserInfo.email,
+        id: loginUserInfo.id,
+        nickname: loginUserInfo.nickname,
+        role: loginUserInfo.role,
+        uuid: loginUserInfo.uuid,
+      });
 
       setLoading(false);
       navigate("/");
-    } catch (error) {
-      console.log(error);
-      alert("로그인에 실패했습니다.");
+    } catch (error: any) {
+      switch (error.code) {
+        case "auth/invalid-email":
+          alert("이메일 형식이 올바르지 않습니다.");
+          break;
+        case "auth/user-disabled":
+          alert("이 계정은 비활성화되어 있습니다.");
+          break;
+        case "auth/user-not-found":
+          alert("존재하지 않는 계정입니다.");
+          break;
+        case "auth/wrong-password":
+          alert("비밀번호가 올바르지 않습니다.");
+          break;
+        case "auth/too-many-requests":
+          alert("로그인 시도가 너무 많습니다. 나중에 다시 시도해주세요.");
+          break;
+        case "auth/network-request-failed":
+          alert("네트워크 오류가 발생했습니다. 연결을 확인해주세요.");
+          break;
+        default:
+          alert("로그인 중 알 수 없는 오류가 발생했습니다.");
+          console.error(error);
+          break;
+      }
       setLoading(false);
       return false;
     }

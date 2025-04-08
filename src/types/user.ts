@@ -3,9 +3,8 @@ import { postType } from "./post";
 export type UserInfoType = {
   id: string;
   uuid: string;
-  token?: string;
   email: string;
-  password: string;
+  password?: string;
   nickname: string;
   role: string;
 };
@@ -60,15 +59,15 @@ export type BidAwardType = {
 export type AuthStoreType = {
   isLogin: boolean;
   userInfo: UserInfoType | null;
-  token: string | null;
   salesHistory: Array<postType> | null;
   favorite: Array<FavoriteType> | null;
   bidList: Array<BidListType> | null;
   bidAward: Array<BidAwardType> | null;
 
+  loginStatus: (isLogin: boolean) => void;
   login: (userInfo: UserInfoType) => void;
   logout: () => void;
-  updateUserInfo: (newUserInfo: UserInfoType) => void;
+  updateUserInfo: (newUserInfo: UserInfoType | null) => void;
   updateSalesHistory: (salesHistory: Array<postType> | null) => void;
   updateUserFavorite: (favorite: Array<FavoriteType>) => void;
   updateBidList: (bidList: Array<BidListType> | null) => void;

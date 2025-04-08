@@ -4,7 +4,7 @@ import useAuthStore from "../../stores/useAuthStore";
 import { MypageLayout } from "../../styles/MypageStyle";
 import defaultImg from "/images/profile_default.png";
 import api from "../../apis/api";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { findCategory } from "../../modules/category";
 import CommonList from "../../components/UI/CommonList";
 import CommonListItem from "../../components/UI/CommonListItem";
@@ -14,12 +14,15 @@ import CommonButton from "../../components/common/CommonButton";
 import { FavoriteType } from "../../types/user";
 import { useQuery } from "react-query";
 import { mypageRecentList } from "../../apis/libs";
+import { signOut } from "firebase/auth";
+import { auth } from "../../../firebase";
 
 export default function Mypage() {
   const [userFavorite, setUserFavorite] = useState<Array<FavoriteType> | []>(
     []
   );
   const {
+    isLogin,
     userInfo,
     salesHistory,
     updateSalesHistory,
@@ -29,6 +32,7 @@ export default function Mypage() {
     updateBidAward,
     logout,
   } = useAuthStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // 판매 내역
@@ -72,10 +76,16 @@ export default function Mypage() {
     setUserFavorite(data);
   };
 
-  const handelLogout = () => {
-    logout();
-    alert("logout");
-    location.href = "/";
+  const handelLogout = async () => {
+    try {
+      await signOut(auth);
+      alert("로그아웃 되었습니다.");
+      logout();
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+      alert("로그아웃에 실패했습니다.");
+    }
   };
 
   const { data: recentList, isLoading: recentLoading } = useQuery({
@@ -83,7 +93,7 @@ export default function Mypage() {
     queryFn: () => mypageRecentList(userInfo?.uuid as string),
     staleTime: 5 * 60 * 1000,
     cacheTime: 30 * 60 * 1000,
-    // enabled: !!all?.data,
+    enabled: isLogin,
   });
 
   return (

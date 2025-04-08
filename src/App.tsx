@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import {
   BaseLayout,
   FooterLayout,
@@ -32,6 +32,8 @@ import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import { ReactQueryDevtools } from "react-query/devtools";
 import CommonButton from "./components/common/CommonButton";
 import Logo from "./components/Logo";
+import { auth } from "../firebase";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -60,13 +62,42 @@ function App() {
     setToggleMenu3(!toggleMenu3);
   };
 
-  const { userInfo, isLogin, logout } = useAuthStore();
+  const navigate = useNavigate();
+  const { loginStatus, userInfo, isLogin, logout, updateUserInfo } =
+    useAuthStore();
 
-  const handelLogout = () => {
-    logout();
-    alert("logout");
-    location.href = "/";
+  const handelLogout = async () => {
+    try {
+      await signOut(auth);
+      alert("로그아웃 되었습니다.");
+      toggleDrawer(false);
+      logout();
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+      alert("로그아웃에 실패했습니다.");
+    }
   };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user: any) => {
+      if (!user) {
+        loginStatus(false);
+        updateUserInfo(null);
+      } else {
+        loginStatus(true);
+        updateUserInfo({
+          email: user.email,
+          id: user.uid,
+          nickname: user.displayName,
+          role: "USER",
+          uuid: user.uid,
+        });
+      }
+    });
+
+    return () => unsubscribe();
+  }, [loginStatus, updateUserInfo]);
 
   return (
     <>
