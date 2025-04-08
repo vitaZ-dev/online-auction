@@ -9,6 +9,9 @@ import { WritepageLayout } from "../../styles/SellPageStyle";
 import CommonInput from "../../components/common/CommonInput";
 import CommonTextarea from "../../components/common/CommonTextarea";
 import { CircularProgress } from "@mui/material";
+import firebaseDB from "../../../firebase";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import CommonButton from "../../components/common/CommonButton";
 
 export default function Edit() {
   const [loading, setLoading] = useState(true);
@@ -30,25 +33,50 @@ export default function Edit() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchPosts();
+    getEditPost();
   }, []);
 
-  const fetchPosts = async () => {
+  // const fetchPosts = async () => {
+  //   setLoading(true);
+
+  //   const { data } = await api.get(`posts?id=${POST_ID}`);
+  //   setPageCheck(Boolean(data.length));
+  //   setUserCheck(data[0]?.user_id === userInfo?.uuid);
+  //   // 내용세팅
+  //   setTitle(data[0]?.title);
+  //   setContents(data[0]?.contents);
+  //   setImgSrc(data[0]?.src);
+  //   setCategory(data[0]?.category_id ?? -1);
+  //   setPrice(data[0]?.start_price);
+  //   setPriceNoEdit(Boolean(data[0]?.bid_count));
+  //   setIsBidOpen(Boolean(data[0]?.is_open));
+
+  //   setLoading(false);
+  // };
+
+  const getEditPost = async () => {
     setLoading(true);
+    try {
+      const editRef = doc(firebaseDB, "posts", POST_ID);
+      const editSnap = await getDoc(editRef);
+      const data = editSnap.data();
 
-    const { data } = await api.get(`posts?id=${POST_ID}`);
-    setPageCheck(Boolean(data.length));
-    setUserCheck(data[0]?.user_id === userInfo?.uuid);
-    // 내용세팅
-    setTitle(data[0]?.title);
-    setContents(data[0]?.contents);
-    setImgSrc(data[0]?.src);
-    setCategory(data[0]?.category_id ?? -1);
-    setPrice(data[0]?.start_price);
-    setPriceNoEdit(Boolean(data[0]?.bid_count));
-    setIsBidOpen(Boolean(data[0]?.is_open));
+      setPageCheck(Boolean(data));
+      setUserCheck(data?.user_id === userInfo?.uuid);
+      // 내용세팅
+      setTitle(data?.title);
+      setContents(data?.contents);
+      setImgSrc(data?.src);
+      setCategory(data?.category_id ?? -1);
+      setPrice(data?.start_price);
+      setPriceNoEdit(Boolean(data?.bid_count));
+      setIsBidOpen(Boolean(data?.is_open));
 
-    setLoading(false);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
   };
 
   const onChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -132,6 +160,34 @@ export default function Edit() {
     }
   };
 
+  const editPostFB = async () => {
+    if (!isBidOpen) {
+      alert("입찰 완료된 게시글은 수정할 수 없습니다!");
+      return false;
+    }
+    const start_price = Math.abs(Number(price));
+
+    try {
+      const editRef = doc(firebaseDB, "posts", POST_ID);
+
+      await updateDoc(editRef, {
+        title,
+        category_id: category,
+        contents,
+        start_price,
+        // src: imgSrc,
+        src: "https://placehold.co/100x100",
+        // updated_at: serverTimestamp(), // 수정된 시각
+      });
+
+      alert("게시글이 수정되었습니다!");
+      navigate(`/auction/${POST_ID}`);
+    } catch (error) {
+      console.log(error);
+      alert("게시글 수정에 실패했습니다!");
+    }
+  };
+
   return (
     <>
       {loading ? (
@@ -144,7 +200,7 @@ export default function Edit() {
             alignItems: "center",
           }}
         >
-          <CircularProgress sx={{}} />
+          <CircularProgress color="secondary" />
         </div>
       ) : pageCheck ? (
         userCheck ? (
@@ -255,6 +311,12 @@ export default function Edit() {
               >
                 수정하기
               </button>
+              <CommonButton
+                text="수정하기"
+                btnType="large"
+                onClick={() => editPostFB()}
+                disabled={!isBidOpen}
+              />
             </div>
           </WritepageLayout>
         ) : (
