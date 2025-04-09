@@ -5,7 +5,7 @@ import { CommonModalProps } from "../../types/component";
 export default function CommonModal({
   isOpen,
   setDisplay,
-  modalTitle = "Modal Title",
+  modalTitle = "",
   children,
   showFooter = false,
   handleModalOk,
@@ -34,6 +34,7 @@ export default function CommonModal({
           {showFooter && (
             <div className="modal_footer">
               <button
+                className="ok"
                 onClick={() => {
                   handleModalOk?.();
                   setDisplay(false);
@@ -42,6 +43,7 @@ export default function CommonModal({
                 확인
               </button>
               <button
+                className="cancel"
                 onClick={() => {
                   handleModalCancel?.();
                   setDisplay(false);

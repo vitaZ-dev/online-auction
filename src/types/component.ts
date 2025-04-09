@@ -46,7 +46,7 @@ export interface CommonTextareaProps {
 export interface CommonModalProps {
   isOpen: boolean;
   setDisplay: React.Dispatch<React.SetStateAction<boolean>>;
-  modalTitle: string;
+  modalTitle?: string;
   children?: React.ReactNode;
   showFooter?: boolean;
   handleModalOk?: () => void;

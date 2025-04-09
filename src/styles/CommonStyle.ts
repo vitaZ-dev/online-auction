@@ -256,6 +256,36 @@ export const CommonModalStyle = styled.div`
       font-weight: 600;
     }
   }
+
+  .modal_contents {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 36px;
+    padding: 0 (var(--padding-size));
+  }
+
+  .modal_footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-top: 32px;
+
+    button {
+      min-width: 48px;
+      width: 96px;
+      padding: 8px;
+      border: 1px solid var(--main-violet-00-color);
+      border-radius: 5px;
+      background-color: var(--main-violet-00-color);
+      color: var(--white);
+      &.cancel {
+        background-color: var(--white);
+        color: var(--main-violet-00-color);
+      }
+    }
+  }
 `;
 
 export const CommonCategoryBadgeStyle = styled.div`
