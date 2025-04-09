@@ -1,6 +1,7 @@
 import {
   arrayRemove,
   arrayUnion,
+  deleteDoc,
   doc,
   getDocs,
   limit,
@@ -129,5 +130,14 @@ export const updateFavorite = async (
   } catch (error) {
     console.error(error);
     return { success: false, res: [] };
+  }
+};
+
+// 게시글 삭제
+export const deletePost = async (post_id: string) => {
+  try {
+    await deleteDoc(doc(firebaseDB, "posts", post_id));
+  } catch (error) {
+    return error;
   }
 };

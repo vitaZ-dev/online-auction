@@ -28,8 +28,14 @@ import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
 import CommonInput from "../../components/common/CommonInput";
 import CommonButton from "../../components/common/CommonButton";
 import { postBidHistory, postType } from "../../types/post";
-import { getDetailPost, getOtherPosts, updateFavorite } from "../../apis/libs";
+import {
+  deletePost,
+  getDetailPost,
+  getOtherPosts,
+  updateFavorite,
+} from "../../apis/libs";
 import { useQuery } from "react-query";
+import CommonModal from "../../components/common/CommonModal";
 
 export default function Detail() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -43,6 +49,9 @@ export default function Detail() {
   const [bidHistoryDetail, setBidHistoryDetail] = useState<
     Array<postBidHistory> | []
   >([]);
+
+  // 모달
+  const [toggle, setToggle] = useState<boolean>(false);
 
   const { id: POST_ID } = useParams<{ id: string }>();
   const { pathname } = useLocation();
@@ -123,7 +132,7 @@ export default function Detail() {
     setBidAmount(all.data?.now_price || all.data?.start_price || 0);
     setFavoriteCnt(all.data?.favorite);
     setFavoriteCheck(
-      all.data?.favorite_list.some((item: string) => item === userInfo?.uuid)
+      all.data?.favorite_list?.some((item: string) => item === userInfo?.uuid)
     );
     setBidHistoryDetail(all.data?.bid_history || []);
   }, [all.data]);
@@ -147,7 +156,7 @@ export default function Detail() {
     navigate(`/sell/${POST_ID}`);
   };
 
-  const deletePost = async (isOpen: boolean) => {
+  /*const deletePostPrev = async (isOpen: boolean) => {
     if (!isOpen) {
       alert("입찰 완료된 게시글은 삭제할 수 없습니다!");
       return false;
@@ -164,6 +173,45 @@ export default function Detail() {
       console.error(error);
       alert("게시글 삭제에 실패했습니다!");
     }
+  };*/
+
+  // fb 게시글 삭제
+  const deletePostWait = async (isOpen: boolean) => {
+    if (!userCheck) {
+      alert("게시글 작성자만 삭제할 수 있습니다!");
+      return false;
+    }
+
+    if (!isOpen) {
+      alert("입찰 완료된 게시글은 삭제할 수 없습니다!");
+      return false;
+    }
+
+    try {
+      setLoading(true);
+      await deletePost(POST_ID as string);
+      updateSalesHistory(null);
+      alert("게시글 삭제가 완료되었습니다!");
+      setLoading(false);
+      navigate("/auction", { replace: true });
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+      alert("게시글 삭제에 실패했습니다!");
+    }
+  };
+  const openDeleteModal = (isOpen: boolean) => {
+    if (!userCheck) {
+      alert("게시글 작성자만 삭제할 수 있습니다!");
+      return false;
+    }
+
+    if (!isOpen) {
+      alert("입찰 완료된 게시글은 삭제할 수 없습니다!");
+      return false;
+    }
+
+    setToggle(true);
   };
 
   const updateFavoriteWait = async (
@@ -472,7 +520,7 @@ export default function Detail() {
                     <EditIcon color="secondary" />
                   </button>
                   <button
-                    onClick={() => deletePost(Boolean(all.data?.is_open))}
+                    onClick={() => openDeleteModal(Boolean(all.data?.is_open))}
                     disabled={loading || !all.data?.is_open}
                   >
                     <DeleteIcon color="secondary" />
@@ -527,7 +575,7 @@ export default function Detail() {
               </div>
               <div>
                 <p>종료일</p>
-                <p>{all.data?.end_date.split(" ")[0]}</p>
+                <p>{all.data?.end_date?.split(" ")[0]}</p>
               </div>
             </div>
           </section>
@@ -574,7 +622,9 @@ export default function Detail() {
               <p className="notice">
                 *가장 높은 금액을 입력한 유저에게 자동으로 낙찰됩니다!
               </p>
-              <button
+              <CommonButton
+                text="입찰 마감 처리"
+                btnType="large"
                 onClick={() =>
                   closeAuction(
                     Boolean(all.data?.is_open),
@@ -586,9 +636,7 @@ export default function Detail() {
                   )
                 }
                 disabled={!all.data?.is_open}
-              >
-                입찰 마감 처리
-              </button>
+              />
             </CommonPaddingBox>
           )}
           {!userCheck && Boolean(all.data?.is_open) && (
@@ -694,6 +742,16 @@ export default function Detail() {
           ))}
         </CommonList>
       </section>
+
+      {/* 모달 */}
+      <CommonModal
+        isOpen={toggle}
+        setDisplay={setToggle}
+        showFooter={true}
+        handleModalOk={() => deletePostWait(Boolean(all.data?.is_open))}
+      >
+        <p>게시글을 삭제하겠습니까?</p>
+      </CommonModal>
     </ItemDetailLayout>
   );
 }

@@ -259,10 +259,15 @@ export const CommonModalStyle = styled.div`
 
   .modal_contents {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: 36px;
     padding: 0 (var(--padding-size));
+    & > * {
+      width: 100%;
+      text-align: center;
+    }
   }
 
   .modal_footer {
