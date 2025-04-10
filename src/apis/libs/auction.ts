@@ -12,6 +12,7 @@ import {
 } from "firebase/firestore";
 import firebaseDB from "../../../firebase";
 import { POSTS_DB } from "../../modules/firebase";
+import { setDateTemp } from "../../modules";
 
 // 게시글 상세 내용 호출
 export const getDetailPost = async (post_id: string, cnt_update: boolean) => {
@@ -85,7 +86,7 @@ export const updateFavorite = async (
 ) => {
   try {
     const detailRef = doc(firebaseDB, "posts", post_id);
-    const favoriteRef = doc(firebaseDB, "favorite", uuid);
+    const favoriteRef = doc(firebaseDB, "favorite", uuid, "data", post_id);
 
     const res = await runTransaction(firebaseDB, async (transaction) => {
       const detailDoc = await transaction.get(detailRef);
@@ -100,13 +101,7 @@ export const updateFavorite = async (
           favorite: newPop,
           favorite_list: arrayRemove(uuid),
         });
-        transaction.set(
-          favoriteRef,
-          {
-            data: arrayRemove(add_item),
-          },
-          { merge: true }
-        );
+        transaction.delete(favoriteRef);
       } else {
         // 좋아요 클릭
         transaction.update(detailRef, {
@@ -116,7 +111,8 @@ export const updateFavorite = async (
         transaction.set(
           favoriteRef,
           {
-            data: arrayUnion(add_item),
+            ...add_item,
+            created_at: setDateTemp(),
           },
           { merge: true }
         );

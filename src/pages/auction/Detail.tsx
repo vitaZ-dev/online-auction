@@ -238,8 +238,8 @@ export default function Detail() {
       const addItem = {
         id: userInfo?.id + POST_ID!,
         item_id: POST_ID!,
-        user_id: userInfo?.id,
-        uuid: userInfo?.uuid,
+        user_id: userInfo?.id as string,
+        uuid: userInfo?.uuid as string,
         title,
         src,
         category_id,
