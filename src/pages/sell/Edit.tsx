@@ -12,6 +12,7 @@ import { CircularProgress } from "@mui/material";
 import firebaseDB from "../../../firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import CommonButton from "../../components/common/CommonButton";
+import { queryClient } from "../../main";
 
 export default function Edit() {
   const [loading, setLoading] = useState(true);
@@ -181,7 +182,8 @@ export default function Edit() {
       });
 
       alert("게시글이 수정되었습니다!");
-      navigate(`/auction/${POST_ID}`);
+      queryClient.invalidateQueries({ queryKey: ["detail", POST_ID] });
+      navigate(`/auction/${POST_ID}`, { replace: true });
     } catch (error) {
       console.log(error);
       alert("게시글 수정에 실패했습니다!");

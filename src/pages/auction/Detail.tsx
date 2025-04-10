@@ -36,6 +36,7 @@ import {
 } from "../../apis/libs";
 import { useQuery } from "react-query";
 import CommonModal from "../../components/common/CommonModal";
+import { queryClient } from "../../main";
 
 export default function Detail() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -106,7 +107,7 @@ export default function Detail() {
   });
 
   const { data: otherList, isLoading: otherLoading } = useQuery({
-    queryKey: ["other-list", all?.data?.nickname],
+    queryKey: ["other-list", all?.data?.user_id],
     queryFn: () => getOtherPostsWait(all?.data?.user_id as string),
     staleTime: 5 * 60 * 1000,
     cacheTime: 30 * 60 * 1000,
@@ -219,6 +220,7 @@ export default function Detail() {
     setToggle(true);
   };
 
+  // 게시글 좋아요
   const updateFavoriteWait = async (
     title: string,
     src: string,
@@ -257,6 +259,7 @@ export default function Detail() {
         setFavoriteCheck(isFavorite);
         setFavoriteCnt(cnt);
         alert("ok");
+        queryClient.invalidateQueries({ queryKey: ["home", "favorite"] });
       } else {
         alert("실패했습니다");
       }
