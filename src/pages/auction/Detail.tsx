@@ -73,8 +73,13 @@ export default function Detail() {
 
   const getDetailPostWait = async (POST_ID: string, cntUpdate: boolean) => {
     try {
-      const res = await getDetailPost(POST_ID, cntUpdate);
-      return res;
+      const { data, err } = await getDetailPost(POST_ID, cntUpdate);
+      if (err) {
+        console.log(err);
+        return {};
+      }
+
+      return data;
     } catch (error) {
       console.log(error);
       return {};
@@ -105,7 +110,7 @@ export default function Detail() {
     queryFn: () => getOtherPostsWait(all?.data?.user_id as string),
     staleTime: 5 * 60 * 1000,
     cacheTime: 30 * 60 * 1000,
-    enabled: !!all?.data,
+    enabled: !!all?.data && JSON.stringify(all.data) !== "{}",
   });
 
   useEffect(() => {
@@ -472,10 +477,10 @@ export default function Detail() {
     }
   };
 
-  return (
-    <ItemDetailLayout>
-      {/* 제품 */}
-      {all.isLoading ? (
+  // tsx
+  if (all.isLoading) {
+    return (
+      <ItemDetailLayout>
         <section>
           <div className="item_img">
             <div className="img_wrap">
@@ -493,265 +498,281 @@ export default function Detail() {
             </div>
           </div>
         </section>
-      ) : (
         <section>
-          <div className="item_img" onClick={openComponent}>
-            <div className="img_wrap">
-              <img src={all.data?.src} alt="image" />
-            </div>
-          </div>
-          {show && <FullSizeImage src={all.data?.src} setShow={setShow} />}
-          <div className="user_info">
-            <div className="user_prof">
-              <AccountCircleIcon />
-              <h2>{all.data?.user_info}</h2>
-            </div>
-            <div className="user_utils">
-              {userCheck ? (
-                <>
-                  <div className="favorite">
-                    <FavoriteTwoToneIcon color="secondary" />
-                    <span>{numberFormat(favoriteCnt)}</span>
-                  </div>
-                  <button
-                    onClick={() => editPost(Boolean(all.data?.is_open))}
-                    disabled={!all.data?.is_open}
-                  >
-                    <EditIcon color="secondary" />
-                  </button>
-                  <button
-                    onClick={() => openDeleteModal(Boolean(all.data?.is_open))}
-                    disabled={loading || !all.data?.is_open}
-                  >
-                    <DeleteIcon color="secondary" />
-                  </button>
-                </>
-              ) : (
-                <button
-                  className="favorite"
-                  onClick={() =>
-                    updateFavoriteWait(
-                      all.data?.title,
-                      all.data?.src,
-                      all.data?.category_id,
-                      all.data?.start_price
-                    )
-                  }
-                  disabled={loading}
-                >
-                  {favoriteCheck ? (
-                    <FavoriteTwoToneIcon color="secondary" />
-                  ) : (
-                    <FavoriteBorderIcon color="secondary" />
-                  )}
-                  <span>{numberFormat(favoriteCnt)}</span>
-                </button>
-              )}
-            </div>
-          </div>
-          <hr />
+          <CommonTitle type={2} title="판매자의 다른 판매 물품" />
+          <CommonList grid={4} loading={true}></CommonList>
+        </section>
+      </ItemDetailLayout>
+    );
+  }
+  return (
+    <ItemDetailLayout>
+      {JSON.stringify(all.data) === "{}" ? (
+        <CommonNodataBox>해당 게시글이 존재하지 않습니다.</CommonNodataBox>
+      ) : (
+        <>
+          {/* 제품 */}
           <section>
-            <div className="contents_info" style={{ paddingTop: "8px" }}>
-              <CommonCategoryBadge categoryID={all.data?.category_id} />
-            </div>
-            <CommonTitle
-              type={1}
-              title={all.data?.title}
-              isOpen={Boolean(all.data?.is_open)}
-            />
-            <div className="contents_info">
-              <p>작성일 | {all.data?.start_date}</p>
-              <p>조회 | {numberFormat(all.data?.cnt)}</p>
-            </div>
-
-            <div className="item_info">
-              <div>
-                <p>현재 입찰가</p>
-                <p>{numberFormat(all.data?.now_price) || "no bid"}</p>
-              </div>
-              <div>
-                <p>총 입찰</p>
-                <p>{numberFormat(all.data?.bid_count) || 0}</p>
-              </div>
-              <div>
-                <p>종료일</p>
-                <p>{all.data?.end_date?.split(" ")[0]}</p>
+            <div className="item_img" onClick={openComponent}>
+              <div className="img_wrap">
+                <img src={all.data?.src} alt="image" />
               </div>
             </div>
-          </section>
-
-          <section>
-            <CommonTitle type={3} title="품목 세부 정보" />
-            <CommonPaddingBox>
-              <ItemDetailBox>
-                <div className="detail_table">
-                  <p>
-                    <span>카테고리</span>
-                    <span className="contents">
-                      {findCategory(all.data?.category_id)}
-                    </span>
-                  </p>
-                  <p>
-                    <span>시작가</span>
-                    <span className="contents">
-                      {numberFormat(all.data?.start_price)}원
-                    </span>
-                  </p>
-                  <p>
-                    <span>입찰횟수</span>
-                    <span className="contents">
-                      {numberFormat(all.data?.bid_count)}
-                    </span>
-                  </p>
-                  <p>
-                    <span>현재최대가</span>
-                    <span className="contents">
-                      {numberFormat(all.data?.now_price)}
-                    </span>
-                  </p>
-                  <p>
-                    <span>마감일</span>
-                    <span className="contents">{all.data?.end_date}</span>
-                  </p>
-                </div>
-              </ItemDetailBox>
-            </CommonPaddingBox>
-          </section>
-          {userCheck && Boolean(all.data?.is_open) && (
-            <CommonPaddingBox>
-              <p className="notice">
-                *가장 높은 금액을 입력한 유저에게 자동으로 낙찰됩니다!
-              </p>
-              <CommonButton
-                text="입찰 마감 처리"
-                btnType="large"
-                onClick={() =>
-                  closeAuction(
-                    Boolean(all.data?.is_open),
-                    all.data?.end_date,
-                    all.data?.bid_history,
-                    all.data?.title,
-                    all.data?.src,
-                    all.data?.category_id
-                  )
-                }
-                disabled={!all.data?.is_open}
-              />
-            </CommonPaddingBox>
-          )}
-          {!userCheck && Boolean(all.data?.is_open) && (
-            <section>
-              <CommonTitle type={3} title="입찰하기" />
-              <CommonPaddingBox>
-                <div className="bid_input">
-                  <CommonInput
-                    type="number"
-                    length="full"
-                    min={all.data?.start_price}
-                    value={bidAmount}
-                    setValue={(e) => setBidAmount(Number(e.target.value))}
-                  />
-                  <CommonButton
-                    text="입찰하기"
-                    btnType="large"
+            {show && <FullSizeImage src={all.data?.src} setShow={setShow} />}
+            <div className="user_info">
+              <div className="user_prof">
+                <AccountCircleIcon />
+                <h2>{all.data?.user_info}</h2>
+              </div>
+              <div className="user_utils">
+                {userCheck ? (
+                  <>
+                    <div className="favorite">
+                      <FavoriteTwoToneIcon color="secondary" />
+                      <span>{numberFormat(favoriteCnt)}</span>
+                    </div>
+                    <button
+                      onClick={() => editPost(Boolean(all.data?.is_open))}
+                      disabled={!all.data?.is_open}
+                    >
+                      <EditIcon color="secondary" />
+                    </button>
+                    <button
+                      onClick={() =>
+                        openDeleteModal(Boolean(all.data?.is_open))
+                      }
+                      disabled={loading || !all.data?.is_open}
+                    >
+                      <DeleteIcon color="secondary" />
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    className="favorite"
                     onClick={() =>
-                      auctionBidding(all.data, all.data?.now_price)
+                      updateFavoriteWait(
+                        all.data?.title,
+                        all.data?.src,
+                        all.data?.category_id,
+                        all.data?.start_price
+                      )
                     }
                     disabled={loading}
-                  />
-                </div>
-                <p className="notice">* 한 번 입찰하면 취소할 수 없습니다!</p>
-              </CommonPaddingBox>
-            </section>
-          )}
-
-          <section>
-            <CommonTitle type={4} title="상세내용" />
-            <CommonPaddingBox>
-              <ItemDetailBox>
-                <p className="textarea">{all.data?.contents}</p>
-              </ItemDetailBox>
-            </CommonPaddingBox>
-          </section>
-          {!all.data?.is_open && (
-            <section>
-              <CommonTitle type={3} title="최종 입찰자" />
-              <CommonPaddingBox>
-                <ItemDetailBidderBox>
-                  <MilitaryTechIcon className="icon" />
-                  <div className="bidder_wrap">
-                    <p>
-                      {all.data?.last_bidder?.bidder || "입찰자가 없습니다."}
-                    </p>
-                    {all.data?.last_bidder?.bidder && (
-                      <p className="price">
-                        낙찰 금액은
-                        <span>
-                          {numberFormat(all.data?.last_bidder?.amount)}
-                        </span>
-                        원 입니다.
-                      </p>
+                  >
+                    {favoriteCheck ? (
+                      <FavoriteTwoToneIcon color="secondary" />
+                    ) : (
+                      <FavoriteBorderIcon color="secondary" />
                     )}
+                    <span>{numberFormat(favoriteCnt)}</span>
+                  </button>
+                )}
+              </div>
+            </div>
+            <hr />
+            <section>
+              <div className="contents_info" style={{ paddingTop: "8px" }}>
+                <CommonCategoryBadge categoryID={all.data?.category_id} />
+              </div>
+              <CommonTitle
+                type={1}
+                title={all.data?.title}
+                isOpen={Boolean(all.data?.is_open)}
+              />
+              <div className="contents_info">
+                <p>작성일 | {all.data?.start_date}</p>
+                <p>조회 | {numberFormat(all.data?.cnt)}</p>
+              </div>
+
+              <div className="item_info">
+                <div>
+                  <p>현재 입찰가</p>
+                  <p>{numberFormat(all.data?.now_price) || "no bid"}</p>
+                </div>
+                <div>
+                  <p>총 입찰</p>
+                  <p>{numberFormat(all.data?.bid_count) || 0}</p>
+                </div>
+                <div>
+                  <p>종료일</p>
+                  <p>{all.data?.end_date?.split(" ")[0]}</p>
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <CommonTitle type={3} title="품목 세부 정보" />
+              <CommonPaddingBox>
+                <ItemDetailBox>
+                  <div className="detail_table">
+                    <p>
+                      <span>카테고리</span>
+                      <span className="contents">
+                        {findCategory(all.data?.category_id)}
+                      </span>
+                    </p>
+                    <p>
+                      <span>시작가</span>
+                      <span className="contents">
+                        {numberFormat(all.data?.start_price)}원
+                      </span>
+                    </p>
+                    <p>
+                      <span>입찰횟수</span>
+                      <span className="contents">
+                        {numberFormat(all.data?.bid_count)}
+                      </span>
+                    </p>
+                    <p>
+                      <span>현재최대가</span>
+                      <span className="contents">
+                        {numberFormat(all.data?.now_price)}
+                      </span>
+                    </p>
+                    <p>
+                      <span>마감일</span>
+                      <span className="contents">{all.data?.end_date}</span>
+                    </p>
                   </div>
-                </ItemDetailBidderBox>
+                </ItemDetailBox>
               </CommonPaddingBox>
             </section>
-          )}
-          <section>
-            <CommonTitle type={3} title="입찰내역" />
-            <CommonPaddingBox>
-              {all.data?.bid_history?.length ? (
-                <ShowListTable
-                  tableGrid={[1, 1, 2]}
-                  tableHeader={["bidder", "amount", "time"]}
-                  tableHeaderText={["입찰자", "입찰가", "입찰 시간"]}
-                  tableList={all.data?.bid_history}
+            {userCheck && Boolean(all.data?.is_open) && (
+              <CommonPaddingBox>
+                <p className="notice">
+                  *가장 높은 금액을 입력한 유저에게 자동으로 낙찰됩니다!
+                </p>
+                <CommonButton
+                  text="입찰 마감 처리"
+                  btnType="large"
+                  onClick={() =>
+                    closeAuction(
+                      Boolean(all.data?.is_open),
+                      all.data?.end_date,
+                      all.data?.bid_history,
+                      all.data?.title,
+                      all.data?.src,
+                      all.data?.category_id
+                    )
+                  }
+                  disabled={!all.data?.is_open}
                 />
-              ) : (
-                <CommonNodataBox>입찰자가 없습니다</CommonNodataBox>
-              )}
-            </CommonPaddingBox>
-          </section>
-        </section>
-      )}
-      {/* 다른내용 */}
-      <section>
-        <CommonTitle
-          type={2}
-          title="판매자의 다른 판매 물품"
-          link="/mypage/list"
-          linkProps={{
-            state: {
-              uuid: all.data?.user_id,
-              nickname: all.data?.user_info,
-            },
-          }}
-        />
-        <CommonList grid={4} loading={all.isLoading || otherLoading}>
-          {otherList?.map((sell, idx) => (
-            <Link to={`/auction/${sell.id}`} key={`item_${sell.id}_${idx}`}>
-              <CommonListItem
-                key={`item_${sell.id}`}
-                src={sell.src}
-                category={findCategory(sell?.category_id)}
-                title={sell.title}
-                startPrice={sell.start_price}
-                isOpen={Boolean(sell.is_open)}
-              />
-            </Link>
-          ))}
-        </CommonList>
-      </section>
+              </CommonPaddingBox>
+            )}
+            {!userCheck && Boolean(all.data?.is_open) && (
+              <section>
+                <CommonTitle type={3} title="입찰하기" />
+                <CommonPaddingBox>
+                  <div className="bid_input">
+                    <CommonInput
+                      type="number"
+                      length="full"
+                      min={all.data?.start_price}
+                      value={bidAmount}
+                      setValue={(e) => setBidAmount(Number(e.target.value))}
+                    />
+                    <CommonButton
+                      text="입찰하기"
+                      btnType="large"
+                      onClick={() =>
+                        auctionBidding(all.data, all.data?.now_price)
+                      }
+                      disabled={loading}
+                    />
+                  </div>
+                  <p className="notice">* 한 번 입찰하면 취소할 수 없습니다!</p>
+                </CommonPaddingBox>
+              </section>
+            )}
 
-      {/* 모달 */}
-      <CommonModal
-        isOpen={toggle}
-        setDisplay={setToggle}
-        showFooter={true}
-        handleModalOk={() => deletePostWait(Boolean(all.data?.is_open))}
-      >
-        <p>게시글을 삭제하겠습니까?</p>
-      </CommonModal>
+            <section>
+              <CommonTitle type={4} title="상세내용" />
+              <CommonPaddingBox>
+                <ItemDetailBox>
+                  <p className="textarea">{all.data?.contents}</p>
+                </ItemDetailBox>
+              </CommonPaddingBox>
+            </section>
+            {!all.data?.is_open && (
+              <section>
+                <CommonTitle type={3} title="최종 입찰자" />
+                <CommonPaddingBox>
+                  <ItemDetailBidderBox>
+                    <MilitaryTechIcon className="icon" />
+                    <div className="bidder_wrap">
+                      <p>
+                        {all.data?.last_bidder?.bidder || "입찰자가 없습니다."}
+                      </p>
+                      {all.data?.last_bidder?.bidder && (
+                        <p className="price">
+                          낙찰 금액은
+                          <span>
+                            {numberFormat(all.data?.last_bidder?.amount)}
+                          </span>
+                          원 입니다.
+                        </p>
+                      )}
+                    </div>
+                  </ItemDetailBidderBox>
+                </CommonPaddingBox>
+              </section>
+            )}
+            <section>
+              <CommonTitle type={3} title="입찰내역" />
+              <CommonPaddingBox>
+                {all.data?.bid_history?.length ? (
+                  <ShowListTable
+                    tableGrid={[1, 1, 2]}
+                    tableHeader={["bidder", "amount", "time"]}
+                    tableHeaderText={["입찰자", "입찰가", "입찰 시간"]}
+                    tableList={all.data?.bid_history}
+                  />
+                ) : (
+                  <CommonNodataBox>입찰자가 없습니다</CommonNodataBox>
+                )}
+              </CommonPaddingBox>
+            </section>
+          </section>
+          {/* 판매자의 다른 판매 물품 */}
+          <section>
+            <CommonTitle
+              type={2}
+              title="판매자의 다른 판매 물품"
+              link="/mypage/list"
+              linkProps={{
+                state: {
+                  uuid: all.data?.user_id,
+                  nickname: all.data?.user_info,
+                },
+              }}
+            />
+            <CommonList grid={4} loading={all.isLoading || otherLoading}>
+              {otherList?.map((sell, idx) => (
+                <Link to={`/auction/${sell.id}`} key={`item_${sell.id}_${idx}`}>
+                  <CommonListItem
+                    key={`item_${sell.id}`}
+                    src={sell.src}
+                    category={findCategory(sell?.category_id)}
+                    title={sell.title}
+                    startPrice={sell.start_price}
+                    isOpen={Boolean(sell.is_open)}
+                  />
+                </Link>
+              ))}
+            </CommonList>
+          </section>
+
+          {/* 모달 */}
+          <CommonModal
+            isOpen={toggle}
+            setDisplay={setToggle}
+            showFooter={true}
+            handleModalOk={() => deletePostWait(Boolean(all.data?.is_open))}
+          >
+            <p>게시글을 삭제하겠습니까?</p>
+          </CommonModal>
+        </>
+      )}
     </ItemDetailLayout>
   );
 }

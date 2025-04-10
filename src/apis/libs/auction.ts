@@ -29,10 +29,9 @@ export const getDetailPost = async (post_id: string, cnt_update: boolean) => {
 
     const detailRes = await runTransaction(firebaseDB, async (transaction) => {
       const detailDoc = await transaction.get(detailRef);
-      // 해당 게시글 없을 때 추가 표시 필?
+      // 해당 게시글 없을 때
       if (!detailDoc.exists()) {
-        // throw "Document does not exist!";
-        return {};
+        return { data: null, err: `Document doesn't exist.` };
       }
 
       const newPop = detailDoc.data().cnt + +cnt_update;
@@ -40,14 +39,13 @@ export const getDetailPost = async (post_id: string, cnt_update: boolean) => {
         transaction.update(detailRef, { cnt: newPop });
       }
 
-      return detailDoc.data();
+      return { data: detailDoc.data(), err: null };
     });
 
     return detailRes;
   } catch (error) {
-    // This will be a "population is too big" error.
     console.error(error);
-    return {};
+    return { data: null, err: error };
   }
 };
 
