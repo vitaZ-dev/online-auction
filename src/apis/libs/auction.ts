@@ -53,13 +53,16 @@ export const getDetailPost = async (post_id: string, cnt_update: boolean) => {
 };
 
 // 게시글 상세 입찰내역 확인
-export const getDetailBidHistory = async (post_id: string) => {
+export const getDetailBidHistory = async (
+  post_id: string,
+  limits: number = 10
+) => {
   try {
     const detailBidHistoryQuery = query(
       collection(firebaseDB, "posts", post_id, "bid_history"),
       orderBy("amount", "desc"),
       orderBy("created_at", "desc"),
-      limit(10)
+      limit(limits)
     );
     const querySnapshot = await getDocs(detailBidHistoryQuery);
     const data: DocumentData[] = [];
@@ -212,6 +215,66 @@ export const auctionBidding = async (
     });
 
     return detailRes;
+  } catch (error) {
+    console.error(error);
+    return { res: false, err: error };
+  }
+};
+
+// 게시글 입찰 마감 처리
+export const closeAuction = async (
+  post_id: string,
+  uuid: string,
+  award_check: boolean
+) => {
+  // 총 입찰이 0이면 입찰자 없이 마감
+  // 총 입찰이 1이상 이면 입찰자 설정
+  try {
+    // 낙찰자 정보 불러옴
+    const { data: bid_info, err } = await getDetailBidHistory(post_id, 1);
+
+    if (err) {
+      return { res: false, err };
+    }
+
+    const closeRes = await runTransaction(firebaseDB, async (transaction) => {
+      // ref
+      const detailRef = doc(firebaseDB, "posts", post_id);
+      const bidAwardRef = doc(firebaseDB, "bid_award", uuid, "data", post_id);
+
+      const detailDoc = await transaction.get(detailRef);
+      if (!detailDoc.exists()) {
+        return { res: false, err: `Document doesn't exist.` };
+      }
+
+      const nowTime = setDateTemp();
+
+      transaction.update(detailRef, {
+        is_open: 0,
+        end_date: nowTime,
+        last_bidder: bid_info?.[0] ?? null,
+      });
+      // 입찰자가 있을 때만 낙찰내역 collection에 추가
+      if (award_check) {
+        transaction.set(
+          bidAwardRef,
+          {
+            // amount /  bidder / created_at / item_id / time / uuid
+            ...bid_info?.[0],
+            user_id: uuid,
+            title: detailDoc.data().title,
+            category_id: detailDoc.data().category_id,
+            src: detailDoc.data().src,
+            created_at: nowTime,
+          },
+          { merge: true }
+        );
+      }
+
+      return { res: true, err: null };
+    });
+
+    return closeRes;
   } catch (error) {
     console.error(error);
     return { res: false, err: error };

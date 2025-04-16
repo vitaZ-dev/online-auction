@@ -27,9 +27,9 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
 import CommonInput from "../../components/common/CommonInput";
 import CommonButton from "../../components/common/CommonButton";
-import { postBidHistory } from "../../types/post";
 import {
   auctionBidding,
+  closeAuction,
   deletePost,
   getDetailBidHistory,
   getDetailPost,
@@ -152,7 +152,7 @@ export default function Detail() {
     setFavoriteCheck(
       all.data?.favorite_list?.some((item: string) => item === userInfo?.uuid)
     );
-    setBidHistoryDetail(all.data?.bid_history || []);
+    // setBidHistoryDetail(all.data?.bid_history || []);
   }, [all.data, userInfo?.uuid]);
 
   const openComponent = () => setShow(true);
@@ -340,7 +340,7 @@ export default function Detail() {
     setBidHistoryShow(!bidHistoryShow);
     if (!bidHistoryLoad) {
       setLoading(true);
-      const { data, err } = await getDetailBidHistory(POST_ID!);
+      const { data, err } = await getDetailBidHistory(POST_ID!, 10);
 
       if (err) {
         console.log(err);
@@ -499,7 +499,44 @@ export default function Detail() {
   };
   */
 
-  const closeAuction = async (
+  // 게시글 입찰 마감 처리
+  const closeAuctionWait = async (isOpen: boolean, endDate: string) => {
+    // 입찰 마감 처리는 최소 14일 이후에 가능+
+    if (!isOpen) return false;
+
+    if (new Date() < new Date(endDate)) {
+      alert("최소 마감일 이후에 마감할 수 있습니다.");
+      return false;
+    }
+    const awardCheck: boolean = all.data?.bid_count > 0;
+
+    try {
+      setLoading(true);
+      const { err } = await closeAuction(
+        POST_ID!,
+        userInfo?.uuid as string,
+        awardCheck
+      );
+      if (err) {
+        console.log(err);
+        alert("오류가 발생했습니다!");
+        setLoading(false);
+        return;
+      }
+
+      // 리액트쿼리 처리
+      queryClient.invalidateQueries({ predicate: () => true });
+      queryClient.refetchQueries({ queryKey: ["detail", POST_ID] });
+      alert("처리되었습니다!");
+      setLoading(false);
+      return;
+    } catch (error) {
+      console.log(error);
+      alert("낙찰 처리에 실패했습니다!");
+      setLoading(false);
+    }
+  };
+  /*const closeAuction = async (
     isOpen: boolean,
     endDate: string,
     history: Array<postBidHistory>,
@@ -551,7 +588,7 @@ export default function Detail() {
       console.log(error);
       setLoading(false);
     }
-  };
+  };*/
 
   // tsx
   if (all.isLoading) {
@@ -722,16 +759,12 @@ export default function Detail() {
                   text="입찰 마감 처리"
                   btnType="large"
                   onClick={() =>
-                    closeAuction(
+                    closeAuctionWait(
                       Boolean(all.data?.is_open),
-                      all.data?.end_date,
-                      all.data?.bid_history,
-                      all.data?.title,
-                      all.data?.src,
-                      all.data?.category_id
+                      all.data?.end_date
                     )
                   }
-                  disabled={!all.data?.is_open}
+                  disabled={!all.data?.is_open || loading}
                 />
               </CommonPaddingBox>
             )}
