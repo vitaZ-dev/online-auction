@@ -12,7 +12,7 @@ import {
   runTransaction,
   where,
 } from "firebase/firestore";
-import firebaseDB from "../../../firebase";
+import firebaseDB from "../../libs/firebase";
 import { POSTS_DB } from "../../modules/firebase";
 import { setDateTemp } from "../../modules";
 

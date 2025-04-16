@@ -38,8 +38,8 @@ import {
 } from "../../apis/libs";
 import { useQuery } from "react-query";
 import CommonModal from "../../components/common/CommonModal";
-import { queryClient } from "../../main";
 import { DocumentData } from "firebase/firestore";
+import queryClient from "../../libs/queryClient";
 
 export default function Detail() {
   const [loading, setLoading] = useState<boolean>(false);

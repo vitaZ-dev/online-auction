@@ -9,10 +9,10 @@ import { WritepageLayout } from "../../styles/SellPageStyle";
 import CommonInput from "../../components/common/CommonInput";
 import CommonTextarea from "../../components/common/CommonTextarea";
 import { CircularProgress } from "@mui/material";
-import firebaseDB from "../../../firebase";
+import firebaseDB from "../../libs/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import CommonButton from "../../components/common/CommonButton";
-import { queryClient } from "../../main";
+import queryClient from "../../libs/queryClient";
 
 export default function Edit() {
   const [loading, setLoading] = useState(true);

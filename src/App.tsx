@@ -32,7 +32,7 @@ import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import { ReactQueryDevtools } from "react-query/devtools";
 import CommonButton from "./components/common/CommonButton";
 import Logo from "./components/Logo";
-import { auth } from "../firebase";
+import { auth } from "./libs/firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 
 function App() {

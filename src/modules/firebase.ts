@@ -1,4 +1,4 @@
-import firebaseDB from "../../firebase";
+import firebaseDB from "../libs/firebase";
 import { collection } from "firebase/firestore";
 
 export const USER_DB = collection(firebaseDB, "user");

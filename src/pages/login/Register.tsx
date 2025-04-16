@@ -6,7 +6,7 @@ import { LoginPageLayout } from "../../styles/LoginPageStyle";
 import CommonInput from "../../components/common/CommonInput";
 import CommonButton from "../../components/common/CommonButton";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import firebaseDB, { auth } from "../../../firebase";
+import firebaseDB, { auth } from "../../libs/firebase";
 import { doc, getDocs, query, setDoc, where } from "firebase/firestore";
 import { USER_DB } from "../../modules/firebase";
 import Loading from "../../components/Loading";

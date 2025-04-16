@@ -15,7 +15,7 @@ import { FavoriteType } from "../../types/user";
 import { useQuery } from "react-query";
 import { mypageRecentList } from "../../apis/libs";
 import { signOut } from "firebase/auth";
-import { auth } from "../../../firebase";
+import { auth } from "../../libs/firebase";
 
 export default function Mypage() {
   const [userFavorite, setUserFavorite] = useState<Array<FavoriteType> | []>(

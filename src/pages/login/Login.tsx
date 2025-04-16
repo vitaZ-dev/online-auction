@@ -12,7 +12,7 @@ import {
   setPersistence,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { auth } from "../../../firebase";
+import { auth } from "../../libs/firebase";
 import Loading from "../../components/Loading";
 import { UserInfoType } from "../../types/user";
 import { USER_DB } from "../../modules/firebase";
@@ -112,6 +112,7 @@ export default function Login() {
           alert("이 계정은 비활성화되어 있습니다.");
           break;
         case "auth/user-not-found":
+        case "auth/invalid-credential":
           alert("존재하지 않는 계정입니다.");
           break;
         case "auth/wrong-password":

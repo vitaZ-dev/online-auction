@@ -9,7 +9,7 @@ import { WritepageLayout } from "../../styles/SellPageStyle";
 import CommonInput from "../../components/common/CommonInput";
 import CommonTextarea from "../../components/common/CommonTextarea";
 import { collection, doc, setDoc } from "firebase/firestore";
-import firebaseDB from "../../../firebase";
+import firebaseDB from "../../libs/firebase";
 
 export default function Sell() {
   const [title, setTitle] = useState<string>("");
