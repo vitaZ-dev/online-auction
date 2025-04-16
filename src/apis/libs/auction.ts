@@ -1,8 +1,10 @@
 import {
   arrayRemove,
   arrayUnion,
+  collection,
   deleteDoc,
   doc,
+  DocumentData,
   getDocs,
   limit,
   orderBy,
@@ -46,6 +48,25 @@ export const getDetailPost = async (post_id: string, cnt_update: boolean) => {
     return detailRes;
   } catch (error) {
     console.error(error);
+    return { data: null, err: error };
+  }
+};
+
+// 게시글 상세 입찰내역 확인
+export const getDetailBidHistory = async (post_id: string) => {
+  try {
+    const detailBidHistoryQuery = query(
+      collection(firebaseDB, "posts", post_id, "bid_history"),
+      orderBy("amount", "desc"),
+      orderBy("created_at", "desc"),
+      limit(10)
+    );
+    const querySnapshot = await getDocs(detailBidHistoryQuery);
+    const data: DocumentData[] = [];
+    querySnapshot.forEach((doc) => data.push(doc.data()));
+    return { data, err: null };
+  } catch (error) {
+    console.log(error);
     return { data: null, err: error };
   }
 };
@@ -133,5 +154,66 @@ export const deletePost = async (post_id: string) => {
     await deleteDoc(doc(firebaseDB, "posts", post_id));
   } catch (error) {
     return error;
+  }
+};
+
+interface BidPropsType {
+  item_id: string;
+  uuid: string;
+  bidder: string;
+  amount: number;
+  time: string;
+}
+// 게시글 입찰 등록
+export const auctionBidding = async (
+  post_id: string,
+  bid_item: BidPropsType,
+  update_price: number,
+  uuid: string
+) => {
+  try {
+    const detailRes = await runTransaction(firebaseDB, async (transaction) => {
+      // ref
+      const detailRef = doc(firebaseDB, "posts", post_id);
+      const detailBidHistoryRef = doc(
+        collection(firebaseDB, "posts", post_id, "bid_history")
+      );
+      const bidListRef = doc(firebaseDB, "bid_list", uuid, "data", post_id);
+
+      const detailDoc = await transaction.get(detailRef);
+      if (!detailDoc.exists()) {
+        return { data: null, err: `Document doesn't exist.` };
+      }
+
+      const newPop = detailDoc.data().bid_count + 1;
+
+      transaction.update(detailRef, {
+        bid_count: newPop,
+        now_price: update_price,
+      });
+      transaction.set(
+        detailBidHistoryRef,
+        {
+          ...bid_item,
+          created_at: setDateTemp(),
+        },
+        { merge: true }
+      );
+      transaction.set(
+        bidListRef,
+        {
+          ...bid_item,
+          created_at: setDateTemp(),
+        },
+        { merge: true }
+      );
+
+      return { res: true, err: null };
+    });
+
+    return detailRes;
+  } catch (error) {
+    console.error(error);
+    return { res: false, err: error };
   }
 };

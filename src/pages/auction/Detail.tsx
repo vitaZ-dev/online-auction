@@ -1,5 +1,5 @@
 import api from "../../apis/api";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   ItemDetailBidderBox,
@@ -27,9 +27,11 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
 import CommonInput from "../../components/common/CommonInput";
 import CommonButton from "../../components/common/CommonButton";
-import { postBidHistory, postType } from "../../types/post";
+import { postBidHistory } from "../../types/post";
 import {
+  auctionBidding,
   deletePost,
+  getDetailBidHistory,
   getDetailPost,
   getOtherPosts,
   updateFavorite,
@@ -37,6 +39,7 @@ import {
 import { useQuery } from "react-query";
 import CommonModal from "../../components/common/CommonModal";
 import { queryClient } from "../../main";
+import { DocumentData } from "firebase/firestore";
 
 export default function Detail() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -48,8 +51,10 @@ export default function Detail() {
   const [favoriteCheck, setFavoriteCheck] = useState<boolean>(false);
   const [bidAmount, setBidAmount] = useState<number>(0);
   const [bidHistoryDetail, setBidHistoryDetail] = useState<
-    Array<postBidHistory> | []
+    Array<DocumentData> | [] | null
   >([]);
+  const [bidHistoryLoad, setBidHistoryLoad] = useState<boolean>(false);
+  const [bidHistoryShow, setBidHistoryShow] = useState<boolean>(false);
 
   // 모달
   const [toggle, setToggle] = useState<boolean>(false);
@@ -66,6 +71,13 @@ export default function Detail() {
   } = useAuthStore();
   const [cookies, setCookie] = useCookies();
   const navigate = useNavigate();
+
+  const isUnmounted = useRef(false);
+  useEffect(() => {
+    return () => {
+      isUnmounted.current = true;
+    };
+  }, []);
 
   const cntUpdate = useMemo(() => {
     const cookieName = `view_${isLogin ? userInfo?.id : "non"}`;
@@ -141,16 +153,7 @@ export default function Detail() {
       all.data?.favorite_list?.some((item: string) => item === userInfo?.uuid)
     );
     setBidHistoryDetail(all.data?.bid_history || []);
-  }, [all.data]);
-
-  const fetchPosts = async () => {
-    const { data } = await api.get(`posts/${POST_ID}`);
-    setUserCheck(data.user_id === userInfo?.uuid);
-    setBidHistoryDetail(data?.bid_history || []);
-    setBidAmount(data?.now_price || data?.start_price || 0);
-
-    return data;
-  };
+  }, [all.data, userInfo?.uuid]);
 
   const openComponent = () => setShow(true);
 
@@ -332,7 +335,76 @@ export default function Detail() {
   };
   */
 
-  const auctionBidding = async (item: postType, nowPrice: number) => {
+  // 게시글 입찰내역 보이기
+  const getDetailBidHistoryWait = async () => {
+    setBidHistoryShow(!bidHistoryShow);
+    if (!bidHistoryLoad) {
+      setLoading(true);
+      const { data, err } = await getDetailBidHistory(POST_ID!);
+
+      if (err) {
+        console.log(err);
+        setLoading(false);
+        return;
+      } else {
+        setBidHistoryDetail(data);
+        setTimeout(() => {
+          if (!isUnmounted.current) {
+            setBidHistoryLoad(true);
+            setLoading(false);
+          }
+        }, 1000);
+        return;
+      }
+    }
+  };
+
+  // 입찰
+  const auctionBiddingWait = async (nowPrice: number) => {
+    if (!isLogin) {
+      alert("로그인 후 이용할 수 있습니다!");
+      return false;
+    }
+
+    if (bidAmount <= nowPrice) {
+      alert("입찰가는 현대최대가 보다 높은 값만 입력할 수 있습니다!");
+      return false;
+    }
+
+    setLoading(true);
+    const bidItem = {
+      item_id: POST_ID!,
+      uuid: userInfo?.uuid as string,
+      amount: bidAmount,
+      bidder: userInfo?.nickname || "USER",
+      time: setDateTemp(),
+    };
+
+    try {
+      const { err } = await auctionBidding(
+        POST_ID!,
+        bidItem,
+        bidAmount,
+        userInfo?.uuid as string
+      );
+      if (err) {
+        console.log(err);
+      } else {
+        queryClient.invalidateQueries({ queryKey: ["detail", POST_ID] });
+        updateBidList(null);
+        alert("입찰이 완료되었습니다!");
+        setBidHistoryLoad(false);
+        setBidHistoryShow(false);
+      }
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      alert("입찰에 실패했습니다.");
+      setLoading(false);
+    }
+  };
+  /*
+  const auctionBiddingPrev = async (item: postType, nowPrice: number) => {
     if (!isLogin) {
       alert("로그인 후 이용할 수 있습니다!");
       return false;
@@ -425,6 +497,7 @@ export default function Detail() {
     }
     setLoading(false);
   };
+  */
 
   const closeAuction = async (
     isOpen: boolean,
@@ -629,7 +702,7 @@ export default function Detail() {
                     <p>
                       <span>현재최대가</span>
                       <span className="contents">
-                        {numberFormat(all.data?.now_price)}
+                        {numberFormat(all.data?.now_price)}원
                       </span>
                     </p>
                     <p>
@@ -677,9 +750,7 @@ export default function Detail() {
                     <CommonButton
                       text="입찰하기"
                       btnType="large"
-                      onClick={() =>
-                        auctionBidding(all.data, all.data?.now_price)
-                      }
+                      onClick={() => auctionBiddingWait(all.data?.now_price)}
                       disabled={loading}
                     />
                   </div>
@@ -688,14 +759,6 @@ export default function Detail() {
               </section>
             )}
 
-            <section>
-              <CommonTitle type={4} title="상세내용" />
-              <CommonPaddingBox>
-                <ItemDetailBox>
-                  <p className="textarea">{all.data?.contents}</p>
-                </ItemDetailBox>
-              </CommonPaddingBox>
-            </section>
             {!all.data?.is_open && (
               <section>
                 <CommonTitle type={3} title="최종 입찰자" />
@@ -721,20 +784,55 @@ export default function Detail() {
               </section>
             )}
             <section>
-              <CommonTitle type={3} title="입찰내역" />
               <CommonPaddingBox>
-                {all.data?.bid_history?.length ? (
-                  <ShowListTable
-                    tableGrid={[1, 1, 2]}
-                    tableHeader={["bidder", "amount", "time"]}
-                    tableHeaderText={["입찰자", "입찰가", "입찰 시간"]}
-                    tableList={all.data?.bid_history}
-                  />
-                ) : (
-                  <CommonNodataBox>입찰자가 없습니다</CommonNodataBox>
-                )}
+                <CommonButton
+                  text={bidHistoryShow ? "입찰 기록 숨기기" : "입찰 기록 보기"}
+                  btnType="large"
+                  onClick={() => getDetailBidHistoryWait()}
+                />
+                <p className="notice">* 최근 10개 입찰 기록만 보여집니다.</p>
               </CommonPaddingBox>
+              {bidHistoryShow && (
+                <>
+                  <CommonTitle type={3} title="입찰내역" />
+                  {!bidHistoryLoad && loading ? (
+                    <div
+                      style={{
+                        display: "flex",
+                        width: "100%",
+                        height: "100%",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <CircularProgress color="secondary" />
+                    </div>
+                  ) : (
+                    <CommonPaddingBox>
+                      {all.data?.bid_count ? (
+                        <ShowListTable
+                          tableGrid={[1, 1, 2]}
+                          tableHeader={["bidder", "amount", "time"]}
+                          tableHeaderText={["입찰자", "입찰가", "입찰 시간"]}
+                          tableList={bidHistoryDetail}
+                        />
+                      ) : (
+                        <CommonNodataBox>입찰자가 없습니다</CommonNodataBox>
+                      )}
+                    </CommonPaddingBox>
+                  )}
+                </>
+              )}
             </section>
+          </section>
+
+          <section>
+            <CommonTitle type={4} title="상세내용" />
+            <CommonPaddingBox>
+              <ItemDetailBox>
+                <p className="textarea">{all.data?.contents}</p>
+              </ItemDetailBox>
+            </CommonPaddingBox>
           </section>
           {/* 판매자의 다른 판매 물품 */}
           <section>

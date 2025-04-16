@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface LogoProps {
   onClick?: () => void;
 }
@@ -98,7 +97,7 @@ export interface ShowListTableProps {
   tableGrid: number[];
   tableHeader: string[];
   tableHeaderText: string[];
-  tableList: any[];
+  tableList: any[] | null;
 }
 
 export interface FullSizeImageProps {

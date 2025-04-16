@@ -53,8 +53,8 @@ export const WritepageLayout = styled.div`
     &:active,
     &:focus {
       background-color: var(--white);
-      border: 1px solid var(--main-red-color);
-      box-shadow: 0 0 0 0.5px var(--main-red-color);
+      border: 1px solid var(--main-violet-00-color);
+      box-shadow: 0 0 0 0.5px var(--main-violet-00-color);
     }
   }
 
@@ -78,7 +78,7 @@ export const WritepageLayout = styled.div`
     margin-top: 8px;
     padding: 4px 8px;
     border-radius: 5px;
-    border: 1px solid var(--main-red-color);
+    border: 1px solid var(--main-violet-00-color);
     background-color: var(--white);
     cursor: pointer;
   }
