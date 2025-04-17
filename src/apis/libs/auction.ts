@@ -5,16 +5,69 @@ import {
   deleteDoc,
   doc,
   DocumentData,
+  getCountFromServer,
   getDocs,
   limit,
   orderBy,
   query,
   runTransaction,
+  startAfter,
   where,
 } from "firebase/firestore";
 import firebaseDB from "../../libs/firebase";
 import { POSTS_DB } from "../../modules/firebase";
 import { setDateTemp } from "../../modules";
+import { calTotalPage } from "../../utils";
+
+// 게시글 리스트 무한스크롤 호출
+export const getPostList = async (
+  page: number = 1,
+  CONTENTS_COUNT: number,
+  totalPage: number,
+  setTotalPage: any,
+  lastItem: null | DocumentData
+) => {
+  let totalPages: number = totalPage;
+  console.log("totalPages, lastItem, page", totalPages, lastItem, page);
+
+  try {
+    // 데이터 불러온 최초 1회만 실행하면 됨
+    if (page === 1) {
+      const snapshot = await getCountFromServer(POSTS_DB);
+      setTotalPage(calTotalPage(snapshot.data().count, CONTENTS_COUNT));
+      totalPages = calTotalPage(snapshot.data().count, CONTENTS_COUNT);
+    }
+
+    let listQuery = query(
+      POSTS_DB,
+      orderBy("created_at", "desc"),
+      limit(CONTENTS_COUNT)
+    );
+    if (lastItem) {
+      listQuery = query(
+        POSTS_DB,
+        orderBy("created_at", "desc"),
+        startAfter(lastItem),
+        limit(CONTENTS_COUNT)
+      );
+    }
+
+    const { docs, empty } = await getDocs(listQuery);
+    if (empty) {
+      return { docs: [], lastItem: null, page, totalPages, empty: true };
+    }
+    return {
+      docs: docs.map((item) => item.data()),
+      lastItem: docs[docs.length - 1],
+      page,
+      totalPages,
+      empty: false,
+    };
+  } catch (error) {
+    console.log(error);
+    return { docs: [], lastItem: null, page, totalPages, empty: true };
+  }
+};
 
 // 게시글 상세 내용 호출
 export const getDetailPost = async (post_id: string, cnt_update: boolean) => {
