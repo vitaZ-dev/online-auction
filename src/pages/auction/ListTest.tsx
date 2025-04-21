@@ -14,15 +14,19 @@ import CommonCheckbox from "../../components/common/CommonCheckbox";
 import CommonRadioBtn from "../../components/common/CommonRadioBtn";
 import CommonList from "../../components/UI/CommonList";
 import CommonListItem from "../../components/UI/CommonListItem";
+import DataLoading from "../../components/DataLoading";
 import { DocumentData } from "firebase/firestore";
+import { useInView } from "react-intersection-observer";
 
 export default function ListTest() {
+  // const { pathname } = useLocation();
+
   const CONTENTS_COUNT = 4;
   // 필터
   const [filterShow, setFilterShow] = useState<boolean>(false);
   const [filterIsOpen, setFilterIsOpen] = useState<boolean>(false);
   const [filterCategory, setFilterCategory] = useState<number>(0);
-  const [filterSort, setFilterSort] = useState<string>("");
+  const [filterSort, setFilterSort] = useState<string>("1");
 
   const filterSearchPosts = async () => {
     console.log("filter 된 값 검색");
@@ -49,12 +53,28 @@ export default function ListTest() {
       CONTENTS_COUNT,
       totalPage,
       setTotalPage,
-      lastItem
+      lastItem,
+      // 필터값
+      filterIsOpen, // 거래 가능만 보기
+      filterCategory, // 카테고리 id
+      filterSort // 정렬기준_최신(1), 좋아요(2)
     );
     return result;
   };
 
-  const scroll = useInfiniteScroll(["fb-test"], firebaseWait);
+  const scroll = useInfiniteScroll(
+    [
+      "fb-test", // key
+      filterIsOpen ? "showOpen" : "showAll", // 거래 가능만 보기
+      filterCategory, // 카테고리 id
+      filterSort, // 정렬기준
+    ],
+    firebaseWait
+  );
+
+  useEffect(() => {
+    scroll.handleRefetch();
+  }, []);
 
   const goNextPage = async () => {
     await scroll.fetchNextPage();
@@ -83,10 +103,18 @@ export default function ListTest() {
     return scroll.data?.pages.flatMap((page) => page.docs) ?? [];
   }, [scroll.data]);
 
+  const { ref, inView } = useInView({
+    threshold: 0.8,
+  });
+  useEffect(() => {
+    if (inView && scroll.hasNextPage && !scroll.isFetching) {
+      goNextPage();
+    }
+  }, [inView]);
+
   // tsx
   return (
     <AuctionListLayout>
-      <button onClick={() => goNextPage()}>goNextPage</button>
       <CommonTitle type={1} title="경매 물품" />
       <div className="filter_box">
         <CommonButton
@@ -110,6 +138,14 @@ export default function ListTest() {
             <div>
               <p>카테고리</p>
               <div className="radio_wrap">
+                <CommonRadioBtn
+                  text="전체"
+                  id="0"
+                  name="category_filter"
+                  value={0}
+                  onChange={(e) => setFilterCategory(+e.target.value)}
+                  checked={filterCategory === 0}
+                />
                 {CATEGORY.map((item) => (
                   <CommonRadioBtn
                     key={item.category_id}
@@ -195,11 +231,13 @@ export default function ListTest() {
           ))}
         </CommonList>
 
-        {/* {(hasNextPage || isFetchingNextPage || isFetching) && (
-            <div ref={ref}>
-              <DataLoading />
-            </div>
-          )} */}
+        {(scroll.hasNextPage ||
+          scroll.isFetchingNextPage ||
+          scroll.isFetching) && (
+          <div ref={ref}>
+            <DataLoading />
+          </div>
+        )}
       </>
       {scroll?.data?.pages?.[0]?.empty && (
         <CommonNodataBox>데이터가 없습니다</CommonNodataBox>

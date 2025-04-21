@@ -25,32 +25,36 @@ export const getPostList = async (
   CONTENTS_COUNT: number,
   totalPage: number,
   setTotalPage: any,
-  lastItem: null | DocumentData
+  lastItem: null | DocumentData,
+  // 필터값
+  isOpen: boolean,
+  categoryId: number,
+  sortBy: string // 1_최신순 2_좋아요
 ) => {
   let totalPages: number = totalPage;
-  console.log("totalPages, lastItem, page", totalPages, lastItem, page);
 
   try {
     // 데이터 불러온 최초 1회만 실행하면 됨
     if (page === 1) {
-      const snapshot = await getCountFromServer(POSTS_DB);
+      const countQuery = query(
+        POSTS_DB,
+        ...(isOpen ? [where("is_open", "==", 1)] : []),
+        ...(categoryId !== 0 ? [where("category_id", "==", categoryId)] : [])
+      );
+      const snapshot = await getCountFromServer(countQuery);
       setTotalPage(calTotalPage(snapshot.data().count, CONTENTS_COUNT));
       totalPages = calTotalPage(snapshot.data().count, CONTENTS_COUNT);
     }
 
-    let listQuery = query(
+    const listQuery = query(
       POSTS_DB,
+      ...(isOpen ? [where("is_open", "==", 1)] : []),
+      ...(categoryId !== 0 ? [where("category_id", "==", categoryId)] : []),
+      ...(sortBy === "2" ? [orderBy("favorite", "desc")] : []),
       orderBy("created_at", "desc"),
+      ...(lastItem ? [startAfter(lastItem)] : []),
       limit(CONTENTS_COUNT)
     );
-    if (lastItem) {
-      listQuery = query(
-        POSTS_DB,
-        orderBy("created_at", "desc"),
-        startAfter(lastItem),
-        limit(CONTENTS_COUNT)
-      );
-    }
 
     const { docs, empty } = await getDocs(listQuery);
     if (empty) {
