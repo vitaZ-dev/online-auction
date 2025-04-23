@@ -1,5 +1,5 @@
-import { useInfiniteQuery } from "react-query";
-// import { useInfiniteQuery } from "@tanstack/react-query";
+// import { useInfiniteQuery } from "react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 const useInfiniteScroll = (
   queryKey: Array<string | number>,

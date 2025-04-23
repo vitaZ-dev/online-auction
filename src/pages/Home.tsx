@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useQueries } from "react-query";
+import { useQueries } from "@tanstack/react-query";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import CommonTitle from "../components/UI/CommonTitle";
@@ -34,20 +34,22 @@ export default function Home() {
     }
   };
 
-  const [recentQuery, favoriteQuery] = useQueries([
-    {
-      queryKey: ["home", "recent"],
-      queryFn: () => getRecentListWait(),
-      staleTime: 5 * 60 * 1000,
-      cacheTime: 30 * 60 * 1000,
-    },
-    {
-      queryKey: ["home", "favorite"],
-      queryFn: () => getFavoriteListWait(),
-      staleTime: 5 * 60 * 1000,
-      cacheTime: 30 * 60 * 1000,
-    },
-  ]);
+  const [recentQuery, favoriteQuery] = useQueries({
+    queries: [
+      {
+        queryKey: ["home", "recent"],
+        queryFn: () => getRecentListWait(),
+        staleTime: 30 * 1000,
+        gcTime: 60 * 1000,
+      },
+      {
+        queryKey: ["home", "favorite"],
+        queryFn: () => getFavoriteListWait(),
+        staleTime: 30 * 1000,
+        gcTime: 60 * 1000,
+      },
+    ],
+  });
 
   return (
     <HomeLayout>

@@ -12,7 +12,7 @@ import { CommonNodataBox } from "../../styles/CommonStyle";
 import CommonTitle from "../../components/UI/CommonTitle";
 import CommonButton from "../../components/common/CommonButton";
 import { FavoriteType } from "../../types/user";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { mypageRecentList } from "../../apis/libs";
 import { signOut } from "firebase/auth";
 import { auth } from "../../libs/firebase";

@@ -36,7 +36,7 @@ import {
   getOtherPosts,
   updateFavorite,
 } from "../../apis/libs";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import CommonModal from "../../components/common/CommonModal";
 import { DocumentData } from "firebase/firestore";
 import queryClient from "../../libs/queryClient";

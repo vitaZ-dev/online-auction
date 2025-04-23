@@ -4,7 +4,7 @@ import {
   LoaderFunction,
   RouterProvider,
 } from "react-router-dom";
-import { QueryClientProvider } from "react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { lazy, ReactNode, Suspense } from "react";
 import queryClient from "./libs/queryClient.ts";
 
