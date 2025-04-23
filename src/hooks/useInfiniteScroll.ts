@@ -16,7 +16,7 @@ const useInfiniteScroll = (
         ? pageItems.page + 1
         : undefined;
     },
-    enabled: false, // 자동 fetch 방지
+    // enabled: false, // 자동 fetch 방지
   });
 
   const handleRefetch = () => query.refetch(); // 수동 호출

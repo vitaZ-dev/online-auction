@@ -32,6 +32,11 @@ export const getPostList = async (
   sortBy: string // 1_최신순 2_좋아요
 ) => {
   let totalPages: number = totalPage;
+  const filter = {
+    is_open: isOpen,
+    category_id: categoryId,
+    sort: sortBy,
+  };
 
   try {
     // 데이터 불러온 최초 1회만 실행하면 됨
@@ -58,7 +63,14 @@ export const getPostList = async (
 
     const { docs, empty } = await getDocs(listQuery);
     if (empty) {
-      return { docs: [], lastItem: null, page, totalPages, empty: true };
+      return {
+        docs: [],
+        lastItem: null,
+        page,
+        totalPages,
+        empty: true,
+        filter: null,
+      };
     }
     return {
       docs: docs.map((item) => item.data()),
@@ -66,10 +78,18 @@ export const getPostList = async (
       page,
       totalPages,
       empty: false,
+      filter,
     };
   } catch (error) {
     console.log(error);
-    return { docs: [], lastItem: null, page, totalPages, empty: true };
+    return {
+      docs: [],
+      lastItem: null,
+      page,
+      totalPages,
+      empty: true,
+      filter: null,
+    };
   }
 };
 

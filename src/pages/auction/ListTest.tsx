@@ -17,6 +17,7 @@ import CommonListItem from "../../components/UI/CommonListItem";
 import DataLoading from "../../components/DataLoading";
 import { DocumentData } from "firebase/firestore";
 import { useInView } from "react-intersection-observer";
+import queryClient from "../../libs/queryClient";
 
 export default function ListTest() {
   // const { pathname } = useLocation();
@@ -29,16 +30,18 @@ export default function ListTest() {
   const [filterSort, setFilterSort] = useState<string>("1");
 
   const filterSearchPosts = async () => {
-    console.log("filter 된 값 검색");
+    setLastItem(null);
+    setPage(1);
+    queryClient.removeQueries(["fb-test"]);
+
+    // queryClient.refetchQueries();
   };
 
   const clearAllFilter = async () => {
-    // setFilterShow(false);
     setFilterIsOpen(false);
     setFilterCategory(0);
-    setFilterSort("");
+    setFilterSort("1");
     window.scrollTo(0, 0);
-    // setQuery({});
   };
 
   // 메인 무한스크롤 리스트
@@ -62,18 +65,15 @@ export default function ListTest() {
     return result;
   };
 
-  const scroll = useInfiniteScroll(
-    [
-      "fb-test", // key
-      filterIsOpen ? "showOpen" : "showAll", // 거래 가능만 보기
-      filterCategory, // 카테고리 id
-      filterSort, // 정렬기준
-    ],
-    firebaseWait
-  );
+  const scroll = useInfiniteScroll(["fb-test"], firebaseWait);
 
   useEffect(() => {
-    scroll.handleRefetch();
+    if (scroll.data?.pages && scroll.data?.pages[0]?.filter) {
+      const filter = scroll.data?.pages[0]?.filter;
+      setFilterCategory(filter.category_id);
+      setFilterIsOpen(filter.is_open);
+      setFilterSort(filter.sort);
+    }
   }, []);
 
   const goNextPage = async () => {
