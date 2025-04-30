@@ -16,6 +16,7 @@ import { useQuery } from "@tanstack/react-query";
 import { mypageRecentList } from "../../apis/libs";
 import { signOut } from "firebase/auth";
 import { auth } from "../../libs/firebase";
+import queryClient from "../../libs/queryClient";
 
 export default function Mypage() {
   const [userFavorite, setUserFavorite] = useState<Array<FavoriteType> | []>(
@@ -79,6 +80,10 @@ export default function Mypage() {
   const handelLogout = async () => {
     try {
       await signOut(auth);
+      queryClient.removeQueries({
+        predicate: (query) => query.queryKey[0] === "mypage",
+      });
+      queryClient.getQueryCache().clear();
       alert("로그아웃 되었습니다.");
       logout();
       navigate("/");
@@ -91,8 +96,8 @@ export default function Mypage() {
   const { data: recentList, isLoading: recentLoading } = useQuery({
     queryKey: ["mypage", "recent", userInfo?.uuid],
     queryFn: () => mypageRecentList(userInfo?.uuid as string),
-    staleTime: 5 * 60 * 1000,
-    cacheTime: 30 * 60 * 1000,
+    // staleTime: 5 * 60 * 1000,
+    // cacheTime: 30 * 60 * 1000,
     enabled: isLogin,
   });
 

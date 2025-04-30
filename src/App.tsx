@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   BaseLayout,
   FooterLayout,
@@ -34,6 +34,7 @@ import CommonButton from "./components/common/CommonButton";
 import Logo from "./components/Logo";
 import { auth } from "./libs/firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+import queryClient from "./libs/queryClient";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -65,12 +66,17 @@ function App() {
   const navigate = useNavigate();
   const { loginStatus, userInfo, isLogin, logout, updateUserInfo } =
     useAuthStore();
+  const location = useLocation();
 
   const handelLogout = async () => {
     try {
-      await signOut(auth);
-      alert("로그아웃 되었습니다.");
       toggleDrawer(false);
+      await signOut(auth);
+      queryClient.removeQueries({
+        predicate: (query) => query.queryKey[0] === "mypage",
+      });
+      queryClient.getQueryCache().clear();
+      alert("로그아웃 되었습니다.");
       logout();
       navigate("/");
     } catch (error) {
@@ -98,6 +104,10 @@ function App() {
 
     return () => unsubscribe();
   }, [loginStatus, updateUserInfo]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
 
   return (
     <>
