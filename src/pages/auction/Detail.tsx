@@ -360,7 +360,7 @@ export default function Detail() {
   };
 
   // 입찰
-  const auctionBiddingWait = async (nowPrice: number) => {
+  const auctionBiddingWait = async (item: any, nowPrice: number) => {
     if (!isLogin) {
       alert("로그인 후 이용할 수 있습니다!");
       return false;
@@ -374,6 +374,13 @@ export default function Detail() {
     setLoading(true);
     const bidItem = {
       item_id: POST_ID!,
+      title: item.title,
+      category_id: item.category_id,
+      src: item.src,
+      start_price: item.start_price,
+    };
+    const historyItem = {
+      item_id: POST_ID!,
       uuid: userInfo?.uuid as string,
       amount: bidAmount,
       bidder: userInfo?.nickname || "USER",
@@ -383,6 +390,7 @@ export default function Detail() {
     try {
       const { err } = await auctionBidding(
         POST_ID!,
+        historyItem,
         bidItem,
         bidAmount,
         userInfo?.uuid as string
@@ -783,7 +791,9 @@ export default function Detail() {
                     <CommonButton
                       text="입찰하기"
                       btnType="large"
-                      onClick={() => auctionBiddingWait(all.data?.now_price)}
+                      onClick={() =>
+                        auctionBiddingWait(all.data, all.data?.now_price)
+                      }
                       disabled={loading}
                     />
                   </div>

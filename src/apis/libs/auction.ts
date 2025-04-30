@@ -237,16 +237,24 @@ export const deletePost = async (post_id: string) => {
   }
 };
 
-interface BidPropsType {
+interface HistoryPropsType {
   item_id: string;
   uuid: string;
   bidder: string;
   amount: number;
   time: string;
 }
+interface BidPropsType {
+  item_id: string;
+  title: string;
+  category_id: number;
+  src: string;
+  start_price: number;
+}
 // 게시글 입찰 등록
 export const auctionBidding = async (
   post_id: string,
+  history_item: HistoryPropsType,
   bid_item: BidPropsType,
   update_price: number,
   uuid: string
@@ -258,11 +266,15 @@ export const auctionBidding = async (
       const detailBidHistoryRef = doc(
         collection(firebaseDB, "posts", post_id, "bid_history")
       );
-      const bidListRef = doc(firebaseDB, "bid_list", uuid, "data", post_id);
+      const bidListRef = doc(collection(firebaseDB, "bid_list", uuid, "data"));
 
       const detailDoc = await transaction.get(detailRef);
       if (!detailDoc.exists()) {
         return { data: null, err: `Document doesn't exist.` };
+      }
+
+      if (!detailDoc.data().is_open) {
+        return { res: false, err: `Auction is closed.` };
       }
 
       const newPop = detailDoc.data().bid_count + 1;
@@ -274,7 +286,7 @@ export const auctionBidding = async (
       transaction.set(
         detailBidHistoryRef,
         {
-          ...bid_item,
+          ...history_item,
           created_at: setDateTemp(),
         },
         { merge: true }
