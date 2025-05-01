@@ -18,6 +18,7 @@ const Home = lazy(() => import("./pages/Home.tsx"));
 const List = lazy(() => import("./pages/auction/List.tsx"));
 const Detail = lazy(() => import("./pages/auction/Detail.tsx"));
 const Result = lazy(() => import("./pages/auction/Result.tsx"));
+const SellerItems = lazy(() => import("./pages/auction/SellerItems.tsx"));
 const Sell = lazy(() => import("./pages/sell/Sell.tsx"));
 const Edit = lazy(() => import("./pages/sell/Edit.tsx"));
 const MyList = lazy(() => import("./pages/sell/MyList.tsx"));
@@ -88,6 +89,10 @@ const router = createBrowserRouter([
           {
             path: "result",
             element: lazyComponent(<Result />),
+          },
+          {
+            path: "items/:sellerID",
+            element: lazyComponent(<SellerItems />),
           },
         ],
       },
