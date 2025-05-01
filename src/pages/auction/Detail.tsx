@@ -158,25 +158,6 @@ export default function Detail() {
     navigate(`/sell/${POST_ID}`);
   };
 
-  /*const deletePostPrev = async (isOpen: boolean) => {
-    if (!isOpen) {
-      alert("입찰 완료된 게시글은 삭제할 수 없습니다!");
-      return false;
-    }
-
-    try {
-      setLoading(true);
-      await api.delete(`posts/${POST_ID}`);
-      updateSalesHistory(null);
-      alert("게시글 삭제가 완료되었습니다!");
-      setLoading(false);
-      navigate("/auction", { replace: true });
-    } catch (error) {
-      console.error(error);
-      alert("게시글 삭제에 실패했습니다!");
-    }
-  };*/
-
   // fb 게시글 삭제
   const deletePostWait = async (isOpen: boolean) => {
     if (!userCheck) {
@@ -274,67 +255,6 @@ export default function Detail() {
     setLoading(false);
   };
 
-  /*
-  const updateFavoritePrev = async (item: postType) => {
-    if (!isLogin) {
-      alert("로그인 후 이용할 수 있습니다!");
-      return false;
-    }
-
-    const cnt = favoriteCheck ? favoriteCnt - 1 : favoriteCnt + 1;
-    let favorite_list;
-    if (favoriteCheck) {
-      favorite_list = item.favorite_list.filter(
-        (item) => item.uuid !== userInfo?.uuid
-      );
-    } else {
-      favorite_list = [
-        ...item.favorite_list,
-        {
-          id: userInfo?.id,
-          uuid: userInfo?.uuid,
-        },
-      ];
-    }
-    favorite_list = Array.from(
-      new Map(favorite_list.map((item) => [item.id, item])).values()
-    );
-
-    setLoading(true);
-    try {
-      if (favoriteCheck) {
-        // 좋아요 해제
-        await api.delete(`favorite/${userInfo?.id + POST_ID!}`);
-      } else {
-        // 좋아요 등록
-        await api.post(`favorite`, {
-          id: userInfo?.id + POST_ID!,
-          item_id: POST_ID,
-          user_id: userInfo?.id,
-          uuid: userInfo?.uuid,
-          title: item.title,
-          src: item.src,
-          category_id: item.category_id,
-          start_price: item.start_price,
-        });
-      }
-
-      // 해당 제품 db 내용 업데이트
-      await api.patch(`posts/${POST_ID}`, {
-        favorite: cnt,
-        favorite_list,
-      });
-      alert("성공");
-      setFavoriteCnt(cnt);
-      setFavoriteCheck(!favoriteCheck);
-    } catch (error) {
-      console.log(error);
-      console.log("실패했습니다");
-    }
-    setLoading(false);
-  };
-  */
-
   // 게시글 입찰내역 보이기
   const getDetailBidHistoryWait = async () => {
     setBidHistoryShow(!bidHistoryShow);
@@ -414,101 +334,6 @@ export default function Detail() {
       setLoading(false);
     }
   };
-  /*
-  const auctionBiddingPrev = async (item: postType, nowPrice: number) => {
-    if (!isLogin) {
-      alert("로그인 후 이용할 수 있습니다!");
-      return false;
-    }
-
-    if (bidAmount <= nowPrice) {
-      alert("입찰가는 현대최대가 보다 높은 값만 입력할 수 있습니다!");
-      return false;
-    }
-
-    const patch = bidHistoryDetail?.some((i) => i.uuid === userInfo?.uuid);
-
-    setLoading(true);
-    const nowTime = setDateTemp();
-    try {
-      if (patch) {
-        // patch
-        const filterHistory = bidHistoryDetail
-          ? bidHistoryDetail.filter((i) => i.uuid === userInfo?.uuid)
-          : [];
-
-        await api.patch(`bid_list/${userInfo?.id + POST_ID}`, {
-          history: [
-            {
-              item_id: POST_ID,
-              user_id: userInfo?.id,
-              uuid: userInfo?.uuid,
-              amount: bidAmount,
-              bidder: userInfo?.nickname || "USER",
-              time: nowTime,
-            },
-            ...filterHistory,
-          ],
-        });
-      } else {
-        // post
-        await api.post(`bid_list`, {
-          id: userInfo?.id + POST_ID,
-          item_id: POST_ID,
-          user_id: userInfo?.id,
-          uuid: userInfo?.uuid,
-          bidder: userInfo?.nickname || "USER",
-          amount: bidAmount,
-          time: nowTime,
-          title: item.title,
-          src: item.src,
-          category_id: item.category_id,
-          start_price: item.start_price,
-          history: [
-            {
-              item_id: POST_ID,
-              user_id: userInfo?.id,
-              uuid: userInfo?.uuid,
-              amount: bidAmount,
-              bidder: userInfo?.nickname || "USER",
-              time: nowTime,
-            },
-          ],
-        });
-      }
-
-      await api.patch(`posts/${POST_ID}`, {
-        now_price: bidAmount,
-        bid_count: bidHistoryDetail.length + 1,
-        bid_history: [
-          {
-            id: POST_ID,
-            user_id: userInfo?.id,
-            uuid: userInfo?.uuid,
-            amount: bidAmount,
-            bidder: userInfo?.nickname || "USER",
-            time: nowTime,
-          },
-          ...bidHistoryDetail,
-        ],
-      });
-      updateBidList(null);
-      alert("입찰 완료!");
-    } catch (error) {
-      console.log(error);
-      alert("입찰에 실패했습니다!");
-    }
-
-    try {
-      await fetchPosts();
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-    }
-    setLoading(false);
-  };
-  */
 
   // 게시글 입찰 마감 처리
   const closeAuctionWait = async (isOpen: boolean, endDate: string) => {
@@ -547,59 +372,6 @@ export default function Detail() {
       setLoading(false);
     }
   };
-  /*const closeAuction = async (
-    isOpen: boolean,
-    endDate: string,
-    history: Array<postBidHistory>,
-    title: string,
-    src: string,
-    category_id: number
-  ) => {
-    // 입찰 마감 처리는 최소 14일 이후에 가능+
-    if (!isOpen) return false;
-
-    if (new Date() < new Date(endDate)) {
-      alert("최소 마감일 이후에 마감할 수 있습니다.");
-      return false;
-    }
-
-    let last_bidder = null;
-    if (history.length) {
-      last_bidder = history.reduce(
-        (acc, curr) => (curr.amount > acc.amount ? curr : acc),
-        history[0]
-      );
-    }
-
-    const nowDate = setDateTemp();
-    try {
-      setLoading(true);
-      await api.patch(`posts/${POST_ID}`, {
-        is_open: 0,
-        end_date: nowDate,
-        last_bidder,
-      });
-      if (last_bidder) {
-        await api.post(`bid_award`, {
-          id: last_bidder.id + POST_ID,
-          item_id: POST_ID,
-          user_id: last_bidder.id,
-          uuid: last_bidder.uuid,
-          award_date: nowDate,
-          time: last_bidder.time,
-          amount: last_bidder.amount,
-          title,
-          category_id,
-          src,
-        });
-        updateBidAward(null);
-      }
-      alert("처리되었습니다!");
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-    }
-  };*/
 
   // tsx
   if (all.isLoading) {
