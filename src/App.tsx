@@ -347,7 +347,9 @@ function App() {
           </div>
         </FooterLayout>
       </BaseLayout>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {import.meta.env.MODE === "development" && (
+        <ReactQueryDevtools initialIsOpen={false} />
+      )}
     </>
   );
 }
