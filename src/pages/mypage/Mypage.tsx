@@ -38,6 +38,7 @@ export default function Mypage() {
   const { data: bidAward, isLoading: awardLoading } = useQuery({
     queryKey: ["mypage", "bid_award", userInfo?.uuid],
     queryFn: () => mypageAwardList(userInfo?.uuid as string),
+    gcTime: 60 * 60 * 1000,
     enabled: isLogin,
   });
 

@@ -67,8 +67,6 @@ export const mypageFavorite = async (user_id: string) => {
       limit(4)
     );
     const { docs } = await getDocs(favoriteQuery);
-    console.log(docs.map((item) => item.data()));
-
     return docs.map((item) => item.data());
   } catch (error) {
     console.log(error);
