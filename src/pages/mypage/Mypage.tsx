@@ -124,13 +124,15 @@ export default function Mypage() {
           <>
             <CommonList grid={4} loading={bidLoading}>
               {bidList?.map((item, idx) => (
-                <CommonListItem
-                  key={`bidlist_${idx}`}
-                  src={item?.src}
-                  category={findCategory(item?.category_id)}
-                  title={item?.title}
-                  startPrice={item?.start_price}
-                />
+                <Link to={`/auction/${item?.item_id}`} key={`bidlist_${idx}`}>
+                  <CommonListItem
+                    key={`bidlist_${idx}`}
+                    src={item?.src}
+                    category={findCategory(item?.category_id)}
+                    title={item?.title}
+                    startPrice={item?.start_price}
+                  />
+                </Link>
               ))}
             </CommonList>
           </>
