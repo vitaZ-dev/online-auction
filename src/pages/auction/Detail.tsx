@@ -1,4 +1,3 @@
-import api from "../../apis/api";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
@@ -62,13 +61,7 @@ export default function Detail() {
   const { id: POST_ID } = useParams<{ id: string }>();
   const { pathname } = useLocation();
 
-  const {
-    isLogin,
-    userInfo,
-    updateSalesHistory,
-    updateBidList,
-    updateBidAward,
-  } = useAuthStore();
+  const { isLogin, userInfo } = useAuthStore();
   const [cookies, setCookie] = useCookies();
   const navigate = useNavigate();
 
@@ -113,16 +106,16 @@ export default function Detail() {
   const all = useQuery({
     queryKey: ["detail", POST_ID],
     queryFn: () => getDetailPostWait(POST_ID as string, cntUpdate),
-    staleTime: 5 * 60 * 1000,
-    cacheTime: 30 * 60 * 1000,
+    // staleTime: 1 * 60 * 1000,
+    // gcTime: 30 * 60 * 1000,
     enabled: !!POST_ID,
   });
 
   const { data: otherList, isLoading: otherLoading } = useQuery({
     queryKey: ["other-list", all?.data?.user_id],
     queryFn: () => getOtherPostsWait(all?.data?.user_id as string),
-    staleTime: 5 * 60 * 1000,
-    cacheTime: 30 * 60 * 1000,
+    // staleTime: 1 * 60 * 1000,
+    // gcTime: 30 * 60 * 1000,
     enabled: !!all?.data && JSON.stringify(all.data) !== "{}",
   });
 
@@ -199,9 +192,12 @@ export default function Detail() {
     try {
       setLoading(true);
       await deletePost(POST_ID as string);
-      updateSalesHistory(null);
       alert("게시글 삭제가 완료되었습니다!");
       setLoading(false);
+      await queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === "mypage" && query.queryKey[1] === "recent",
+      });
       navigate("/auction", { replace: true });
     } catch (error) {
       console.error(error);
@@ -263,6 +259,10 @@ export default function Detail() {
         setFavoriteCnt(cnt);
         alert("ok");
         queryClient.invalidateQueries({ queryKey: ["home", "favorite"] });
+        await queryClient.invalidateQueries({
+          predicate: (query) =>
+            query.queryKey[0] === "mypage" && query.queryKey[1] === "favorite",
+        });
       } else {
         alert("실패했습니다");
       }
@@ -399,7 +399,10 @@ export default function Detail() {
         console.log(err);
       } else {
         queryClient.invalidateQueries({ queryKey: ["detail", POST_ID] });
-        updateBidList(null);
+        await queryClient.invalidateQueries({
+          predicate: (query) =>
+            query.queryKey[0] === "mypage" && query.queryKey[1] === "bid_list",
+        });
         alert("입찰이 완료되었습니다!");
         setBidHistoryLoad(false);
         setBidHistoryShow(false);
@@ -530,7 +533,7 @@ export default function Detail() {
 
       // 리액트쿼리 처리
       queryClient.invalidateQueries({ predicate: () => true });
-      queryClient.invalidateQueries({
+      await queryClient.invalidateQueries({
         predicate: (query) =>
           query.queryKey[0] === "mypage" && query.queryKey[1] === "recent",
       });
