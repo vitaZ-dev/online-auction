@@ -106,16 +106,18 @@ export default function Detail() {
   const all = useQuery({
     queryKey: ["detail", POST_ID],
     queryFn: () => getDetailPostWait(POST_ID as string, cntUpdate),
-    // staleTime: 1 * 60 * 1000,
-    // gcTime: 30 * 60 * 1000,
+    staleTime: 30 * 1000,
+    gcTime: 30 * 1000,
+    refetchOnWindowFocus: true,
     enabled: !!POST_ID,
   });
 
   const { data: otherList, isLoading: otherLoading } = useQuery({
     queryKey: ["other-list", all?.data?.user_id],
     queryFn: () => getOtherPostsWait(all?.data?.user_id as string),
-    // staleTime: 1 * 60 * 1000,
-    // gcTime: 30 * 60 * 1000,
+    staleTime: 30 * 1000,
+    gcTime: 30 * 1000,
+    refetchOnWindowFocus: true,
     enabled: !!all?.data && JSON.stringify(all.data) !== "{}",
   });
 
