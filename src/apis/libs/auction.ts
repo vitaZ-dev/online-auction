@@ -311,11 +311,7 @@ export const auctionBidding = async (
 };
 
 // 게시글 입찰 마감 처리
-export const closeAuction = async (
-  post_id: string,
-  uuid: string,
-  award_check: boolean
-) => {
+export const closeAuction = async (post_id: string, award_check: boolean) => {
   // 총 입찰이 0이면 입찰자 없이 마감
   // 총 입찰이 1이상 이면 입찰자 설정
   try {
@@ -329,7 +325,13 @@ export const closeAuction = async (
     const closeRes = await runTransaction(firebaseDB, async (transaction) => {
       // ref
       const detailRef = doc(firebaseDB, "posts", post_id);
-      const bidAwardRef = doc(firebaseDB, "bid_award", uuid, "data", post_id);
+      const bidAwardRef = doc(
+        firebaseDB,
+        "bid_award",
+        bid_info![0].uuid!,
+        "data",
+        post_id
+      );
 
       const detailDoc = await transaction.get(detailRef);
       if (!detailDoc.exists()) {
@@ -350,7 +352,7 @@ export const closeAuction = async (
           {
             // amount /  bidder / created_at / item_id / time / uuid
             ...bid_info?.[0],
-            user_id: uuid,
+            user_id: bid_info?.[0].uuid,
             title: detailDoc.data().title,
             category_id: detailDoc.data().category_id,
             src: detailDoc.data().src,

@@ -520,11 +520,7 @@ export default function Detail() {
 
     try {
       setLoading(true);
-      const { err } = await closeAuction(
-        POST_ID!,
-        userInfo?.uuid as string,
-        awardCheck
-      );
+      const { err } = await closeAuction(POST_ID!, awardCheck);
       if (err) {
         console.log(err);
         alert("오류가 발생했습니다!");
@@ -534,6 +530,10 @@ export default function Detail() {
 
       // 리액트쿼리 처리
       queryClient.invalidateQueries({ predicate: () => true });
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === "mypage" && query.queryKey[1] === "recent",
+      });
       queryClient.refetchQueries({ queryKey: ["detail", POST_ID] });
       alert("처리되었습니다!");
       setLoading(false);
