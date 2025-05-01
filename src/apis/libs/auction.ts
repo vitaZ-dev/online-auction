@@ -40,6 +40,19 @@ export const getPostList = async (
 
   try {
     // 데이터 불러온 최초 1회만 실행하면 됨
+    // const meta = queryClient.getQueryData<{ totalPages: number }>(["fb-meta"]);
+    // if (meta) {
+    //   totalPages = meta?.totalPages ?? 1;
+    // } else {
+    //   const countQuery = query(
+    //     POSTS_DB,
+    //     ...(isOpen ? [where("is_open", "==", 1)] : []),
+    //     ...(categoryId !== 0 ? [where("category_id", "==", categoryId)] : [])
+    //   );
+    //   const snapshot = await getCountFromServer(countQuery);
+    //   setTotalPage(calTotalPage(snapshot.data().count, CONTENTS_COUNT));
+    //   totalPages = calTotalPage(snapshot.data().count, CONTENTS_COUNT);
+    // }
     if (page === 1) {
       const countQuery = query(
         POSTS_DB,
@@ -50,6 +63,13 @@ export const getPostList = async (
       setTotalPage(calTotalPage(snapshot.data().count, CONTENTS_COUNT));
       totalPages = calTotalPage(snapshot.data().count, CONTENTS_COUNT);
     }
+    // else {
+    //   // 1페이지가 아닌 경우 저장된 totalPages를 가져옴
+    //   const meta = queryClient.getQueryData<{ totalPages: number }>([
+    //     "fb-meta",
+    //   ]);
+    //   totalPages = meta?.totalPages ?? 1;
+    // }
 
     const listQuery = query(
       POSTS_DB,
@@ -266,7 +286,7 @@ export const auctionBidding = async (
       const detailBidHistoryRef = doc(
         collection(firebaseDB, "posts", post_id, "bid_history")
       );
-      const bidListRef = doc(collection(firebaseDB, "bid_list", uuid, "data"));
+      const bidListRef = doc(firebaseDB, "bid_list", uuid, "data", post_id);
 
       const detailDoc = await transaction.get(detailRef);
       if (!detailDoc.exists()) {
@@ -291,14 +311,10 @@ export const auctionBidding = async (
         },
         { merge: true }
       );
-      transaction.set(
-        bidListRef,
-        {
-          ...bid_item,
-          created_at: setDateTemp(),
-        },
-        { merge: true }
-      );
+      transaction.set(bidListRef, {
+        ...bid_item,
+        created_at: setDateTemp(),
+      });
 
       return { res: true, err: null };
     });
