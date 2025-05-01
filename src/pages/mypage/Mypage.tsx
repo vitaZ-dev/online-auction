@@ -1,81 +1,51 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from "react";
-import useAuthStore from "../../stores/useAuthStore";
-import { MypageLayout } from "../../styles/MypageStyle";
-import defaultImg from "/images/profile_default.png";
-import api from "../../apis/api";
 import { Link, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import defaultImg from "/images/profile_default.png";
 import { findCategory } from "../../modules/category";
+import useAuthStore from "../../stores/useAuthStore";
+import { CommonNodataBox } from "../../styles/CommonStyle";
+import { MypageLayout } from "../../styles/MypageStyle";
 import CommonList from "../../components/UI/CommonList";
 import CommonListItem from "../../components/UI/CommonListItem";
-import { CommonNodataBox } from "../../styles/CommonStyle";
 import CommonTitle from "../../components/UI/CommonTitle";
 import CommonButton from "../../components/common/CommonButton";
-import { FavoriteType } from "../../types/user";
-import { useQuery } from "@tanstack/react-query";
-import { mypageRecentList } from "../../apis/libs";
+import {
+  mypageAwardList,
+  mypageBidList,
+  mypageFavorite,
+  mypageRecentList,
+} from "../../apis/libs";
 import { signOut } from "firebase/auth";
 import { auth } from "../../libs/firebase";
 import queryClient from "../../libs/queryClient";
 
 export default function Mypage() {
-  const [userFavorite, setUserFavorite] = useState<Array<FavoriteType> | []>(
-    []
-  );
-  const {
-    isLogin,
-    userInfo,
-    salesHistory,
-    updateSalesHistory,
-    bidList,
-    updateBidList,
-    bidAward,
-    updateBidAward,
-    logout,
-  } = useAuthStore();
+  const { isLogin, userInfo, logout } = useAuthStore();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // 판매 내역
-    if (!salesHistory) getSalesHistory();
+  const { data: recentList, isLoading: recentLoading } = useQuery({
+    queryKey: ["mypage", "recent", userInfo?.uuid],
+    queryFn: () => mypageRecentList(userInfo?.uuid as string),
+    enabled: isLogin,
+  });
 
-    // 입찰 내역
-    if (!bidList) getBidList();
+  const { data: bidList, isLoading: bidLoading } = useQuery({
+    queryKey: ["mypage", "bid_list", userInfo?.uuid],
+    queryFn: () => mypageBidList(userInfo?.uuid as string),
+    enabled: isLogin,
+  });
 
-    // 낙찰 내역
-    if (!bidAward) getBidAward();
+  const { data: bidAward, isLoading: awardLoading } = useQuery({
+    queryKey: ["mypage", "bid_award", userInfo?.uuid],
+    queryFn: () => mypageAwardList(userInfo?.uuid as string),
+    enabled: isLogin,
+  });
 
-    // 좋아요 리스트
-    getFavorite();
-  }, []);
-
-  const getSalesHistory = async () => {
-    const { data } = await api.get(
-      `posts?user_id=${userInfo?.uuid}&_sort=created_at&_order=desc&_limit=4`
-    );
-    updateSalesHistory(data);
-  };
-
-  const getBidList = async () => {
-    const { data } = await api.get(
-      `bid_list?uuid=${userInfo?.uuid}&_sort=time&_order=desc&_limit=4`
-    );
-    updateBidList(data);
-  };
-
-  const getBidAward = async () => {
-    const { data } = await api.get(
-      `bid_award?uuid=${userInfo?.uuid}&_sort=award_date&_order=desc&_limit=4`
-    );
-    updateBidAward(data);
-  };
-
-  const getFavorite = async () => {
-    const { data } = await api.get(
-      `favorite?uuid=${userInfo?.uuid}&_sort=created_at&_order=desc&_limit=4`
-    );
-    setUserFavorite(data);
-  };
+  const { data: favoriteList, isLoading: favoriteLoading } = useQuery({
+    queryKey: ["mypage", "favorite", userInfo?.uuid],
+    queryFn: () => mypageFavorite(userInfo?.uuid as string),
+    enabled: isLogin,
+  });
 
   const handelLogout = async () => {
     try {
@@ -92,14 +62,6 @@ export default function Mypage() {
       alert("로그아웃에 실패했습니다.");
     }
   };
-
-  const { data: recentList, isLoading: recentLoading } = useQuery({
-    queryKey: ["mypage", "recent", userInfo?.uuid],
-    queryFn: () => mypageRecentList(userInfo?.uuid as string),
-    // staleTime: 5 * 60 * 1000,
-    // cacheTime: 30 * 60 * 1000,
-    enabled: isLogin,
-  });
 
   return (
     <MypageLayout>
@@ -158,9 +120,9 @@ export default function Mypage() {
           title="나의 입찰 내역"
           link={Boolean(bidList?.length) && "bid"}
         />
-        {bidList?.length ? (
+        {bidList?.length || bidLoading ? (
           <>
-            <CommonList grid={4}>
+            <CommonList grid={4} loading={bidLoading}>
               {bidList?.map((item, idx) => (
                 <CommonListItem
                   key={`bidlist_${idx}`}
@@ -185,9 +147,9 @@ export default function Mypage() {
           title="나의 낙찰 내역"
           link={Boolean(bidAward?.length) && "award"}
         />
-        {bidAward?.length ? (
+        {bidAward?.length || awardLoading ? (
           <>
-            <CommonList grid={4}>
+            <CommonList grid={4} loading={awardLoading}>
               {bidAward?.map((post, idx) => (
                 <Link to={`/auction/${post?.item_id}`} key={`award_${idx}`}>
                   <CommonListItem
@@ -212,12 +174,12 @@ export default function Mypage() {
         <CommonTitle
           type={3}
           title="좋아요 리스트"
-          link={Boolean(userFavorite?.length) && "favorite"}
+          link={Boolean(favoriteList?.length) && "favorite"}
         />
-        {userFavorite.length ? (
+        {favoriteList?.length || favoriteLoading ? (
           <>
-            <CommonList grid={4}>
-              {userFavorite?.map((post, idx) => (
+            <CommonList grid={4} loading={favoriteLoading}>
+              {favoriteList?.map((post, idx) => (
                 <Link to={`/auction/${post?.item_id}`} key={`favorite_${idx}`}>
                   <CommonListItem
                     src={post?.src}
