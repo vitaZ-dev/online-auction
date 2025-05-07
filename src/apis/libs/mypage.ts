@@ -1,13 +1,17 @@
 import {
   collection,
+  DocumentData,
+  getCountFromServer,
   getDocs,
   limit,
   orderBy,
   query,
+  startAfter,
   where,
 } from "firebase/firestore";
 import { POSTS_DB } from "../../modules/firebase";
 import firebaseDB from "../../libs/firebase";
+import { calTotalPage } from "../../utils";
 
 // 마이페이지 최근 판매 물품 목록
 export const mypageRecentList = async (user_id: string) => {
@@ -71,5 +75,67 @@ export const mypageFavorite = async (user_id: string) => {
   } catch (error) {
     console.log(error);
     return [];
+  }
+};
+
+// 마이페이지 상세 게시글 무한스크롤
+export const getMypageList = async (
+  author_id: string,
+  page: number = 1,
+  CONTENTS_COUNT: number,
+  lastItem: null | DocumentData,
+  isOpen: string // all | 1(open) | 0(close)
+) => {
+  let totalPage: number = 1;
+  try {
+    if (page === 1) {
+      const countQuery = query(
+        POSTS_DB,
+        ...(isOpen === "1" || isOpen === "0"
+          ? [where("is_open", "==", +isOpen)]
+          : []),
+        where("user_id", "==", author_id)
+      );
+      const snapshot = await getCountFromServer(countQuery);
+      totalPage = calTotalPage(snapshot.data().count, CONTENTS_COUNT);
+    }
+
+    const listQuery = query(
+      POSTS_DB,
+      ...(isOpen === "1" || isOpen === "0"
+        ? [where("is_open", "==", +isOpen)]
+        : []),
+      where("user_id", "==", author_id),
+      orderBy("created_at", "desc"),
+      ...(lastItem ? [startAfter(lastItem)] : []),
+      limit(CONTENTS_COUNT)
+    );
+
+    const { docs, empty } = await getDocs(listQuery);
+    if (empty) {
+      return {
+        docs: [],
+        lastItem: null,
+        page,
+        totalPage,
+        empty: true,
+      };
+    }
+    return {
+      docs: docs.map((item) => item.data()),
+      lastItem: docs[docs.length - 1],
+      page,
+      totalPage,
+      empty: false,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      docs: [],
+      lastItem: null,
+      page,
+      totalPage,
+      empty: true,
+    };
   }
 };
