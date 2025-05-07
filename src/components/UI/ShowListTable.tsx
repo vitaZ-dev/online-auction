@@ -1,13 +1,29 @@
 import { ShowListTableLayout } from "../../styles/CommonStyle";
 import { ShowListTableProps } from "../../types/component";
 import { numberFormat } from "../../utils";
+import DataLoading from "../DataLoading";
 
 export default function ShowListTable({
   tableGrid,
   tableHeader,
   tableHeaderText,
   tableList,
+  tableLoading = false,
 }: ShowListTableProps) {
+  // loading
+  if (tableLoading)
+    return (
+      <ShowListTableLayout tableGrid={tableGrid}>
+        <div className="table_header">
+          {tableHeader?.map((_, idx) => (
+            <span key={`table_header_${idx}`}>{tableHeaderText[idx]}</span>
+          ))}
+        </div>
+        <DataLoading />
+        <div className="mb32"></div>
+      </ShowListTableLayout>
+    );
+
   return (
     <ShowListTableLayout tableGrid={tableGrid}>
       <div className="table_header">

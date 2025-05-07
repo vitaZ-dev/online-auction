@@ -518,6 +518,10 @@ export const FullImageLayout = styled.div`
 export const ShowListTableLayout = styled.div<ShowListTableType>`
   position: relative;
 
+  .mb32 {
+    margin-bottom: 32px;
+  }
+
   .table_header,
   .table_contents > * {
     display: grid;
@@ -532,7 +536,7 @@ export const ShowListTableLayout = styled.div<ShowListTableType>`
     top: 0;
     left: 0;
     width: 100%;
-    border-bottom: 1px solid var(--main-red-color);
+    border-bottom: 1px solid var(--main-violet-00-color);
     span {
       padding: 0 8px;
     }

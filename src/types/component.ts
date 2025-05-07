@@ -99,6 +99,7 @@ export interface ShowListTableProps {
   tableHeader: string[];
   tableHeaderText: string[];
   tableList: any[] | null;
+  tableLoading?: boolean;
 }
 
 export interface FullSizeImageProps {
