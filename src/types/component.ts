@@ -59,6 +59,7 @@ export interface CommonRadioBtnProps {
   value: string | number;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   checked: boolean;
+  disabled?: boolean;
 }
 
 export interface MUIPaginationProps {

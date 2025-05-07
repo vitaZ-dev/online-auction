@@ -369,6 +369,10 @@ export const CommonRadioBtnStyle = styled.div`
     appearance: none;
     display: none !important;
 
+    &:disabled + label {
+      opacity: 0.5;
+      cursor: default;
+    }
     & + label {
       display: inline-block;
       min-width: 45px;
