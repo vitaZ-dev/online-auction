@@ -1,11 +1,13 @@
 import {
   collection,
+  CollectionReference,
   DocumentData,
   getCountFromServer,
   getDocs,
   limit,
   orderBy,
   query,
+  QueryConstraint,
   startAfter,
   where,
 } from "firebase/firestore";
@@ -80,7 +82,8 @@ export const mypageFavorite = async (user_id: string) => {
 
 // 마이페이지 상세 게시글 무한스크롤
 export const getMypageList = async (
-  author_id: string,
+  collectionPath: CollectionReference<DocumentData>,
+  constraints: QueryConstraint[],
   page: number = 1,
   CONTENTS_COUNT: number,
   lastItem: null | DocumentData,
@@ -90,22 +93,24 @@ export const getMypageList = async (
   try {
     if (page === 1) {
       const countQuery = query(
-        POSTS_DB,
+        collectionPath,
+        // where("user_id", "==", user_id),
+        ...constraints,
         ...(isOpen === "1" || isOpen === "0"
           ? [where("is_open", "==", +isOpen)]
-          : []),
-        where("user_id", "==", author_id)
+          : [])
       );
       const snapshot = await getCountFromServer(countQuery);
       totalPage = calTotalPage(snapshot.data().count, CONTENTS_COUNT);
     }
 
     const listQuery = query(
-      POSTS_DB,
+      collectionPath,
+      // where("user_id", "==", user_id),
+      ...constraints,
       ...(isOpen === "1" || isOpen === "0"
         ? [where("is_open", "==", +isOpen)]
         : []),
-      where("user_id", "==", author_id),
       orderBy("created_at", "desc"),
       ...(lastItem ? [startAfter(lastItem)] : []),
       limit(CONTENTS_COUNT)

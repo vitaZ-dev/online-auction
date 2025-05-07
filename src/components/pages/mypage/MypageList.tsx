@@ -1,42 +1,45 @@
-import {
-  collection,
-  DocumentData,
-  limit,
-  orderBy,
-  query,
-  startAfter,
-  where,
-} from "firebase/firestore";
-import firebaseDB from "../../../libs/firebase";
-import { useCallback, useEffect, useState } from "react";
+import { DocumentData } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import { MypageLayout } from "../../../styles/MypageStyle";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import CommonTitle from "../../UI/CommonTitle";
 import CommonRadioBtn from "../../common/CommonRadioBtn";
 import CommonList from "../../UI/CommonList";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CommonListItem from "../../UI/CommonListItem";
 import { findCategory } from "../../../modules/category";
 import DataLoading from "../../DataLoading";
 import { CommonNodataBox } from "../../../styles/CommonStyle";
 import { useInView } from "react-intersection-observer";
-import { getMypageList, getOtherList } from "../../../apis/libs";
+import { getMypageList } from "../../../apis/libs";
 import useAuthStore from "../../../stores/useAuthStore";
+import { MYPAGE_META } from "../../../constants/mypage";
 
 const CONTENTS_COUNT = 10;
 
-export default function MypageList() {
+interface MypageListProps {
+  collectionPath: string;
+  filterOpen?: boolean;
+}
+
+export default function MypageList({
+  collectionPath,
+  filterOpen = true,
+}: MypageListProps) {
   const navigate = useNavigate();
-  const { pathname } = useLocation();
-
-  const [pageType, setPageType] = useState<string>("");
-
-  useEffect(() => {
-    const title = pathname.split("/").at(-1);
-    setPageType(title || "");
-  }, [pathname]);
 
   const { userInfo } = useAuthStore();
+
+  useEffect(() => {
+    console.log(collectionPath);
+    console.log(
+      MYPAGE_META[collectionPath]?.title(userInfo?.nickname || "USER"),
+      MYPAGE_META[collectionPath]?.path(userInfo?.uuid || "")
+    );
+  }, [collectionPath]);
+  const [colPath, ...constraints] = MYPAGE_META[collectionPath]?.path(
+    userInfo?.uuid || ""
+  );
 
   const [isOpen, setIsOpen] = useState<string>("all"); // "all" | "1" | "0"
   const [page, setPage] = useState<number>(1);
@@ -47,16 +50,6 @@ export default function MypageList() {
   const [hasNextPage, setHasNextPage] = useState<boolean>(false);
   const [empty, isEmpty] = useState<boolean>(false);
 
-  /*
-  const base = query(
-    collection(firebaseDB, "posts"),
-    where("authorId", "==", "CURRENT_USER_ID"), // 실제 uid로 대체
-    orderBy("created_at", "desc"),
-    ...(lastItem ? [startAfter(lastItem)] : []),
-    limit(CONTENTS_COUNT)
-  );
-  */
-
   const fetchPost = async (page: number, isOpen: string) => {
     // if (!hasNextPage || !userInfo) return;
     if (!userInfo) return;
@@ -64,7 +57,8 @@ export default function MypageList() {
     setLoading(true);
     try {
       const result = await getMypageList(
-        userInfo.uuid!,
+        colPath,
+        constraints,
         page,
         CONTENTS_COUNT,
         lastItem,
@@ -123,47 +117,57 @@ export default function MypageList() {
         />
         <CommonTitle
           type={1}
-          title={`${userInfo?.nickname || "USER"} 님의 판매 물품 목록`}
+          title={MYPAGE_META[collectionPath].title(
+            userInfo?.nickname || "USER"
+          )}
         />
       </div>
 
-      <div className="sell_list_filter">
-        <CommonRadioBtn
-          text="all"
-          id="all"
-          name="open_filter"
-          value="all"
-          onChange={(e) => searchIsOpen(e.target.value)}
-          checked={isOpen === "all"}
-        />
-        <CommonRadioBtn
-          text="open"
-          id="open"
-          name="open_filter"
-          value="1"
-          onChange={(e) => searchIsOpen(e.target.value)}
-          checked={isOpen === "1"}
-        />
-        <CommonRadioBtn
-          text="close"
-          id="close"
-          name="open_filter"
-          value="0"
-          onChange={(e) => searchIsOpen(e.target.value)}
-          checked={isOpen === "0"}
-        />
-      </div>
+      {filterOpen && (
+        <div className="sell_list_filter">
+          <CommonRadioBtn
+            text="all"
+            id="all"
+            name="open_filter"
+            value="all"
+            onChange={(e) => searchIsOpen(e.target.value)}
+            checked={isOpen === "all"}
+            disabled={loading}
+          />
+          <CommonRadioBtn
+            text="open"
+            id="open"
+            name="open_filter"
+            value="1"
+            onChange={(e) => searchIsOpen(e.target.value)}
+            checked={isOpen === "1"}
+            disabled={loading}
+          />
+          <CommonRadioBtn
+            text="close"
+            id="close"
+            name="open_filter"
+            value="0"
+            onChange={(e) => searchIsOpen(e.target.value)}
+            checked={isOpen === "0"}
+            disabled={loading}
+          />
+        </div>
+      )}
 
       <section>
         <CommonList loading={pageLoading}>
           {posts?.map((post, idx) => (
-            <Link to={`/auction/${post?.id}`} key={idx}>
+            <Link
+              to={`/auction/${post?.id ?? post?.item_id}`}
+              key={`${collectionPath}` + idx}
+            >
               <CommonListItem
                 src={post?.src}
                 category={findCategory(post?.category_id)}
                 title={post?.title}
                 startPrice={post?.start_price}
-                isOpen={Boolean(post.is_open)}
+                isOpen={Boolean(post.is_open) || !filterOpen}
               />
             </Link>
           ))}
@@ -171,7 +175,7 @@ export default function MypageList() {
 
         <div ref={ref}>{hasNextPage ? <DataLoading /> : <></>}</div>
       </section>
-      {empty && <CommonNodataBox>판매한 물품이 없습니다</CommonNodataBox>}
+      {empty && <CommonNodataBox>게시글이 없습니다.</CommonNodataBox>}
     </MypageLayout>
   );
 }
