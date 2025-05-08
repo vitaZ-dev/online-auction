@@ -1,7 +1,8 @@
 import { collection, where } from "firebase/firestore";
 import firebaseDB from "../libs/firebase";
+import { ObjectType } from "../types";
 
-export const MYPAGE_META = {
+export const MYPAGE_META: ObjectType = {
   posts: {
     title: (nickname: string) => `${nickname}님의 최근 판매 물품 목록`,
     path: (user_id: string) => [
