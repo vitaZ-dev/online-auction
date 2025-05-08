@@ -218,7 +218,7 @@ export default function Detail() {
 
     try {
       const addItem = {
-        id: userInfo?.id + POST_ID!,
+        id: POST_ID!,
         item_id: POST_ID!,
         user_id: userInfo?.id as string,
         uuid: userInfo?.uuid as string,
