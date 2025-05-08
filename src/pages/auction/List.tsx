@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { getPostList } from "../../apis/libs";
-import { CATEGORY, findCategory } from "../../modules/category";
+import { CATEGORY, findCategory } from "../../constants/category";
 import { AuctionListLayout } from "../../styles/AuctionStyle";
 import { CommonNodataBox } from "../../styles/CommonStyle";
 import { DocumentData } from "firebase/firestore";

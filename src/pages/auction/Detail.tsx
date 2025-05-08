@@ -5,7 +5,7 @@ import {
   ItemDetailBox,
   ItemDetailLayout,
 } from "../../styles/AuctionStyle";
-import { findCategory } from "../../modules/category";
+import { findCategory } from "../../constants/category";
 import useAuthStore from "../../stores/useAuthStore";
 import FullSizeImage from "../../components/common/FullSizeImage";
 import { useCookies } from "react-cookie";

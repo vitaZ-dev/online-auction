@@ -13,7 +13,7 @@ import CommonRadioBtn from "../../common/CommonRadioBtn";
 import CommonTitle from "../../UI/CommonTitle";
 import CommonList from "../../UI/CommonList";
 import CommonListItem from "../../UI/CommonListItem";
-import { findCategory } from "../../../modules/category";
+import { findCategory } from "../../../constants/category";
 
 const CONTENTS_COUNT = 10;
 

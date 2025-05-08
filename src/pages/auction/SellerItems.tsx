@@ -8,7 +8,7 @@ import CommonRadioBtn from "../../components/common/CommonRadioBtn";
 import CommonList from "../../components/UI/CommonList";
 import CommonListItem from "../../components/UI/CommonListItem";
 import DataLoading from "../../components/DataLoading";
-import { findCategory } from "../../modules/category";
+import { findCategory } from "../../constants/category";
 import { DocumentData } from "firebase/firestore";
 import { getOtherList } from "../../apis/libs";
 import { useInView } from "react-intersection-observer";

@@ -5,7 +5,7 @@ import { Navigation } from "swiper/modules";
 import CommonTitle from "../components/UI/CommonTitle";
 import CommonList from "../components/UI/CommonList";
 import CommonListItem from "../components/UI/CommonListItem";
-import { CATEGORY, findCategory } from "../modules/category";
+import { CATEGORY, findCategory } from "../constants/category";
 import { HomeLayout, SwiperItem, SwiperLayout } from "../styles/HomeStyle";
 import "swiper/swiper-bundle.css";
 import { CommonNodataBox } from "../styles/CommonStyle";

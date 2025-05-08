@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
-import { CATEGORY } from "../../modules/category";
+import { CATEGORY } from "../../constants/category";
 import CommonTitle from "../../components/UI/CommonTitle";
 import { CommonNodataBox } from "../../styles/CommonStyle";
 import { WritepageLayout } from "../../styles/SellPageStyle";

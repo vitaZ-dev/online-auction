@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import defaultImg from "/images/profile_default.png";
-import { findCategory } from "../../modules/category";
+import { findCategory } from "../../constants/category";
 import useAuthStore from "../../stores/useAuthStore";
 import { CommonNodataBox } from "../../styles/CommonStyle";
 import { MypageLayout } from "../../styles/MypageStyle";

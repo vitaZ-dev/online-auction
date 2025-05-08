@@ -1,4 +1,4 @@
-import { findCategory } from "../../modules/category";
+import { findCategory } from "../../constants/category";
 import { CommonCategoryBadgeStyle } from "../../styles/CommonStyle";
 import { CommonCategoryBadgeProps } from "../../types/component";
 
