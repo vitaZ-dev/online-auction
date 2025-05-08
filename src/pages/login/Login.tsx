@@ -1,4 +1,3 @@
-import api from "../../apis/api";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
@@ -35,40 +34,6 @@ export default function Login() {
       setEmail(ID);
     }
   }, []);
-
-  const login = async () => {
-    if (!email) {
-      alert("이메일을 입력하십시오");
-      return;
-    }
-    if (!password) {
-      alert("비밀번호를 입력하십시오");
-      return;
-    }
-
-    try {
-      const { data } = await api.get(
-        `user?email=${email}&password=${password}`
-      );
-      if (data?.length) {
-        authStore.login(data[0]);
-
-        if (rememberID) {
-          localStorage.setItem("remember_id", email);
-        } else {
-          localStorage.removeItem("remember_id");
-        }
-
-        navigate("/");
-      } else {
-        console.log("login fail");
-        alert("일치하는 회원 정보가 없습니다.");
-      }
-    } catch (error) {
-      console.log(error);
-      alert("에러가 발생했습니다.");
-    }
-  };
 
   const signIn = async () => {
     if (!email) {
@@ -175,12 +140,7 @@ export default function Login() {
           />
         </div>
 
-        <CommonButton text="로그인" btnType="large" onClick={() => login()} />
-        <CommonButton
-          text="로그인fb"
-          btnType="large"
-          onClick={() => signIn()}
-        />
+        <CommonButton text="로그인" btnType="large" onClick={() => signIn()} />
       </div>
 
       <ul className="find_area">

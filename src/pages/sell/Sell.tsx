@@ -1,5 +1,4 @@
 import { useState } from "react";
-import api from "../../apis/api";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
 import { setDate14Temp, setDateTemp } from "../../modules";
@@ -8,6 +7,7 @@ import CommonTitle from "../../components/UI/CommonTitle";
 import { WritepageLayout } from "../../styles/SellPageStyle";
 import CommonInput from "../../components/common/CommonInput";
 import CommonTextarea from "../../components/common/CommonTextarea";
+import CommonButton from "../../components/common/CommonButton";
 import { collection, doc, setDoc } from "firebase/firestore";
 import firebaseDB from "../../libs/firebase";
 import queryClient from "../../libs/queryClient";
@@ -79,59 +79,6 @@ export default function Sell() {
     }
   };
 
-  const registerPost = async () => {
-    if (!title) {
-      alert("제목을 입력하세요!");
-      return false;
-    }
-    if (!contents) {
-      alert("내용을 입력하세요!");
-      return false;
-    }
-    if (category === -1) {
-      alert("카테고리를 선택하세요!");
-      return false;
-    }
-    if (!imgSrc) {
-      alert("이미지를 선택하세요!");
-      return false;
-    }
-
-    const start_price = Math.abs(Number(price));
-    const start_date = setDateTemp();
-    const end_date = setDate14Temp(start_date);
-
-    try {
-      await api.post("posts", {
-        title,
-        category_id: category,
-        user_info: userInfo?.nickname || "USER",
-        user_id: userInfo?.uuid,
-        start_date,
-        end_date,
-        price: 9999,
-        start_price,
-        now_price: 0,
-        is_open: 1,
-        src: imgSrc,
-        contents,
-        created_at: start_date,
-        favorite: 1,
-        favorite_list: [],
-        bid: 0,
-        cnt: 0,
-        bid_count: 0,
-        bid_history: [],
-      });
-      updateSalesHistory(null);
-      alert("ok");
-      navigate("/auction");
-    } catch (err) {
-      console.log(err);
-      alert("error 발생-등록 실패");
-    }
-  };
-
   const registerPostFirebase = async () => {
     if (!title) {
       alert("제목을 입력하세요!");
@@ -187,10 +134,11 @@ export default function Sell() {
           (query.queryKey[0] === "mypage" && query.queryKey[1] === "recent"),
       });
       updateSalesHistory(null);
-      alert("ok-firebase");
+      alert("게시글이 등록되었습니다.");
+      navigate("/auction");
     } catch (err) {
       console.log(err);
-      alert("error 발생-firebase 등록 실패");
+      alert("게시글 등록이 실패했습니다.");
     }
   };
 
@@ -283,12 +231,11 @@ export default function Sell() {
           </div>
         </div>
 
-        <button className="page_btn" onClick={() => registerPost()}>
-          등록하기
-        </button>
-        <button className="page_btn" onClick={() => registerPostFirebase()}>
-          등록하기(firebase)
-        </button>
+        <CommonButton
+          text="등록하기"
+          btnType="large"
+          onClick={() => registerPostFirebase()}
+        />
       </div>
     </WritepageLayout>
   );

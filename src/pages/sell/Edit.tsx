@@ -1,4 +1,3 @@
-import api from "../../apis/api";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
@@ -30,30 +29,12 @@ export default function Edit() {
 
   const { pathname } = useLocation();
   const POST_ID = pathname.split("/")[2];
-  const { userInfo, updateSalesHistory } = useAuthStore();
+  const { userInfo } = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
     getEditPost();
   }, []);
-
-  // const fetchPosts = async () => {
-  //   setLoading(true);
-
-  //   const { data } = await api.get(`posts?id=${POST_ID}`);
-  //   setPageCheck(Boolean(data.length));
-  //   setUserCheck(data[0]?.user_id === userInfo?.uuid);
-  //   // 내용세팅
-  //   setTitle(data[0]?.title);
-  //   setContents(data[0]?.contents);
-  //   setImgSrc(data[0]?.src);
-  //   setCategory(data[0]?.category_id ?? -1);
-  //   setPrice(data[0]?.start_price);
-  //   setPriceNoEdit(Boolean(data[0]?.bid_count));
-  //   setIsBidOpen(Boolean(data[0]?.is_open));
-
-  //   setLoading(false);
-  // };
 
   const getEditPost = async () => {
     setLoading(true);
@@ -134,30 +115,6 @@ export default function Edit() {
         };
       };
       reader.readAsDataURL(file);
-    }
-  };
-
-  const editPost = async () => {
-    if (!isBidOpen) {
-      alert("입찰 완료된 게시글은 수정할 수 없습니다!");
-      return false;
-    }
-    const start_price = Math.abs(Number(price));
-
-    try {
-      await api.patch(`posts/${POST_ID}`, {
-        title,
-        category_id: category,
-        contents,
-        start_price,
-        src: imgSrc,
-      });
-      updateSalesHistory(null);
-      alert("게시글이 수정되었습니다!");
-      navigate(`/auction/${POST_ID}`);
-    } catch (error) {
-      console.log(error);
-      alert("게시글 수정에 실패했습니다!");
     }
   };
 
@@ -310,13 +267,6 @@ export default function Edit() {
                 </div>
               </div>
 
-              <button
-                className="page_btn"
-                onClick={() => editPost()}
-                disabled={!isBidOpen}
-              >
-                수정하기
-              </button>
               <CommonButton
                 text="수정하기"
                 btnType="large"
