@@ -1,6 +1,5 @@
 import { useState } from "react";
-import api from "../../apis/api";
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
 import { Link, useNavigate } from "react-router-dom";
 import { LoginPageLayout } from "../../styles/LoginPageStyle";
 import CommonInput from "../../components/common/CommonInput";
@@ -22,57 +21,6 @@ export default function Register() {
   const [checkPassword, setCheckPassword] = useState<boolean>(false);
   const [nickname, setNickname] = useState<string>("");
   const [checkNickname, setCheckNickname] = useState<boolean>(false);
-
-  const register = async () => {
-    if (!email) {
-      alert("이메일을 입력해 주세요!");
-      return false;
-    }
-    if (!password) {
-      alert("비밀번호를 입력해 주세요!");
-      return false;
-    }
-    if (!nickname) {
-      alert("닉네임을 입력해 주세요!");
-      return false;
-    }
-
-    const { data } = await api.get(`user?email=${email}`);
-    if (data.length) {
-      alert("중복된 이메일이 있습니다!");
-      setCheckEmail(true);
-      return false;
-    } else setCheckEmail(false);
-
-    if (password.length < 6) {
-      alert("6자리 이상의 비밀번호를 입력해주세요!");
-      setCheckPassword(true);
-      return false;
-    } else setCheckPassword(false);
-
-    const { data: nick } = await api.get(`user?nickname=${nickname}`);
-    if (nick.length) {
-      alert("중복된 닉네임이 있습니다!");
-      setCheckNickname(true);
-      return false;
-    } else setCheckNickname(false);
-
-    try {
-      api.post("user", {
-        uuid: uuidv4(),
-        token: Math.random().toString(36).substring(2, 11),
-        email,
-        password,
-        nickname,
-        role: "USER",
-      });
-      alert("ok");
-      navigate("/login");
-    } catch (err) {
-      console.log(err);
-      alert("회원가입에 실패했습니다!");
-    }
-  };
 
   const createUser = async () => {
     setLoading(true);
@@ -236,11 +184,6 @@ export default function Register() {
 
         <CommonButton
           text="회원가입"
-          btnType="large"
-          onClick={() => register()}
-        />
-        <CommonButton
-          text="회원가입FB"
           btnType="large"
           onClick={() => createUser()}
         />
