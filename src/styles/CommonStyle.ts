@@ -530,6 +530,11 @@ export const ShowListTableLayout = styled.div<ShowListTableType>`
 
     line-height: 2;
   }
+  .table_contents > .no_contents {
+    display: block;
+    margin: var(--padding-size) auto;
+    line-height: 2;
+  }
 
   .table_header {
     position: sticky;

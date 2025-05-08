@@ -98,7 +98,7 @@ export interface ShowListTableProps {
   tableGrid: number[];
   tableHeader: string[];
   tableHeaderText: string[];
-  tableList: any[] | null;
+  tableList: any[] | null | undefined;
   tableLoading?: boolean;
 }
 

@@ -32,19 +32,25 @@ export default function ShowListTable({
         ))}
       </div>
       <div className="table_contents">
-        {tableList?.map((list, idx) => (
-          <p key={`table_list_${idx}`}>
-            {Array(tableHeader.length)
-              .fill(0)
-              .map((_, index) => (
-                <span key={`table_list_${idx}_${index}`}>
-                  {Number.isInteger(list[tableHeader[index]])
-                    ? numberFormat(list[tableHeader[index]])
-                    : list[tableHeader[index]]}
-                </span>
-              ))}
-          </p>
-        ))}
+        {tableList?.length ? (
+          <>
+            {tableList?.map((list, idx) => (
+              <p key={`table_list_${idx}`}>
+                {Array(tableHeader.length)
+                  .fill(0)
+                  .map((_, index) => (
+                    <span key={`table_list_${idx}_${index}`}>
+                      {Number.isInteger(list[tableHeader[index]])
+                        ? numberFormat(list[tableHeader[index]])
+                        : list[tableHeader[index]]}
+                    </span>
+                  ))}
+              </p>
+            ))}
+          </>
+        ) : (
+          <p className="no_contents">기록이 없습니다.</p>
+        )}
       </div>
     </ShowListTableLayout>
   );
