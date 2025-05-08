@@ -182,7 +182,11 @@ export default function Edit() {
       });
 
       alert("게시글이 수정되었습니다!");
-      queryClient.invalidateQueries({ queryKey: ["detail", POST_ID] });
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === "home" ||
+          (query.queryKey[0] === "mypage" && query.queryKey[1] === "recent"),
+      });
       navigate(`/auction/${POST_ID}`, { replace: true });
     } catch (error) {
       console.log(error);

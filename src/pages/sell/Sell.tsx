@@ -10,6 +10,7 @@ import CommonInput from "../../components/common/CommonInput";
 import CommonTextarea from "../../components/common/CommonTextarea";
 import { collection, doc, setDoc } from "firebase/firestore";
 import firebaseDB from "../../libs/firebase";
+import queryClient from "../../libs/queryClient";
 
 export default function Sell() {
   const [title, setTitle] = useState<string>("");
@@ -180,6 +181,11 @@ export default function Sell() {
         },
         { merge: true }
       );
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === "home" ||
+          (query.queryKey[0] === "mypage" && query.queryKey[1] === "recent"),
+      });
       updateSalesHistory(null);
       alert("ok-firebase");
     } catch (err) {
