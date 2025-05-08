@@ -7,7 +7,7 @@ import CommonButton from "../../components/common/CommonButton";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import firebaseDB, { auth } from "../../libs/firebase";
 import { doc, getDocs, query, setDoc, where } from "firebase/firestore";
-import { USER_DB } from "../../modules/firebase";
+import { USER_DB } from "../../constants/firebase";
 import Loading from "../../components/Loading";
 
 export default function Register() {

@@ -11,7 +11,7 @@ import {
   startAfter,
   where,
 } from "firebase/firestore";
-import { POSTS_DB } from "../../modules/firebase";
+import { POSTS_DB } from "../../constants/firebase";
 import firebaseDB from "../../libs/firebase";
 import { calTotalPage } from "../../utils";
 

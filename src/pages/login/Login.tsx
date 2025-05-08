@@ -14,7 +14,7 @@ import {
 import { auth } from "../../libs/firebase";
 import Loading from "../../components/Loading";
 import { UserInfoType } from "../../types/user";
-import { USER_DB } from "../../modules/firebase";
+import { USER_DB } from "../../constants/firebase";
 import { getDocs, query, where } from "firebase/firestore";
 
 export default function Login() {

@@ -15,7 +15,7 @@ import {
   where,
 } from "firebase/firestore";
 import firebaseDB from "../../libs/firebase";
-import { POSTS_DB } from "../../modules/firebase";
+import { POSTS_DB } from "../../constants/firebase";
 import { setDateTemp } from "../../modules";
 import { calTotalPage } from "../../utils";
 

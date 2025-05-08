@@ -1,5 +1,5 @@
 import { getDocs, limit, orderBy, query } from "firebase/firestore";
-import { POSTS_DB } from "../../modules/firebase";
+import { POSTS_DB } from "../../constants/firebase";
 
 export const getRecentList = async () => {
   try {
