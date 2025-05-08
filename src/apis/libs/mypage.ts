@@ -144,3 +144,23 @@ export const getMypageList = async (
     };
   }
 };
+
+// 마이페이지 게시글 별 나의 입찰 기록
+export const getMyDetailBid = async (post_id: string, user_id: string) => {
+  if (!post_id) return { data: null, err: `No Post ID Exist.` };
+
+  try {
+    const detailBidHistoryQuery = query(
+      collection(firebaseDB, "posts", post_id, "bid_history"),
+      where("uuid", "==", user_id),
+      orderBy("amount", "desc"),
+      orderBy("created_at", "desc")
+    );
+    const { docs } = await getDocs(detailBidHistoryQuery);
+
+    return { data: docs.map((doc) => doc.data()), err: null };
+  } catch (error) {
+    console.log(error);
+    return { data: null, err: error };
+  }
+};

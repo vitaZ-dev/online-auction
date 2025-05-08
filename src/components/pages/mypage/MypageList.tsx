@@ -1,43 +1,40 @@
-import { DocumentData } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { MypageLayout } from "../../../styles/MypageStyle";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import CommonTitle from "../../UI/CommonTitle";
-import CommonRadioBtn from "../../common/CommonRadioBtn";
-import CommonList from "../../UI/CommonList";
-import { Link, useNavigate } from "react-router-dom";
-import CommonListItem from "../../UI/CommonListItem";
-import { findCategory } from "../../../modules/category";
-import DataLoading from "../../DataLoading";
-import { CommonNodataBox } from "../../../styles/CommonStyle";
+import { useNavigate } from "react-router-dom";
+import { DocumentData } from "firebase/firestore";
 import { useInView } from "react-intersection-observer";
 import { getMypageList } from "../../../apis/libs";
 import useAuthStore from "../../../stores/useAuthStore";
 import { MYPAGE_META } from "../../../constants/mypage";
+import { MypageLayout } from "../../../styles/MypageStyle";
+import { CommonNodataBox } from "../../../styles/CommonStyle";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import DataLoading from "../../DataLoading";
+import CommonRadioBtn from "../../common/CommonRadioBtn";
+import CommonTitle from "../../UI/CommonTitle";
+import CommonList from "../../UI/CommonList";
+import CommonListItem from "../../UI/CommonListItem";
+import { findCategory } from "../../../modules/category";
 
 const CONTENTS_COUNT = 10;
 
 interface MypageListProps {
   collectionPath: string;
   filterOpen?: boolean;
+  setDetailId?: React.Dispatch<React.SetStateAction<string>> | null;
+  handleDetailBid?: (id: string, title: string) => void;
 }
 
 export default function MypageList({
   collectionPath,
   filterOpen = true,
+  setDetailId = null,
+  handleDetailBid,
 }: MypageListProps) {
   const navigate = useNavigate();
 
   const { userInfo } = useAuthStore();
 
-  useEffect(() => {
-    console.log(collectionPath);
-    console.log(
-      MYPAGE_META[collectionPath]?.title(userInfo?.nickname || "USER"),
-      MYPAGE_META[collectionPath]?.path(userInfo?.uuid || "")
-    );
-  }, [collectionPath]);
-  const [colPath, ...constraints] = MYPAGE_META[collectionPath]?.path(
+  const [colPath, ...constraints] = MYPAGE_META[collectionPath].path(
     userInfo?.uuid || ""
   );
 
@@ -85,6 +82,13 @@ export default function MypageList({
 
     fetch();
   }, [isOpen]);
+
+  const goDetailPage = (id: string, title: string) => {
+    if (setDetailId) {
+      setDetailId(id);
+      handleDetailBid?.(id, title);
+    } else navigate(`/auction/${id}`);
+  };
 
   const goPrevPage = () => {
     navigate("/mypage");
@@ -158,8 +162,10 @@ export default function MypageList({
       <section>
         <CommonList loading={pageLoading}>
           {posts?.map((post, idx) => (
-            <Link
-              to={`/auction/${post?.id ?? post?.item_id}`}
+            <div
+              onClick={() =>
+                goDetailPage(post?.id ?? post?.item_id, post?.title)
+              }
               key={`${collectionPath}` + idx}
             >
               <CommonListItem
@@ -169,7 +175,7 @@ export default function MypageList({
                 startPrice={post?.start_price}
                 isOpen={Boolean(post.is_open) || !filterOpen}
               />
-            </Link>
+            </div>
           ))}
         </CommonList>
 
