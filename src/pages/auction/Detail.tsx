@@ -659,7 +659,7 @@ export default function Detail() {
             <CommonTitle
               type={2}
               title="판매자의 다른 판매 물품"
-              link="/mypage/list"
+              link={`/auction/items/${all.data?.user_id}`}
               linkProps={{
                 state: {
                   uuid: all.data?.user_id,
