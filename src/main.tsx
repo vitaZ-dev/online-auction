@@ -12,16 +12,13 @@ import "./index.css";
 
 import App from "./App.tsx";
 import Loading from "./components/Loading.tsx";
-// import FireList from "./pages/auction/FireList.tsx";
-import Infinite from "./pages/auction/Infinite.tsx";
 const Home = lazy(() => import("./pages/Home.tsx"));
 const List = lazy(() => import("./pages/auction/List.tsx"));
 const Detail = lazy(() => import("./pages/auction/Detail.tsx"));
-const Result = lazy(() => import("./pages/auction/Result.tsx"));
+// const Result = lazy(() => import("./pages/auction/Result.tsx"));
 const SellerItems = lazy(() => import("./pages/auction/SellerItems.tsx"));
 const Sell = lazy(() => import("./pages/sell/Sell.tsx"));
 const Edit = lazy(() => import("./pages/sell/Edit.tsx"));
-const MyList = lazy(() => import("./pages/sell/MyList.tsx"));
 const Guide = lazy(() => import("./pages/guide/Guide.tsx"));
 const Mypage = lazy(() => import("./pages/mypage/Mypage.tsx"));
 const MySellList = lazy(() => import("./pages/mypage/MySellList.tsx"));
@@ -30,7 +27,6 @@ const MyBidList = lazy(() => import("./pages/mypage/MyBidList.tsx"));
 const MyBidAward = lazy(() => import("./pages/mypage/MyBidAward.tsx"));
 const Login = lazy(() => import("./pages/login/Login.tsx"));
 const Register = lazy(() => import("./pages/login/Register.tsx"));
-const About = lazy(() => import("./pages/About.tsx"));
 const Services = lazy(() => import("./pages/services/Services.tsx"));
 const Faq = lazy(() => import("./pages/services/Faq.tsx"));
 const Notice = lazy(() => import("./pages/services/Notice.tsx"));
@@ -63,9 +59,6 @@ function lazyComponent(element: ReactNode): ReactNode {
   return <Suspense fallback={<Loading />}>{element}</Suspense>;
 }
 
-/**
- * TODO lazy loading & Suspense & loading component
- */
 const router = createBrowserRouter([
   {
     path: "/",
@@ -86,10 +79,10 @@ const router = createBrowserRouter([
             path: ":id",
             element: lazyComponent(<Detail />),
           },
-          {
-            path: "result",
-            element: lazyComponent(<Result />),
-          },
+          // {
+          //   path: "result",
+          //   element: lazyComponent(<Result />),
+          // },
           {
             path: "items/:sellerID",
             element: lazyComponent(<SellerItems />),
@@ -111,10 +104,6 @@ const router = createBrowserRouter([
           {
             path: ":id",
             element: lazyComponent(<Edit />),
-          },
-          {
-            path: "mylist",
-            element: lazyComponent(<MyList />),
           },
         ],
       },
@@ -160,18 +149,6 @@ const router = createBrowserRouter([
             element: lazyComponent(<MyBidAward />),
           },
         ],
-      },
-      {
-        path: "/about",
-        element: lazyComponent(<About />),
-      },
-      // {
-      //   path: "/lists",
-      //   element: lazyComponent(<FireList />),
-      // },
-      {
-        path: "/infinite",
-        element: lazyComponent(<Infinite />),
       },
     ],
   },
