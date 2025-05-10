@@ -16,7 +16,7 @@ import {
 } from "firebase/firestore";
 import firebaseDB from "../../libs/firebase";
 import { POSTS_DB } from "../../constants/firebase";
-import { setDateTemp } from "../../modules";
+import { setDateTemp } from "../../utils";
 import { calTotalPage } from "../../utils";
 
 // 게시글 리스트 무한스크롤 호출

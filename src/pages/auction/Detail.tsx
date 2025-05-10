@@ -9,7 +9,7 @@ import { findCategory } from "../../constants/category";
 import useAuthStore from "../../stores/useAuthStore";
 import FullSizeImage from "../../components/common/FullSizeImage";
 import { useCookies } from "react-cookie";
-import { setDateTemp } from "../../modules";
+import { setDateTemp } from "../../utils";
 import CommonList from "../../components/common/CommonList";
 import CommonListItem from "../../components/common/CommonListItem";
 import { CommonNodataBox, CommonPaddingBox } from "../../styles/CommonStyle";

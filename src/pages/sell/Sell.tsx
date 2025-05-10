@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
-import { setDate14Temp, setDateTemp } from "../../modules";
+import { setDate14Temp, setDateTemp } from "../../utils";
 import { CATEGORY } from "../../constants/category";
 import CommonTitle from "../../components/common/CommonTitle";
 import { WritepageLayout } from "../../styles/SellPageStyle";
