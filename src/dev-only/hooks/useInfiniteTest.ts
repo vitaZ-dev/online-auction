@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useInfiniteQuery } from "react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import {
   getCountFromServer,
   getDocs,
@@ -8,8 +8,8 @@ import {
   query as q,
   startAfter,
 } from "firebase/firestore";
-import { POSTS_DB } from "../modules/firebase";
-import { calTotalPage } from "../utils";
+import { POSTS_DB } from "../../constants/firebase";
+import { calTotalPage } from "../../utils";
 
 const fetchPosts = async (page: number = 1) => {
   let totalPages: number = 1;

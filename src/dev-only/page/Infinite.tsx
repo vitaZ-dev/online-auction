@@ -4,11 +4,12 @@ import { Link } from "react-router-dom";
 import { calTotalPage } from "../../utils";
 import CommonTitle from "../../components/UI/CommonTitle";
 import CommonList from "../../components/UI/CommonList";
-import { useInfiniteTest } from "../../hooks/useInfiniteTest";
+import { useInfiniteTest } from "../../dev-only/hooks/useInfiniteTest";
 import DataLoading from "../../components/DataLoading";
 import { useInView } from "react-intersection-observer";
-import { POSTS_DB } from "../../modules/firebase";
+import { POSTS_DB } from "../../constants/firebase";
 import {
+  DocumentData,
   getCountFromServer,
   getDocs,
   limit,
@@ -17,36 +18,43 @@ import {
   startAfter,
 } from "firebase/firestore";
 import CommonListItem from "../../components/UI/CommonListItem";
-import { findCategory } from "../../modules/category";
+import { findCategory } from "../../constants/category";
 import { CommonNodataBox } from "../../styles/CommonStyle";
 import { AuctionListLayout } from "../../styles/AuctionStyle";
+import { getPostList } from "../../apis/libs";
+import useInfiniteScroll from "../../dev-only/hooks/useInfiniteScroll";
 
 export default function Infinite() {
-  const PER_PAGE = 4;
+  const CONTENTS_COUNT = 4;
   const [db, setDB] = useState<any[]>([]);
   const [isData, setIsData] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
   const [totalPage, setTotalPage] = useState<number>(1);
+  const [totalPage2, setTotalPage2] = useState<number>(1);
   const [lastItem, setLastItem] = useState<any[] | null>(null);
 
   // const all = useInfiniteTest(getJsonServerData);
-  const firebaseGet = async (page: number = 1, lastItem) => {
+  const firebaseGet = async (page: number = 1, lastItem: any) => {
     let totalPages: number = totalPage;
 
     // 데이터 불러온 최초 1회만 실행하면 됨
     if (page === 1) {
       const snapshot = await getCountFromServer(POSTS_DB);
-      totalPages = calTotalPage(snapshot.data().count, PER_PAGE);
-      setTotalPage(calTotalPage(snapshot.data().count, PER_PAGE));
+      totalPages = calTotalPage(snapshot.data().count, CONTENTS_COUNT);
+      setTotalPage(calTotalPage(snapshot.data().count, CONTENTS_COUNT));
     }
 
-    let fire = q(POSTS_DB, orderBy("created_at", "desc"), limit(PER_PAGE));
+    let fire = q(
+      POSTS_DB,
+      orderBy("created_at", "desc"),
+      limit(CONTENTS_COUNT)
+    );
     if (lastItem) {
       fire = q(
         POSTS_DB,
         orderBy("created_at", "desc"),
         startAfter(lastItem),
-        limit(PER_PAGE)
+        limit(CONTENTS_COUNT)
       );
       // query 즉, 파이어스토어 저장된 날짜순으로 정렬된 데이터 중에
       // start로 정의된 데이터를 시작으로 마지막 까지의 데이터들을 query에 저장한다.
@@ -61,7 +69,7 @@ export default function Infinite() {
     setLastItem(docs[docs.length - 1]);
 
     // docs.forEach((item) => console.log(item.data()));
-    const doc = [];
+    const doc: DocumentData[] = [];
     docs.forEach((item) => doc.push(item.data()));
     // console.log({ docs: doc, lastItem: lastItem.data(), page, totalPages });
 
@@ -77,6 +85,34 @@ export default function Infinite() {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteTest(firebaseGet, lastItem);
+
+  const firebaseWait = async (page: number = 1) => {
+    const result = await getPostList(
+      page,
+      CONTENTS_COUNT,
+      totalPage2,
+      setTotalPage2,
+      lastItem
+    );
+    return result;
+  };
+  const scroll = useInfiniteScroll(["fb-test"], firebaseWait);
+  const goNextPage2 = async () => {
+    await scroll.fetchNextPage();
+    setPage(page + 1);
+  };
+  useEffect(() => {
+    console.log("rq2", "data2=", scroll);
+    /*
+    data: data2,
+    isLoading: isLoading2,
+    isFetching: isFetching2,
+    error: error2,
+    fetchNextPage: fetchNextPage2,
+    hasNextPage: hasNextPage2,
+    isFetchingNextPage: isFetchingNextPage2,
+    */
+  }, [scroll]);
 
   const goNextPage = async () => {
     await fetchNextPage();
@@ -97,34 +133,6 @@ export default function Infinite() {
     // );
   };
 
-  // useEffect(() => {
-  //   console.log(
-  //     "rq",
-  //     "data=",
-  //     data?.pages[0],
-  //     "isLoading=",
-  //     isLoading,
-  //     "isFetchingNextPage=",
-  //     isFetchingNextPage,
-  //     "isFetching=",
-  //     isFetching
-  //   );
-  // }, [isLoading, isFetchingNextPage, isFetching]);
-  // useEffect(() => {
-  //   console.log(
-  //     "rq",
-  //     "data=",
-  //     data?.pages[0],
-  //     "isLoading=",
-  //     isLoading,
-  //     "isFetchingNextPage=",
-  //     isFetchingNextPage,
-  //     "isFetching=",
-  //     isFetching
-  //   );
-  //   const allDocs = data?.pages?.flatMap((page) => page.docs) || [];
-  //   console.log("allDocs", allDocs);
-  // }, [isLoading, isFetchingNextPage, isFetching]);
   useEffect(() => {
     console.log(
       "rq",
@@ -148,33 +156,28 @@ export default function Infinite() {
 
   const { ref, inView } = useInView({
     /* Optional options */
-    threshold: 0,
+    threshold: 0.5,
   });
-  useEffect(() => {
-    console.log("inView", inView);
-    if (inView && hasNextPage && !isFetching) {
-      console.log("load data");
-      goNextPage();
-    }
-  }, [inView]);
-
   // useEffect(() => {
-  //   // getJsonServerData(page);
-  //   console.log("all", all);
-  // }, [page]);
-  // useEffect(() => {
-  //   if (all.isLoading) {
-  //     console.log("Loading...");
-  //   } else if (all.isError) {
-  //     console.log("Error:", all.error);
-  //   } else {
-  //     console.log("all", all);
+  //   console.log("inView", inView);
+  //   if (inView && hasNextPage && !isFetching) {
+  //     console.log("load data");
+  //     goNextPage();
   //   }
-  // }, [all]);
+  // }, [inView]);
 
+  // tsx
+  // if (error) {
+  //   return (
+  //     <AuctionListLayout>
+  //       <CommonNodataBox>데이터 로딩 중 에러가 발생했습니다</CommonNodataBox>
+  //     </AuctionListLayout>
+  //   );
+  // }
   return (
     <AuctionListLayout>
       <CommonTitle type={1} title="Infinite" />
+      <button onClick={() => goNextPage2()}>goNextPage2</button>
       {isData ? (
         <>
           <CommonList loading={isLoading}>

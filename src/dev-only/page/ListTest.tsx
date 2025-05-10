@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { getPostList } from "../../apis/libs";
-import useInfiniteScroll from "../../hooks/useInfiniteScroll";
-import { CATEGORY, findCategory } from "../../modules/category";
+import useInfiniteScroll from "../hooks/useInfiniteScroll";
+import { CATEGORY, findCategory } from "../../constants/category";
 import { AuctionListLayout } from "../../styles/AuctionStyle";
 import { CommonNodataBox } from "../../styles/CommonStyle";
 import TuneIcon from "@mui/icons-material/Tune";
@@ -50,13 +50,39 @@ export default function ListTest() {
   const [page, setPage] = useState<number>(1);
   const [totalPage, setTotalPage] = useState<number>(1);
 
+  useEffect(() => {
+    const metaData = queryClient.getQueryData(["fb-meta"]);
+    console.log("metaData", metaData);
+
+    if (scroll.data?.pages && scroll.data?.pages[0]?.filter) {
+      const filter = scroll.data?.pages[0]?.filter;
+      setFilterCategory(filter.category_id);
+      setFilterIsOpen(filter.is_open);
+      setFilterSort(filter.sort);
+    }
+  }, []);
+
+  const getLastItem = (page: number) =>
+    queryClient.getQueryData(["fb-test"])?.pages?.[page - 2]?.lastItem ?? null;
+
   const firebaseWait = async (page: number = 1) => {
+    console.log(
+      page,
+      "실행몇번?",
+      scroll?.data?.pages?.[page - 2]?.lastItem ?? null,
+      totalPage
+    );
+    const last = scroll?.data?.pages?.[page - 2]?.lastItem?.data() ?? null;
+    // const _lastItem = page === 1 ? lastItem : last;
+    const _lastItem = page === 1 ? null : getLastItem(page);
+    console.log("_lastItem", _lastItem);
+
     const result = await getPostList(
       page,
       CONTENTS_COUNT,
       totalPage,
       setTotalPage,
-      lastItem,
+      _lastItem,
       // 필터값
       filterIsOpen, // 거래 가능만 보기
       filterCategory, // 카테고리 id
@@ -67,27 +93,24 @@ export default function ListTest() {
 
   const scroll = useInfiniteScroll(["fb-test"], firebaseWait);
 
-  useEffect(() => {
-    if (scroll.data?.pages && scroll.data?.pages[0]?.filter) {
-      const filter = scroll.data?.pages[0]?.filter;
-      setFilterCategory(filter.category_id);
-      setFilterIsOpen(filter.is_open);
-      setFilterSort(filter.sort);
-    }
-  }, []);
-
   const goNextPage = async () => {
     await scroll.fetchNextPage();
   };
 
+  const list = useMemo(() => {
+    return scroll.data?.pages.flatMap((page) => page.docs) ?? [];
+  }, [scroll.data]);
+
   useEffect(() => {
+    console.log("scroll.data", scroll);
+
     if (!scroll.data) return;
 
     const latestPage = scroll.data.pages.at(-1);
 
     if (!latestPage?.docs) return;
     setPage(page + 1);
-    setTotalPage(latestPage?.totalPages);
+    // setTotalPage(latestPage?.totalPages);
     setLastItem(latestPage?.lastItem);
 
     // setList((prev) => [...prev, ...latestPage.docs]);
@@ -97,10 +120,6 @@ export default function ListTest() {
     // } else {
     //   setList((prev) => [...prev, ...latestPage.docs]); // 그 외 페이지는 추가
     // }
-  }, [scroll.data]);
-
-  const list = useMemo(() => {
-    return scroll.data?.pages.flatMap((page) => page.docs) ?? [];
   }, [scroll.data]);
 
   const { ref, inView } = useInView({
