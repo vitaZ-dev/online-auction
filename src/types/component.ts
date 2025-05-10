@@ -1,7 +1,3 @@
-export interface LogoProps {
-  onClick?: () => void;
-}
-
 export interface CommonButtonProps {
   text?: string;
   btnType: "small" | "medium" | "large";

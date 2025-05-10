@@ -114,13 +114,13 @@ function App() {
       <Global styles={light} />
       <BaseLayout>
         <HeaderLayout>
-          <h1>
-            <Logo
-              onClick={() => {
-                toggleDrawer(false);
-                navigate("/");
-              }}
-            />
+          <h1
+            onClick={() => {
+              toggleDrawer(false);
+              navigate("/");
+            }}
+          >
+            <Logo />
           </h1>
           <div className="header_utils">
             {/* <button onClick={() => console.log("search")}>
