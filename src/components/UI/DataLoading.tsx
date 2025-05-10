@@ -1,4 +1,4 @@
-import { DataLoadingLayout } from "../styles/AppStyle";
+import { DataLoadingLayout } from "../../styles/AppStyle";
 
 export default function DataLoading() {
   return (

@@ -1,4 +1,4 @@
-import CommonTitle from "../../components/UI/CommonTitle";
+import CommonTitle from "../../components/common/CommonTitle";
 import { GuideLayout } from "../../styles/ServiceStyle";
 
 export default function Guide() {

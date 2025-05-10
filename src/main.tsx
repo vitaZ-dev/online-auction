@@ -11,7 +11,7 @@ import queryClient from "./libs/queryClient.ts";
 import "./index.css";
 
 import App from "./App.tsx";
-import Loading from "./components/Loading.tsx";
+import Loading from "./components/UI/Loading.tsx";
 const Home = lazy(() => import("./pages/Home.tsx"));
 const List = lazy(() => import("./pages/auction/List.tsx"));
 const Detail = lazy(() => import("./pages/auction/Detail.tsx"));

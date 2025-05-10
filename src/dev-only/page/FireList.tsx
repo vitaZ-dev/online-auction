@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { CATEGORY, findCategory } from "../../constants/category";
-import CommonList from "../../components/UI/CommonList";
-import CommonListItem from "../../components/UI/CommonListItem";
+import CommonList from "../../components/common/CommonList";
+import CommonListItem from "../../components/common/CommonListItem";
 import { CommonNodataBox } from "../../styles/CommonStyle";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import TuneIcon from "@mui/icons-material/Tune";
 import CommonRadioBtn from "../../components/common/CommonRadioBtn";
 import CommonButton from "../../components/common/CommonButton";
-import CommonTitle from "../../components/UI/CommonTitle";
+import CommonTitle from "../../components/common/CommonTitle";
 import { AuctionListLayout } from "../../styles/AuctionStyle";
 import MUIPagination from "../../components/common/MUIPagination";
 import CommonCheckbox from "../../components/common/CommonCheckbox";
@@ -23,7 +23,7 @@ import {
 } from "firebase/firestore";
 import { calTotalPage } from "../../utils";
 import { POSTS_DB } from "../../constants/firebase";
-import DataLoading from "../../components/DataLoading";
+import DataLoading from "../../components/UI/DataLoading";
 
 export default function FireList() {
   /**

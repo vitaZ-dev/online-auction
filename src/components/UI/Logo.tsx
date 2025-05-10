@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { LogoProps } from "../types/component";
-import { LogoLayout } from "../styles/AppStyle";
+import { LogoProps } from "../../types/component";
+import { LogoLayout } from "../../styles/AppStyle";
 
 export default function Logo({ onClick }: LogoProps) {
   return (

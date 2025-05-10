@@ -1,7 +1,7 @@
 import { ShowListTableLayout } from "../../styles/CommonStyle";
 import { ShowListTableProps } from "../../types/component";
 import { numberFormat } from "../../utils";
-import DataLoading from "../DataLoading";
+import DataLoading from "../UI/DataLoading";
 
 export default function ShowListTable({
   tableGrid,

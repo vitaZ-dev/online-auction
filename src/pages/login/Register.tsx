@@ -8,7 +8,7 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import firebaseDB, { auth } from "../../libs/firebase";
 import { doc, getDocs, query, setDoc, where } from "firebase/firestore";
 import { USER_DB } from "../../constants/firebase";
-import Loading from "../../components/Loading";
+import Loading from "../../components/UI/Loading";
 
 export default function Register() {
   const navigate = useNavigate();

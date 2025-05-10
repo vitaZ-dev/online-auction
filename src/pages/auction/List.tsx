@@ -9,13 +9,13 @@ import { useInView } from "react-intersection-observer";
 import TuneIcon from "@mui/icons-material/Tune";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import CommonTitle from "../../components/UI/CommonTitle";
+import CommonTitle from "../../components/common/CommonTitle";
 import CommonButton from "../../components/common/CommonButton";
 import CommonCheckbox from "../../components/common/CommonCheckbox";
 import CommonRadioBtn from "../../components/common/CommonRadioBtn";
-import CommonList from "../../components/UI/CommonList";
-import CommonListItem from "../../components/UI/CommonListItem";
-import DataLoading from "../../components/DataLoading";
+import CommonList from "../../components/common/CommonList";
+import CommonListItem from "../../components/common/CommonListItem";
+import DataLoading from "../../components/UI/DataLoading";
 
 export default function List() {
   const [query, setQuery] = useSearchParams();

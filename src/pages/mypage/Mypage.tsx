@@ -5,9 +5,9 @@ import { findCategory } from "../../constants/category";
 import useAuthStore from "../../stores/useAuthStore";
 import { CommonNodataBox } from "../../styles/CommonStyle";
 import { MypageLayout } from "../../styles/MypageStyle";
-import CommonList from "../../components/UI/CommonList";
-import CommonListItem from "../../components/UI/CommonListItem";
-import CommonTitle from "../../components/UI/CommonTitle";
+import CommonList from "../../components/common/CommonList";
+import CommonListItem from "../../components/common/CommonListItem";
+import CommonTitle from "../../components/common/CommonTitle";
 import CommonButton from "../../components/common/CommonButton";
 import {
   mypageAwardList,

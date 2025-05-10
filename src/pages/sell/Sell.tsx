@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
 import { setDate14Temp, setDateTemp } from "../../modules";
 import { CATEGORY } from "../../constants/category";
-import CommonTitle from "../../components/UI/CommonTitle";
+import CommonTitle from "../../components/common/CommonTitle";
 import { WritepageLayout } from "../../styles/SellPageStyle";
 import CommonInput from "../../components/common/CommonInput";
 import CommonTextarea from "../../components/common/CommonTextarea";

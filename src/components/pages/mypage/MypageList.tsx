@@ -8,11 +8,11 @@ import { MYPAGE_META } from "../../../constants/mypage";
 import { MypageLayout } from "../../../styles/MypageStyle";
 import { CommonNodataBox } from "../../../styles/CommonStyle";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import DataLoading from "../../DataLoading";
+import DataLoading from "../../UI/DataLoading";
 import CommonRadioBtn from "../../common/CommonRadioBtn";
-import CommonTitle from "../../UI/CommonTitle";
-import CommonList from "../../UI/CommonList";
-import CommonListItem from "../../UI/CommonListItem";
+import CommonTitle from "../../common/CommonTitle";
+import CommonList from "../../common/CommonList";
+import CommonListItem from "../../common/CommonListItem";
 import { findCategory } from "../../../constants/category";
 
 const CONTENTS_COUNT = 10;

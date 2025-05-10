@@ -2,10 +2,10 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { calTotalPage } from "../../utils";
-import CommonTitle from "../../components/UI/CommonTitle";
-import CommonList from "../../components/UI/CommonList";
+import CommonTitle from "../../components/common/CommonTitle";
+import CommonList from "../../components/common/CommonList";
 import { useInfiniteTest } from "../../dev-only/hooks/useInfiniteTest";
-import DataLoading from "../../components/DataLoading";
+import DataLoading from "../../components/UI/DataLoading";
 import { useInView } from "react-intersection-observer";
 import { POSTS_DB } from "../../constants/firebase";
 import {
@@ -17,7 +17,7 @@ import {
   query as q,
   startAfter,
 } from "firebase/firestore";
-import CommonListItem from "../../components/UI/CommonListItem";
+import CommonListItem from "../../components/common/CommonListItem";
 import { findCategory } from "../../constants/category";
 import { CommonNodataBox } from "../../styles/CommonStyle";
 import { AuctionListLayout } from "../../styles/AuctionStyle";

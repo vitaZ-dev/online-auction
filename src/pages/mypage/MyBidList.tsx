@@ -6,7 +6,7 @@ import { getMyDetailBid } from "../../apis/libs";
 import CallMadeIcon from "@mui/icons-material/CallMade";
 import CommonModal from "../../components/common/CommonModal";
 import CommonButton from "../../components/common/CommonButton";
-import ShowListTable from "../../components/UI/ShowListTable";
+import ShowListTable from "../../components/common/ShowListTable";
 import MypageList from "../../components/pages/mypage/MypageList";
 
 export default function MyBidList() {
