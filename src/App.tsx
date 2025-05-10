@@ -115,7 +115,12 @@ function App() {
       <BaseLayout>
         <HeaderLayout>
           <h1>
-            <Logo onClick={() => toggleDrawer(false)} />
+            <Logo
+              onClick={() => {
+                toggleDrawer(false);
+                navigate("/");
+              }}
+            />
           </h1>
           <div className="header_utils">
             {/* <button onClick={() => console.log("search")}>
@@ -150,9 +155,7 @@ function App() {
                       height: "72px",
                     }}
                   >
-                    <div onClick={toggleDrawer(false)}>
-                      <Logo />
-                    </div>
+                    <Logo />
                     <div
                       onClick={toggleDrawer(false)}
                       style={{ cursor: "pointer" }}

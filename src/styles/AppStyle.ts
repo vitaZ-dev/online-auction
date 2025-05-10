@@ -125,11 +125,12 @@ export const NotFoundLayout = styled.div`
 `;
 
 const LogoLayout = styled.div`
-  a {
+  .logo_wrap {
     display: flex;
     align-items: center;
     width: 100%;
     height: 100%;
+    cursor: pointer;
   }
   img {
     height: 60px;
