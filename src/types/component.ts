@@ -106,3 +106,10 @@ export interface FullSizeImageProps {
   src: string;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
+export interface MypageListProps {
+  collectionPath: string;
+  filterOpen?: boolean;
+  setDetailId?: React.Dispatch<React.SetStateAction<string>> | null;
+  handleDetailBid?: (id: string, title: string) => void;
+}

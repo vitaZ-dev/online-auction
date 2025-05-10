@@ -14,15 +14,9 @@ import CommonTitle from "../../common/CommonTitle";
 import CommonList from "../../common/CommonList";
 import CommonListItem from "../../common/CommonListItem";
 import { findCategory } from "../../../constants/category";
+import { MypageListProps } from "../../../types/component";
 
 const CONTENTS_COUNT = 10;
-
-interface MypageListProps {
-  collectionPath: string;
-  filterOpen?: boolean;
-  setDetailId?: React.Dispatch<React.SetStateAction<string>> | null;
-  handleDetailBid?: (id: string, title: string) => void;
-}
 
 export default function MypageList({
   collectionPath,
