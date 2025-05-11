@@ -117,7 +117,7 @@ export default function Sell() {
           start_price,
           now_price: 0,
           is_open: 1,
-          src: "https://placehold.co/100x100",
+          src: imgSrc,
           contents,
           created_at: start_date,
           favorite: 0,

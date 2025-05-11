@@ -133,8 +133,8 @@ export default function Edit() {
         category_id: category,
         contents,
         start_price,
-        // src: imgSrc,
-        src: "https://placehold.co/100x100",
+        src: imgSrc,
+        // src: "https://placehold.co/100x100",
         // updated_at: serverTimestamp(), // 수정된 시각
       });
 
