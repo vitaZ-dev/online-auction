@@ -17,6 +17,8 @@ export default defineConfig({
       "react-router-dom",
       "@emotion/react",
       "@emotion/styled",
+      "@mui/material",
+      "@mui/icons-material",
     ],
   },
   build: {
@@ -30,24 +32,20 @@ export default defineConfig({
           if (
             id.includes("node_modules/react/") ||
             id.includes("node_modules/react-dom/") ||
-            id.includes("node_modules/react-router-dom/")
+            id.includes("node_modules/react-router-dom/") ||
+            id.includes("node_modules/@emotion") ||
+            id.includes("node_modules/@mui")
           ) {
             return "@react-vendor";
           }
-          if (
-            id.includes("@mui/icons-material") ||
-            id.includes("@mui/material")
-          ) {
-            return "@mui-vendor";
-          }
-          if (id.includes("firebase")) {
+          if (id.includes("node_modules/firebase")) {
             return "@firebase";
           }
           if (id.includes("component")) {
             if (id.includes("common")) return "@component-common";
             if (id.includes("UI")) return "@component-UI";
           }
-          if (id.includes("@tanstack/react-query")) {
+          if (id.includes("node_modules/@tanstack/react-query")) {
             return "@react-query";
           }
         },
