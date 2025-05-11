@@ -240,18 +240,21 @@ export default function Detail() {
       if (success) {
         setFavoriteCheck(isFavorite);
         setFavoriteCnt(cnt);
-        alert("ok");
+        const alertText = isFavorite
+          ? "좋아요를 눌렀습니다."
+          : "좋아요가 해제되었습니다.";
+        alert(alertText);
         queryClient.invalidateQueries({ queryKey: ["home", "favorite"] });
         await queryClient.invalidateQueries({
           predicate: (query) =>
             query.queryKey[0] === "mypage" && query.queryKey[1] === "favorite",
         });
       } else {
-        alert("실패했습니다");
+        alert("실패했습니다.");
       }
     } catch (error) {
       console.log(error);
-      alert("실패했습니다");
+      alert("오류가 발생했습니다.");
     }
 
     setLoading(false);
