@@ -171,9 +171,11 @@
 ##### \* 협업 도구
 
 <!-- git, github, notion -->
+<div>
   <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">
   <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
   <img src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white">
+</div>
 
 <br />
 
@@ -186,7 +188,7 @@
 <details>
 <summary>카테고리 별 게시글 검색, 최근 게시글, 좋아요 순 게시글, 서비스 설명 페이지 이동</summary>
 <div markdown="1" style="padding-left: 15px;">
-img
+  <img width="383" alt="image" src="https://github.com/user-attachments/assets/65936dea-7d15-4183-9285-d6e3292f9517" />
 </div>
 </details>
 
@@ -195,7 +197,18 @@ img
 <details>
 <summary>네비게이션 메뉴(로그인 여부 구분)</summary>
 <div markdown="1" style="padding-left: 15px;">
-img
+  
+<br />
+
+- 로그인 상태: mypage 메뉴 보임
+<img width="475" alt="image" src="https://github.com/user-attachments/assets/1e30339b-4e76-4a88-883a-eb4f23b27df1" />
+
+<br />
+
+- 로그아웃 상태: mypage 메뉴 사라짐
+<img width="479" alt="image" src="https://github.com/user-attachments/assets/82dbec3d-89f9-4f26-846f-2e54db03c645" />
+
+<br />
 </div>
 </details>
 
@@ -204,7 +217,11 @@ img
 <details>
 <summary>로그인 및 회원가입 페이지</summary>
 <div markdown="1" style="padding-left: 15px;">
-img
+
+  <img width="473" alt="image" src="https://github.com/user-attachments/assets/eea09407-df93-4769-a48f-63b457914dbb" />
+
+  <img width="472" alt="image" src="https://github.com/user-attachments/assets/b6c455b9-eacd-4b50-8a3a-24ff4bdd9a1c" />
+
 </div>
 </details>
 
@@ -213,16 +230,33 @@ img
 <details>
 <summary>로그아웃, 나의 등록 게시글, 나의 입찰&낙찰 내역, 나의 좋아요 리스트</summary>
 <div markdown="1" style="padding-left: 15px;">
-img
+
+<br />
+
+- 마이페이지 화면
+<img width="320" alt="image" src="https://github.com/user-attachments/assets/8b973a24-d11b-4610-8d11-0258ff991265" />
+
+- 각 항목 별 더 보기 페이지: 무한스크롤 구현
+<img width="386" alt="image" src="https://github.com/user-attachments/assets/76858720-6639-45c3-8a7b-06594f56cbfc" />
+
+- 나의 등록 게시글: 해당 게시글의 마감 여부 구분 가능
+- 나의 낙찰 내역, 나의 좋아요 리스트: 게시글 확인
+      <details>
+        <summary>나의 입찰 내역: 각 게시글 클릭 시 나의 입찰 기록 확인 가능</summary>
+        <div markdown="1" style="padding-left: 15px;">
+        <img width="449" alt="image" src="https://github.com/user-attachments/assets/6fdbe92f-f383-466b-be1d-b6ef54cca2d7" />
+        </div>
+      </details>
+
 </div>
 </details>
 
 ### 게시글 리스트
 
 <details>
-<summary>경매 출품 목록, 조건부 검색 가능</summary>
+<summary>경매 출품 목록, 조건부 검색 가능, 무한스크롤 구현</summary>
 <div markdown="1" style="padding-left: 15px;">
-img
+  <img width="263" alt="image" src="https://github.com/user-attachments/assets/753cfac3-2a20-40f2-801b-d6e9a299368f" />
 </div>
 </details>
 
@@ -231,7 +265,23 @@ img
 <details>
 <summary>좋아요 기능, 입찰하기 | 낙찰 처리, 게시글 수정&삭제</summary>
 <div markdown="1" style="padding-left: 15px;">
-img
+
+- 게시글 작성자: 좋아요 비활성화, 수정&삭제 버튼 활성화, 낙찰 처리 버튼 활성화
+        <details>
+        <summary>이미지 보기</summary>
+        <div markdown="1" style="padding-left: 15px;">
+          <img width="263" alt="image" src="https://github.com/user-attachments/assets/6712353a-bf20-409e-9224-143b91b2a956" />
+        </div>
+        </details>
+
+- 일반 사용자: 입찰 금액 입력, 좋아요 활성화
+        <details>
+        <summary>이미지 보기</summary>
+        <div markdown="1" style="padding-left: 15px;">
+          <img width="263" alt="image" src="https://github.com/user-attachments/assets/83863df2-9655-449b-95cd-d0662790bb5f" />
+        </div>
+        </details>
+
 </div>
 </details>
 
