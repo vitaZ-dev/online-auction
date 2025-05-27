@@ -23,8 +23,10 @@
 ### 1. 주제
 
 - 온라인 경매 서비스
-  - 온라인 상에 중고물품을 올려 경매를 진행하는 서비스.
-  - 다른 유저의 중고 물품에 입찰을 올릴 수 있다.
+  - 온라인 상에 중고물품을 올려 경매를 진행하는 웹서비스
+  - 초기 mock 서버로 json-server를 사용했으나, 제한된 데이터 구조와 배포 후 수정 불가 문제로 인해 실시간 연동과 배포 환경에 적합한 `Firebase`로 전환
+  - 비동기 데이터 관리를 효율적으로 처리하기 위해 `React Query`를 도입해 데이터 캐싱 및 상태 관리를 최적화
+  - `zustand` 를 활용해 전역 상태 관리를 단순화하고, 코드 가독성과 성능을 개선
 
 ### 2. 제작 기간
 
@@ -32,7 +34,8 @@
 
   - 2025.01.10 ~ 03.24
 
-- 2차: 프로젝트 마이그레이션(파이어베이스 & 리액트 쿼리)
+- 2차: 프로젝트 마이그레이션(`Firebase` & `React Query`)
+
   - 2025.03.24 ~ 05.11
 
 ### 3. 프로젝트 구조
@@ -140,11 +143,10 @@
 
 ##### \* Front-end
 
-<!-- react, typescript, vite, javascript, zustand, axios -->
+<!-- react, typescript, javascript, zustand, axios -->
 <div>
   <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=black">
   <img src="https://img.shields.io/badge/Typescript-3178C6?style=for-the-badge&logo=Typescript&logoColor=white">
-  <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=Vite&logoColor=white">
   <img src="https://img.shields.io/badge/Javascript-F7DF1E?style=for-the-badge&logo=Javascript&logoColor=black">
   <img src="https://img.shields.io/badge/zustand-000000?style=for-the-badge&logo=circle&logoColor=white">
   <img src="https://img.shields.io/badge/react%20query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white">
@@ -166,6 +168,14 @@
 <div>
   <img src="https://img.shields.io/badge/firebase-DD2C00?style=for-the-badge&logo=firebase&logoColor=white">
   <img src="https://img.shields.io/badge/json%20server-000000?style=for-the-badge&logo=json&logoColor=white">
+</div>
+
+##### \* Config
+
+<!-- vite, yarn -->
+<div>
+  <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=Vite&logoColor=white">
+  <img src="https://img.shields.io/badge/yarn-2C8EBB?style=for-the-badge&logo=yarn&logoColor=white">
 </div>
 
 ##### \* 협업 도구
@@ -197,16 +207,16 @@
 <details>
 <summary>네비게이션 메뉴(로그인 여부 구분)</summary>
 <div markdown="1" style="padding-left: 15px;">
-  
+
 <br />
 
 - 로그인 상태: mypage 메뉴 보임
-<img width="475" alt="image" src="https://github.com/user-attachments/assets/1e30339b-4e76-4a88-883a-eb4f23b27df1" />
+  <img width="475" alt="image" src="https://github.com/user-attachments/assets/1e30339b-4e76-4a88-883a-eb4f23b27df1" />
 
 <br />
 
 - 로그아웃 상태: mypage 메뉴 사라짐
-<img width="479" alt="image" src="https://github.com/user-attachments/assets/82dbec3d-89f9-4f26-846f-2e54db03c645" />
+  <img width="479" alt="image" src="https://github.com/user-attachments/assets/82dbec3d-89f9-4f26-846f-2e54db03c645" />
 
 <br />
 </div>
@@ -234,10 +244,10 @@
 <br />
 
 - 마이페이지 화면
-<img width="320" alt="image" src="https://github.com/user-attachments/assets/8b973a24-d11b-4610-8d11-0258ff991265" />
+  <img width="320" alt="image" src="https://github.com/user-attachments/assets/8b973a24-d11b-4610-8d11-0258ff991265" />
 
 - 각 항목 별 더 보기 페이지: 무한스크롤 구현
-<img width="386" alt="image" src="https://github.com/user-attachments/assets/76858720-6639-45c3-8a7b-06594f56cbfc" />
+  <img width="386" alt="image" src="https://github.com/user-attachments/assets/76858720-6639-45c3-8a7b-06594f56cbfc" />
 
 - 나의 등록 게시글: 해당 게시글의 마감 여부 구분 가능
 - 나의 낙찰 내역, 나의 좋아요 리스트: 게시글 확인
@@ -291,11 +301,6 @@
 
 - [[문서보기] 프로젝트 기획](https://github.com/vitaZ-dev/online-auction/wiki/%EA%B3%B5%ED%86%B5-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EB%AC%B8%EC%84%9C)
 - [[문서보기] 커스텀 컴포넌트 정리 문서](https://github.com/vitaZ-dev/online-auction/wiki/%EA%B3%B5%ED%86%B5-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EB%AC%B8%EC%84%9C)
-  - [커스텀 컴포넌트 정리 문서 (notion)](https://www.notion.so/Custom-Component-19a90b03460a80bca2f3e336e5b31a3c)
-
-<br />
-
-# ✨ 트러블 슈팅
 
 <br />
 
@@ -304,4 +309,11 @@
 - 게시글 낙찰 후 시스템 구축
 - 로그인 시 토큰 다루기
 - 간편 로그인 기능 추가
+- 무한스크롤 데이터 호출 부분 코드 로직 분리
 - 무한스크롤 리액트쿼리 적용
+- `i18n` 다국어 기능 구현하기
+
+# 😊 About Me
+
+- [Notion 이력서 페이지로 이동](https://www.notion.so/Custom-Component-19a90b03460a80bca2f3e336e5b31a3c)
+- [GitHub 페이지로 이동](https://github.com/vitaZ-dev)
