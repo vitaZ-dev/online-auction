@@ -7,12 +7,12 @@ const useAuthStore = create(
     (set, get) => ({
       isLogin: false,
       userInfo: null,
-      token: null,
       salesHistory: null,
       favorite: null,
       bidList: null,
       bidAward: null,
 
+      loginStatus: (isLogin) => set({ isLogin }),
       login: (userInfo) => set({ isLogin: true, userInfo }),
       logout: () =>
         set({
@@ -42,7 +42,7 @@ const useAuthStore = create(
       // },
     }),
     {
-      name: "online_auction", // name of the item in the storage (must be unique)
+      name: "online_auction",
     }
   )
 );

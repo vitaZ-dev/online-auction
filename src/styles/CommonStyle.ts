@@ -256,6 +256,41 @@ export const CommonModalStyle = styled.div`
       font-weight: 600;
     }
   }
+
+  .modal_contents {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 36px;
+    padding: 0 (var(--padding-size));
+    & > * {
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  .modal_footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-top: 32px;
+
+    button {
+      min-width: 48px;
+      width: 96px;
+      padding: 8px;
+      border: 1px solid var(--main-violet-00-color);
+      border-radius: 5px;
+      background-color: var(--main-violet-00-color);
+      color: var(--white);
+      &.cancel {
+        background-color: var(--white);
+        color: var(--main-violet-00-color);
+      }
+    }
+  }
 `;
 
 export const CommonCategoryBadgeStyle = styled.div`
@@ -286,8 +321,8 @@ export const CommonInputStyle = styled.div<CommonInputType>`
     }
     &:focus:not(:disabled),
     &:active:not(:disabled) {
-      border: 1px solid var(--main-red-color);
-      box-shadow: 0 0 0 0.5px var(--main-red-color);
+      border: 1px solid var(--main-violet-00-color);
+      box-shadow: 0 0 0 0.5px var(--main-violet-00-color);
     }
 
     &:disabled {
@@ -315,8 +350,8 @@ export const CommonTextareaStyle = styled.div`
     }
     &:focus:not(:disabled),
     &:active:not(:disabled) {
-      border: 1px solid var(--main-red-color);
-      box-shadow: 0 0 0 0.5px var(--main-red-color);
+      border: 1px solid var(--main-violet-00-color);
+      box-shadow: 0 0 0 0.5px var(--main-violet-00-color);
     }
 
     &:disabled {
@@ -334,6 +369,10 @@ export const CommonRadioBtnStyle = styled.div`
     appearance: none;
     display: none !important;
 
+    &:disabled + label {
+      opacity: 0.5;
+      cursor: default;
+    }
     & + label {
       display: inline-block;
       min-width: 45px;
@@ -479,6 +518,10 @@ export const FullImageLayout = styled.div`
 export const ShowListTableLayout = styled.div<ShowListTableType>`
   position: relative;
 
+  .mb32 {
+    margin-bottom: 32px;
+  }
+
   .table_header,
   .table_contents > * {
     display: grid;
@@ -487,13 +530,18 @@ export const ShowListTableLayout = styled.div<ShowListTableType>`
 
     line-height: 2;
   }
+  .table_contents > .no_contents {
+    display: block;
+    margin: var(--padding-size) auto;
+    line-height: 2;
+  }
 
   .table_header {
     position: sticky;
     top: 0;
     left: 0;
     width: 100%;
-    border-bottom: 1px solid var(--main-red-color);
+    border-bottom: 1px solid var(--main-violet-00-color);
     span {
       padding: 0 8px;
     }

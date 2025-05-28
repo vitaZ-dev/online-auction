@@ -33,6 +33,10 @@ export const AuctionListLayout = styled.div`
       border-bottom: 1px solid transparent;
     }
   }
+
+  .data_btn {
+    padding: var(--padding-size);
+  }
 `;
 
 export const ItemDetailLayout = styled.article`
@@ -79,11 +83,13 @@ export const ItemDetailLayout = styled.article`
   }
 
   .user_info {
-    height: 60px;
+    min-height: 60px;
     padding: 12px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
 
     .user_prof {
       display: flex;
@@ -106,6 +112,10 @@ export const ItemDetailLayout = styled.article`
       }
 
       button {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid var(--main-gray-01-color);
+        border-radius: 5px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -127,6 +137,8 @@ export const ItemDetailLayout = styled.article`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
     p {
       font-size: 14px;
       color: var(--main-gray-02-color);
@@ -192,13 +204,6 @@ export const ItemDetailLayout = styled.article`
         line-height: 36px;
       }
     }
-  }
-
-  button {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid var(--main-gray-01-color);
-    border-radius: 5px;
   }
 `;
 

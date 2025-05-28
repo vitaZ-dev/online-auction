@@ -1,20 +1,23 @@
 import { useState } from "react";
-import api from "../../apis/api";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../stores/useAuthStore";
-import { setDate14Temp, setDateTemp } from "../../modules";
-import { CATEGORY } from "../../modules/category";
-import CommonTitle from "../../components/UI/CommonTitle";
+import { setDate14Temp, setDateTemp } from "../../utils";
+import { CATEGORY } from "../../constants/category";
+import CommonTitle from "../../components/common/CommonTitle";
 import { WritepageLayout } from "../../styles/SellPageStyle";
 import CommonInput from "../../components/common/CommonInput";
 import CommonTextarea from "../../components/common/CommonTextarea";
+import CommonButton from "../../components/common/CommonButton";
+import { collection, doc, setDoc } from "firebase/firestore";
+import firebaseDB from "../../libs/firebase";
+import queryClient from "../../libs/queryClient";
 
 export default function Sell() {
-  const [title, setTitle] = useState("");
-  const [category, setCategory] = useState(-1);
-  const [contents, setContents] = useState("");
-  const [price, setPrice] = useState(0); //start_price
-  const [imgSrc, setImgSrc] = useState("");
+  const [title, setTitle] = useState<string>("");
+  const [category, setCategory] = useState<number>(-1);
+  const [contents, setContents] = useState<string>("");
+  const [price, setPrice] = useState<number>(0); //start_price
+  const [imgSrc, setImgSrc] = useState<string>("");
 
   const { userInfo, updateSalesHistory } = useAuthStore();
   const navigate = useNavigate();
@@ -76,7 +79,7 @@ export default function Sell() {
     }
   };
 
-  const registerPost = () => {
+  const registerPostFirebase = async () => {
     if (!title) {
       alert("제목을 입력하세요!");
       return false;
@@ -99,33 +102,43 @@ export default function Sell() {
     const end_date = setDate14Temp(start_date);
 
     try {
-      api.post("posts", {
-        title,
-        category_id: category,
-        user_info: userInfo?.nickname || "USER",
-        user_id: userInfo?.uuid,
-        start_date,
-        end_date,
-        price: 9999,
-        start_price,
-        now_price: 0,
-        is_open: 1,
-        src: imgSrc,
-        contents,
-        created_at: start_date,
-        favorite: 1,
-        favorite_list: [],
-        bid: 0,
-        cnt: 0,
-        bid_count: 0,
-        bid_history: [],
+      const docRef = doc(collection(firebaseDB, "posts"));
+      await setDoc(
+        docRef,
+        {
+          // await addDoc(collection(firebaseDB, "posts"), {
+          id: docRef.id,
+          title,
+          category_id: category,
+          user_info: userInfo?.nickname || "USER",
+          user_id: userInfo?.uuid,
+          start_date,
+          end_date,
+          start_price,
+          now_price: 0,
+          is_open: 1,
+          src: imgSrc,
+          contents,
+          created_at: start_date,
+          favorite: 0,
+          favorite_list: [],
+          cnt: 0,
+          bid_count: 0,
+          bid_history: [],
+        },
+        { merge: true }
+      );
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === "home" ||
+          (query.queryKey[0] === "mypage" && query.queryKey[1] === "recent"),
       });
       updateSalesHistory(null);
-      alert("ok");
+      alert("게시글이 등록되었습니다.");
       navigate("/auction");
     } catch (err) {
       console.log(err);
-      alert("error 발생-등록 실패");
+      alert("게시글 등록이 실패했습니다.");
     }
   };
 
@@ -218,9 +231,11 @@ export default function Sell() {
           </div>
         </div>
 
-        <button className="page_btn" onClick={() => registerPost()}>
-          등록하기
-        </button>
+        <CommonButton
+          text="등록하기"
+          btnType="large"
+          onClick={() => registerPostFirebase()}
+        />
       </div>
     </WritepageLayout>
   );

@@ -1,5 +1,5 @@
 import { FAQLayout } from "../../styles/ServiceStyle";
-import CommonTitle from "../../components/UI/CommonTitle";
+import CommonTitle from "../../components/common/CommonTitle";
 import { CommonPaddingBox } from "../../styles/CommonStyle";
 
 export default function Faq() {

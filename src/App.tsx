@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   BaseLayout,
   FooterLayout,
@@ -29,9 +29,12 @@ import CloseIcon from "@mui/icons-material/Close";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 
-// import { ReactQueryDevtools } from "react-query/devtools";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import CommonButton from "./components/common/CommonButton";
-import Logo from "./components/Logo";
+import Logo from "./components/UI/Logo";
+import { auth } from "./libs/firebase";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import queryClient from "./libs/queryClient";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -60,21 +63,64 @@ function App() {
     setToggleMenu3(!toggleMenu3);
   };
 
-  const { userInfo, isLogin, logout } = useAuthStore();
+  const navigate = useNavigate();
+  const { loginStatus, userInfo, isLogin, logout, updateUserInfo } =
+    useAuthStore();
+  const location = useLocation();
 
-  const handelLogout = () => {
-    logout();
-    alert("logout");
-    location.href = "/";
+  const handelLogout = async () => {
+    try {
+      toggleDrawer(false);
+      await signOut(auth);
+      queryClient.removeQueries({
+        predicate: (query) => query.queryKey[0] === "mypage",
+      });
+      queryClient.getQueryCache().clear();
+      alert("로그아웃 되었습니다.");
+      logout();
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+      alert("로그아웃에 실패했습니다.");
+    }
   };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user: any) => {
+      if (!user) {
+        loginStatus(false);
+        updateUserInfo(null);
+      } else {
+        loginStatus(true);
+        updateUserInfo({
+          email: user.email,
+          id: user.uid,
+          nickname: user.displayName,
+          role: "USER",
+          uuid: user.uid,
+        });
+      }
+    });
+
+    return () => unsubscribe();
+  }, [loginStatus, updateUserInfo]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
 
   return (
     <>
       <Global styles={light} />
       <BaseLayout>
         <HeaderLayout>
-          <h1>
-            <Logo onClick={() => toggleDrawer(false)} />
+          <h1
+            onClick={() => {
+              toggleDrawer(false);
+              navigate("/");
+            }}
+          >
+            <Logo />
           </h1>
           <div className="header_utils">
             {/* <button onClick={() => console.log("search")}>
@@ -109,9 +155,7 @@ function App() {
                       height: "72px",
                     }}
                   >
-                    <div onClick={toggleDrawer(false)}>
-                      <Logo />
-                    </div>
+                    <Logo />
                     <div
                       onClick={toggleDrawer(false)}
                       style={{ cursor: "pointer" }}
@@ -306,7 +350,9 @@ function App() {
           </div>
         </FooterLayout>
       </BaseLayout>
-      {/* <ReactQueryDevtools initialIsOpen={false} position="bottom-right" /> */}
+      {import.meta.env.MODE === "development" && (
+        <ReactQueryDevtools initialIsOpen={false} />
+      )}
     </>
   );
 }

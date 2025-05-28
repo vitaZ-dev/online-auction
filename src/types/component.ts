@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export interface LogoProps {
-  onClick?: () => void;
-}
-
 export interface CommonButtonProps {
   text?: string;
   btnType: "small" | "medium" | "large";
@@ -46,7 +41,7 @@ export interface CommonTextareaProps {
 export interface CommonModalProps {
   isOpen: boolean;
   setDisplay: React.Dispatch<React.SetStateAction<boolean>>;
-  modalTitle: string;
+  modalTitle?: string;
   children?: React.ReactNode;
   showFooter?: boolean;
   handleModalOk?: () => void;
@@ -60,6 +55,7 @@ export interface CommonRadioBtnProps {
   value: string | number;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   checked: boolean;
+  disabled?: boolean;
 }
 
 export interface MUIPaginationProps {
@@ -98,10 +94,18 @@ export interface ShowListTableProps {
   tableGrid: number[];
   tableHeader: string[];
   tableHeaderText: string[];
-  tableList: any[];
+  tableList: any[] | null | undefined;
+  tableLoading?: boolean;
 }
 
 export interface FullSizeImageProps {
   src: string;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export interface MypageListProps {
+  collectionPath: string;
+  filterOpen?: boolean;
+  setDetailId?: React.Dispatch<React.SetStateAction<string>> | null;
+  handleDetailBid?: (id: string, title: string) => void;
 }

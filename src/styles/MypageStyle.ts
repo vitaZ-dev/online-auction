@@ -74,5 +74,6 @@ export const MypageLayout = styled.div`
     padding: 0 16px;
     display: flex;
     gap: 12px;
+    flex-wrap: wrap;
   }
 `;

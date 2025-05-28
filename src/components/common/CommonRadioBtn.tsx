@@ -8,6 +8,7 @@ export default function CommonRadioBtn({
   value,
   onChange,
   checked,
+  disabled = false,
 }: CommonRadioBtnProps) {
   return (
     <CommonRadioBtnStyle>
@@ -19,6 +20,7 @@ export default function CommonRadioBtn({
         value={value}
         onChange={onChange}
         checked={checked}
+        disabled={disabled}
         aria-hidden="true"
       />
       <label htmlFor={id} className={checked ? "checked" : ""}>

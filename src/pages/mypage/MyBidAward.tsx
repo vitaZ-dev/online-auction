@@ -1,75 +1,10 @@
-import api from "../../apis/api";
-import { useEffect, useState } from "react";
-import { MypageLayout } from "../../styles/MypageStyle";
-import CommonTitle from "../../components/UI/CommonTitle";
-import useAuthStore from "../../stores/useAuthStore";
-import CommonList from "../../components/UI/CommonList";
-import CommonListItem from "../../components/UI/CommonListItem";
-import { findCategory } from "../../modules/category";
-import { Link, useNavigate } from "react-router-dom";
-import MUIPagination from "../../components/common/MUIPagination";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import { CommonNodataBox } from "../../styles/CommonStyle";
-import { BidAwardType } from "../../types/user";
+import MypageList from "../../components/pages/mypage/MypageList";
 
 export default function MyBidAward() {
-  const [awardList, setAwardList] = useState<Array<BidAwardType> | []>([]);
-  const [page, setPage] = useState<number>(1);
-  const [totalPage, setTotalPage] = useState<number>(1);
-
-  const { userInfo } = useAuthStore();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    getUserPostList(page);
-  }, [page]);
-
-  const getUserPostList = async (page: number) => {
-    const { data, headers } = await api.get(
-      `bid_award?uuid=${userInfo?.uuid}&_sort=award_date&_order=desc&_page=${page}&_per_page=16`
-    );
-    setAwardList(data);
-    const totalPageCal =
-      +headers["x-total-count"] > 16
-        ? Math.ceil(+headers["x-total-count"] / 16)
-        : 1;
-    setTotalPage(totalPageCal);
-  };
-
+  // 낙찰 내역
   return (
-    <MypageLayout>
-      <div className="mypage_title">
-        <ArrowBackIosNewIcon
-          className="back_icon"
-          onClick={() => navigate("/mypage")}
-        />
-        <CommonTitle type={1} title={`${userInfo?.nickname} 님의 낙찰 내역`} />
-      </div>
-
-      {awardList?.length ? (
-        <>
-          <CommonList grid={4}>
-            {awardList?.map((item, idx) => (
-              <div key={idx}>
-                <Link to={`/auction/${item?.item_id}`} key={idx}>
-                  <CommonListItem
-                    src={item?.src}
-                    category={findCategory(item?.category_id)}
-                    title={item?.title}
-                    startPrice={item?.amount}
-                    isOpen={false}
-                  />
-                </Link>
-              </div>
-            ))}
-          </CommonList>
-          <MUIPagination totalPage={totalPage} setPage={setPage} />
-        </>
-      ) : (
-        <>
-          <CommonNodataBox>낙찰 내역이 없습니다</CommonNodataBox>
-        </>
-      )}
-    </MypageLayout>
+    <>
+      <MypageList collectionPath="bid_list" filterOpen={false} />
+    </>
   );
 }

@@ -1,155 +1,166 @@
-import { useEffect, useState } from "react";
-import api from "../../apis/api";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
-import { CATEGORY, findCategory } from "../../modules/category";
-import CommonList from "../../components/UI/CommonList";
-import CommonListItem from "../../components/UI/CommonListItem";
+import { getPostList } from "../../apis/libs";
+import { CATEGORY, findCategory } from "../../constants/category";
+import { AuctionListLayout } from "../../styles/AuctionStyle";
 import { CommonNodataBox } from "../../styles/CommonStyle";
+import { DocumentData } from "firebase/firestore";
+import { useInView } from "react-intersection-observer";
+import TuneIcon from "@mui/icons-material/Tune";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import TuneIcon from "@mui/icons-material/Tune";
-import CommonRadioBtn from "../../components/common/CommonRadioBtn";
+import CommonTitle from "../../components/common/CommonTitle";
 import CommonButton from "../../components/common/CommonButton";
-import CommonTitle from "../../components/UI/CommonTitle";
-import { AuctionListLayout } from "../../styles/AuctionStyle";
-import MUIPagination from "../../components/common/MUIPagination";
-import { postType } from "../../types/post";
 import CommonCheckbox from "../../components/common/CommonCheckbox";
-
-// type searchQueryType = {
-//   is_open?: "0" | "1";
-//   category_id?: string;
-//   sort_by?: "recent" | "favorite";
-//   start_price_gte?: number;
-//   start_price_lte?: number;
-// };
+import CommonRadioBtn from "../../components/common/CommonRadioBtn";
+import CommonList from "../../components/common/CommonList";
+import CommonListItem from "../../components/common/CommonListItem";
+import DataLoading from "../../components/UI/DataLoading";
 
 export default function List() {
-  const [filterIsOpen, setFilterIsOpen] = useState<boolean>(false);
-  const [filterCheck, setFilterCheck] = useState<boolean>(false);
-  const [filterCategory, setFilterCategory] = useState<number>(0);
-  const [filterSort, setFilterSort] = useState<string>("");
-  // const [filterStartPrice, setFilterStartPrice] = useState(0);
-  // const [filterEndPrice, setFilterEndPrice] = useState(0);
-
-  const [page, setPage] = useState<number>(1);
-  const [totalPage, setTotalPage] = useState<number>(1);
-  const [isData, setIsData] = useState<boolean>(true);
-  const [posts, setPosts] = useState<Array<postType> | []>([]);
-  const [pageLoading, setPageLoading] = useState<boolean>(true);
-  // const [showLoadBtn, setShowLoadBtn] = useState(true);
-  // const [pagination, setPagination] = useState({});
-
   const [query, setQuery] = useSearchParams();
   const { search } = useLocation();
 
+  const CONTENTS_COUNT = 10;
+  // 필터
+  const [filterShow, setFilterShow] = useState<boolean>(false);
+  const [filterIsOpen, setFilterIsOpen] = useState<boolean>(false);
+  const [filterCategory, setFilterCategory] = useState<number>(0);
+  const [filterSort, setFilterSort] = useState<string>("1");
+
   useEffect(() => {
-    if (query.get("is_open")) {
-      setFilterIsOpen(true);
-    }
-    if (query.get("category_id")) {
+    if (query.get("is_open")) setFilterIsOpen(true);
+    else setFilterIsOpen(false);
+
+    if (query.get("category_id"))
       setFilterCategory(Number(query.get("category_id")));
-    }
-    if (query.get("sort_by")) {
-      const sortId =
-        query.get("sort_by") === "recent"
-          ? "1"
-          : query.get("sort_by") === "favorite"
-          ? "2"
-          : "";
-      setFilterSort(sortId);
-    }
-  }, []);
+    else setFilterCategory(0);
 
-  useEffect(() => {
-    const query: { [key: string]: string | number } = {};
-    search
-      .slice(1)
-      .split("&")
-      .forEach((item) => (query[item.split("=")[0]] = item.split("=")[1]));
+    if (query.get("sort_by")) setFilterSort("2");
+    else setFilterSort("1");
+  }, [search]);
 
-    fetchPosts(page, query);
-  }, [page, search]);
+  const filterQuery = useMemo(() => {
+    const defaults = {
+      is_open: false,
+      category_id: 0,
+      sort_by: "1",
+    };
 
-  const fetchPosts = async (
-    page: number,
-    query: { [key: string]: string | number } = {}
-  ) => {
-    setPageLoading(true);
+    const entries = search.slice(1)?.split("&");
+    entries.forEach((entry) => {
+      const [key, value] = entry.split("=");
+      if (key === "is_open") {
+        defaults.is_open = Boolean(Number(value) === 1);
+      } else if (key === "category_id") {
+        const num = Number(value);
+        defaults.category_id = isNaN(num) || num > 19 ? 0 : num;
+      } else if (key === "sort_by") {
+        defaults.sort_by = value ? "2" : "1";
+      }
+    });
 
-    /* 검색 조건 하위 쿼리 값 처리 */
-    let url = `posts?&_page=${page}&_limit=10`;
-    if (query?.sort_by && query.sort_by === "favorite") {
-      url += "&_sort=favorite,created_at&_order=desc,desc";
-    } else {
-      url += "&_sort=created_at&_order=desc";
-    }
-
-    if (Object.keys(query).length !== 0) {
-      Object.keys(query).forEach((key) => {
-        if (key !== "sort_by") url += `&${key}=${query[key]}`;
-      });
-    }
-
-    const { data, headers } = await api.get(url);
-    // setPosts((prev: Array<any>) => [...prev, ...data.data]);
-    setPosts(data);
-    const totalPageCal =
-      +headers["x-total-count"] > 10
-        ? Math.ceil(+headers["x-total-count"] / 10)
-        : 1;
-    setTotalPage(totalPageCal);
-
-    setPageLoading(false);
-
-    /**
-     * TODO 필터 검색 시 오류 수정
-     * 1. 카테고리 검색 후 조건에 맞는 결과가 없음
-     * 2. 다른 카테고리 검색 시 결과가 있어도 '게시글 없음' 결과가 뜸
-     * 3. 아래 영역에서 조건 처리
-     */
-    setIsData(data?.length && data?.length !== 0);
-  };
-
-  // const loadingNextPage = () => setPage(page + 1);
+    return defaults;
+  }, [search]);
 
   const filterSearchPosts = async () => {
     if (filterIsOpen) query.set("is_open", "1");
     else query.delete("is_open");
 
     if (filterCategory) query.set("category_id", filterCategory.toString());
+    else query.delete("category_id");
 
-    if (filterSort) {
-      const sortText =
-        filterSort === "1" ? "recent" : filterSort === "2" ? "favorite" : "";
-      query.set("sort_by", sortText);
-    }
+    if (filterSort === "2") query.set("sort_by", "favorite");
+    else query.delete("sort_by");
+
     setQuery(query);
+    setLastItem(null);
+    setList([]);
+    setPageLoading(true);
+    setPage(1);
   };
 
   const clearAllFilter = async () => {
-    setFilterCheck(false);
     setFilterIsOpen(false);
     setFilterCategory(0);
-    setFilterSort("");
+    setFilterSort("1");
+    // setQuery({});
     window.scrollTo(0, 0);
-    setQuery({});
-    // await fetchPosts(1);
   };
 
+  // 메인 무한스크롤 리스트
+  const [list, setList] = useState<DocumentData[]>([]); // 무한스크롤 리스트
+  const [lastItem, setLastItem] = useState<DocumentData | null>(null);
+  const [page, setPage] = useState<number>(1);
+  const [totalPage, setTotalPage] = useState<number>(1);
+  const [pageLoading, setPageLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [hasNextPage, setHasNextPage] = useState<boolean>(false);
+  const [empty, isEmpty] = useState<boolean>(false);
+
+  const getList = async (page: number) => {
+    setLoading(true);
+
+    try {
+      const {
+        is_open: _filterIsOpen,
+        category_id: _filterCategory,
+        sort_by: _filterSort,
+      } = filterQuery;
+
+      const result = await getPostList(
+        page,
+        CONTENTS_COUNT,
+        totalPage,
+        setTotalPage,
+        lastItem,
+        // 필터값
+        _filterIsOpen, // 거래 가능만 보기
+        _filterCategory, // 카테고리 id
+        _filterSort // 정렬기준_최신(1), 좋아요(2)
+      );
+
+      isEmpty(result.empty);
+      setLastItem(result.lastItem);
+      setList((prev) => [...prev, ...result.docs]);
+      setHasNextPage(result.page < result.totalPages);
+
+      if (page === 1) setPageLoading(false);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getList(page);
+  }, [search]);
+
+  const { ref, inView } = useInView({
+    threshold: 0.8,
+  });
+  useEffect(() => {
+    if (inView && hasNextPage && !loading) {
+      setPage((p) => p + 1);
+      getList(page + 1);
+    }
+  }, [inView]);
+
+  // tsx
   return (
     <AuctionListLayout>
       <CommonTitle type={1} title="경매 물품" />
       <div className="filter_box">
         <CommonButton
           btnType="medium"
-          onClick={() => setFilterCheck(!filterCheck)}
+          onClick={() => setFilterShow(!filterShow)}
         >
           <TuneIcon />
           <span>필터</span>
-          {filterCheck ? <ExpandMore /> : <ExpandLess />}
+          {filterShow ? <ExpandMore /> : <ExpandLess />}
         </CommonButton>
-        {filterCheck && (
+        {filterShow && (
           <div className="filter_area">
             <CommonCheckbox
               id="able"
@@ -162,6 +173,14 @@ export default function List() {
             <div>
               <p>카테고리</p>
               <div className="radio_wrap">
+                <CommonRadioBtn
+                  text="전체"
+                  id="0"
+                  name="category_filter"
+                  value={0}
+                  onChange={(e) => setFilterCategory(+e.target.value)}
+                  checked={filterCategory === 0}
+                />
                 {CATEGORY.map((item) => (
                   <CommonRadioBtn
                     key={item.category_id}
@@ -220,52 +239,36 @@ export default function List() {
               <CommonButton
                 text="전체해제"
                 btnType="medium"
-                onClick={clearAllFilter}
+                onClick={() => clearAllFilter()}
               />
               <CommonButton
                 text="검색"
                 btnType="medium"
-                onClick={filterSearchPosts}
+                onClick={() => filterSearchPosts()}
               />
             </div>
           </div>
         )}
       </div>
-      {isData ? (
-        <>
-          <CommonList loading={pageLoading}>
-            {posts?.map((post) => {
-              return (
-                <Link to={`${post.id}`} key={post.id}>
-                  <CommonListItem
-                    src={post.src}
-                    category={findCategory(post?.category_id)}
-                    title={post.title}
-                    startPrice={post.start_price}
-                    isOpen={Boolean(post.is_open)}
-                  />
-                </Link>
-              );
-            })}
-          </CommonList>
-          <MUIPagination totalPage={totalPage} setPage={setPage} />
-          {/* {showLoadBtn && (
-            <button
-              style={{
-                width: "100%",
-                height: "40px",
-                margin: "10px 0",
-                border: "1px solid gray",
-              }}
-              onClick={() => loadingNextPage()}
-            >
-              더보기
-            </button>
-          )} */}
-        </>
-      ) : (
-        <CommonNodataBox>게시글이 없습니다</CommonNodataBox>
-      )}
+      {/* 게시글 리스트 */}
+      <>
+        <CommonList loading={pageLoading}>
+          {list?.map((item, idx) => (
+            <Link to={`/auction/${item?.id}`} key={idx}>
+              <CommonListItem
+                src={item?.src}
+                category={findCategory(item?.category_id)}
+                title={item?.title}
+                startPrice={item?.start_price}
+                isOpen={Boolean(item.is_open)}
+              />
+            </Link>
+          ))}
+        </CommonList>
+
+        <div ref={ref}>{hasNextPage ? <DataLoading /> : <></>}</div>
+      </>
+      {empty && <CommonNodataBox>데이터가 없습니다</CommonNodataBox>}
     </AuctionListLayout>
   );
 }

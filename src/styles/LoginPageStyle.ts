@@ -31,6 +31,7 @@ export const LoginPageLayout = styled.div`
 
   .find_area {
     padding-top: 12px;
+    margin-bottom: 24px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -60,6 +61,7 @@ export const LoginPageLayout = styled.div`
   }
   .go_login_page {
     padding-top: 16px;
+    margin-bottom: 24px;
     text-align: center;
     & > a {
       color: var(--main-gray-02-color);
