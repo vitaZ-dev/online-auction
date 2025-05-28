@@ -299,7 +299,7 @@
 
 # 📕 작업 내용
 
-- [[문서보기] 프로젝트 기획](https://github.com/vitaZ-dev/online-auction/wiki/%EA%B3%B5%ED%86%B5-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EB%AC%B8%EC%84%9C)
+- [[문서보기] 프로젝트 기획](https://github.com/vitaZ-dev/online-auction/wiki/%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%EA%B8%B0%ED%9A%8D)
 - [[문서보기] 커스텀 컴포넌트 정리 문서](https://github.com/vitaZ-dev/online-auction/wiki/%EA%B3%B5%ED%86%B5-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EB%AC%B8%EC%84%9C)
 
 <br />
@@ -309,9 +309,12 @@
 - 게시글 낙찰 후 시스템 구축
 - 로그인 시 토큰 다루기
 - 간편 로그인 기능 추가
+- 회원 정보 찾기 및 회원 정보 수정 기능 추가
 - 무한스크롤 데이터 호출 부분 코드 로직 분리
 - 무한스크롤 리액트쿼리 적용
 - `i18n` 다국어 기능 구현하기
+- FAQ 및 공지사항 페이지 추가 기획 및 구현
+- 관리자 페이지 추가 기획 및 구현
 
 # 😊 About Me
 
