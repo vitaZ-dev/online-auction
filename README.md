@@ -9,5 +9,5 @@
 
 # 😊 About Me
 
-- [Notion 이력서 페이지로 이동](https://www.notion.so/Custom-Component-19a90b03460a80bca2f3e336e5b31a3c)
+- [Notion 이력서 페이지로 이동](https://orchid-carpet-4d1.notion.site/20290b03460a809eac05daaf02474dc9)
 - [GitHub 페이지로 이동](https://github.com/vitaZ-dev)
