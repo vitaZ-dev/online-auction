@@ -332,7 +332,7 @@ function App() {
             <span>Copyrightⓒ 2025. vitaZ-dev. All rights reserved.</span>
             <div className="icons">
               <a
-                href="https://orchid-carpet-4d1.notion.site/e5ee79b802ef4edfbc3e0f50dd1c944c"
+                href="https://orchid-carpet-4d1.notion.site/20290b03460a809eac05daaf02474dc9"
                 target="_blank"
               >
                 <img
